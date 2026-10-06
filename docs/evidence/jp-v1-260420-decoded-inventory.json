@@ -1,0 +1,6275 @@
+{
+  "size": 49156696,
+  "sha256": "d0f5b1dd5ccab3ba8fda57b162d6edb5a3678f2f8ae8606d441f688a60a94c6a",
+  "first_256_bytes_hex": "02ee1258432fea7414d77519ff072266727d81e266772d747970653a436c6f75640a000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+  "magic_candidates": [
+    {
+      "kind": "ubi",
+      "offset": 4696,
+      "offset_hex": "0x1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 135768,
+      "offset_hex": "0x21258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 266840,
+      "offset_hex": "0x41258",
+      "status": "candidate"
+    },
+    {
+      "kind": "uimage",
+      "offset": 270936,
+      "offset_hex": "0x42258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 397912,
+      "offset_hex": "0x61258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 528984,
+      "offset_hex": "0x81258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 660056,
+      "offset_hex": "0xa1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 791128,
+      "offset_hex": "0xc1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 922200,
+      "offset_hex": "0xe1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 1053272,
+      "offset_hex": "0x101258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 1148616,
+      "offset_hex": "0x1186c8",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 1184344,
+      "offset_hex": "0x121258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 1315416,
+      "offset_hex": "0x141258",
+      "status": "candidate"
+    },
+    {
+      "kind": "fdt_or_fit",
+      "offset": 1395064,
+      "offset_hex": "0x154978",
+      "status": "candidate",
+      "total_size": 14400,
+      "extent_in_bounds": true
+    },
+    {
+      "kind": "ubi",
+      "offset": 1446488,
+      "offset_hex": "0x161258",
+      "status": "candidate"
+    },
+    {
+      "kind": "fdt_or_fit",
+      "offset": 1450584,
+      "offset_hex": "0x162258",
+      "status": "candidate",
+      "total_size": 3848807,
+      "extent_in_bounds": true
+    },
+    {
+      "kind": "ubi",
+      "offset": 1577560,
+      "offset_hex": "0x181258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 1708632,
+      "offset_hex": "0x1a1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 1839704,
+      "offset_hex": "0x1c1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 1970776,
+      "offset_hex": "0x1e1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 2101848,
+      "offset_hex": "0x201258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 2232920,
+      "offset_hex": "0x221258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 2363992,
+      "offset_hex": "0x241258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 2495064,
+      "offset_hex": "0x261258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 2626136,
+      "offset_hex": "0x281258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 2757208,
+      "offset_hex": "0x2a1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 2888280,
+      "offset_hex": "0x2c1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 3019352,
+      "offset_hex": "0x2e1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 3150424,
+      "offset_hex": "0x301258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 3281496,
+      "offset_hex": "0x321258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 3412568,
+      "offset_hex": "0x341258",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 3467596,
+      "offset_hex": "0x34e94c",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 3543640,
+      "offset_hex": "0x361258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 3674712,
+      "offset_hex": "0x381258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 3805784,
+      "offset_hex": "0x3a1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 3936856,
+      "offset_hex": "0x3c1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 4067928,
+      "offset_hex": "0x3e1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 4199000,
+      "offset_hex": "0x401258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 4330072,
+      "offset_hex": "0x421258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 4461144,
+      "offset_hex": "0x441258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 4592216,
+      "offset_hex": "0x461258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 4723288,
+      "offset_hex": "0x481258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 4854360,
+      "offset_hex": "0x4a1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 4985432,
+      "offset_hex": "0x4c1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 5116504,
+      "offset_hex": "0x4e1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 5247576,
+      "offset_hex": "0x501258",
+      "status": "candidate"
+    },
+    {
+      "kind": "fdt_or_fit",
+      "offset": 5328816,
+      "offset_hex": "0x514fb0",
+      "status": "candidate",
+      "total_size": 21798,
+      "extent_in_bounds": true
+    },
+    {
+      "kind": "fdt_or_fit",
+      "offset": 5350928,
+      "offset_hex": "0x51a610",
+      "status": "candidate",
+      "total_size": 21798,
+      "extent_in_bounds": true
+    },
+    {
+      "kind": "fdt_or_fit",
+      "offset": 5373036,
+      "offset_hex": "0x51fc6c",
+      "status": "candidate",
+      "total_size": 21711,
+      "extent_in_bounds": true
+    },
+    {
+      "kind": "ubi",
+      "offset": 5378648,
+      "offset_hex": "0x521258",
+      "status": "candidate"
+    },
+    {
+      "kind": "fdt_or_fit",
+      "offset": 5399156,
+      "offset_hex": "0x526274",
+      "status": "candidate",
+      "total_size": 21372,
+      "extent_in_bounds": true
+    },
+    {
+      "kind": "ubi",
+      "offset": 5509720,
+      "offset_hex": "0x541258",
+      "status": "candidate"
+    },
+    {
+      "kind": "squashfs_le",
+      "offset": 5513816,
+      "offset_hex": "0x542258",
+      "status": "candidate",
+      "version": [
+        4,
+        0
+      ],
+      "bytes_used": 41555948,
+      "extent_in_bounds": true
+    },
+    {
+      "kind": "xz",
+      "offset": 5513926,
+      "offset_hex": "0x5422c6",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 5630846,
+      "offset_hex": "0x55eb7e",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 5640792,
+      "offset_hex": "0x561258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 5767042,
+      "offset_hex": "0x57ff82",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 5771864,
+      "offset_hex": "0x581258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 5813358,
+      "offset_hex": "0x58b46e",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 5846978,
+      "offset_hex": "0x5937c2",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 5902936,
+      "offset_hex": "0x5a1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 5917810,
+      "offset_hex": "0x5a4c72",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 6034008,
+      "offset_hex": "0x5c1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 6165080,
+      "offset_hex": "0x5e1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 6296152,
+      "offset_hex": "0x601258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 6427224,
+      "offset_hex": "0x621258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 6558296,
+      "offset_hex": "0x641258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 6689368,
+      "offset_hex": "0x661258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 6820440,
+      "offset_hex": "0x681258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 6864014,
+      "offset_hex": "0x68bc8e",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 6915454,
+      "offset_hex": "0x69857e",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 6951512,
+      "offset_hex": "0x6a1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 7024378,
+      "offset_hex": "0x6b2efa",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 7082584,
+      "offset_hex": "0x6c1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 7140822,
+      "offset_hex": "0x6cf5d6",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 7169466,
+      "offset_hex": "0x6d65ba",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 7213656,
+      "offset_hex": "0x6e1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 7241250,
+      "offset_hex": "0x6e7e22",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 7309970,
+      "offset_hex": "0x6f8a92",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 7317562,
+      "offset_hex": "0x6fa83a",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 7344728,
+      "offset_hex": "0x701258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 7448190,
+      "offset_hex": "0x71a67e",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 7475800,
+      "offset_hex": "0x721258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 7574754,
+      "offset_hex": "0x7394e2",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 7606872,
+      "offset_hex": "0x741258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 7615230,
+      "offset_hex": "0x7432fe",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 7737944,
+      "offset_hex": "0x761258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 7869016,
+      "offset_hex": "0x781258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 8000088,
+      "offset_hex": "0x7a1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 8131160,
+      "offset_hex": "0x7c1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 8262232,
+      "offset_hex": "0x7e1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 8393304,
+      "offset_hex": "0x801258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 8524376,
+      "offset_hex": "0x821258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 8655448,
+      "offset_hex": "0x841258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 8786520,
+      "offset_hex": "0x861258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 8917592,
+      "offset_hex": "0x881258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 9048664,
+      "offset_hex": "0x8a1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 9179736,
+      "offset_hex": "0x8c1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 9310808,
+      "offset_hex": "0x8e1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 9441880,
+      "offset_hex": "0x901258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 9572952,
+      "offset_hex": "0x921258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 9704024,
+      "offset_hex": "0x941258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 9835096,
+      "offset_hex": "0x961258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 9842142,
+      "offset_hex": "0x962dde",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 9966168,
+      "offset_hex": "0x981258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 10097240,
+      "offset_hex": "0x9a1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 10228312,
+      "offset_hex": "0x9c1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 10359384,
+      "offset_hex": "0x9e1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 10490456,
+      "offset_hex": "0xa01258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 10621528,
+      "offset_hex": "0xa21258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 10752600,
+      "offset_hex": "0xa41258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 10883672,
+      "offset_hex": "0xa61258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 11014744,
+      "offset_hex": "0xa81258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 11145816,
+      "offset_hex": "0xaa1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 11276888,
+      "offset_hex": "0xac1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 11407960,
+      "offset_hex": "0xae1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 11539032,
+      "offset_hex": "0xb01258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 11670104,
+      "offset_hex": "0xb21258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 11738234,
+      "offset_hex": "0xb31c7a",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 11801176,
+      "offset_hex": "0xb41258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 11849654,
+      "offset_hex": "0xb4cfb6",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 11932248,
+      "offset_hex": "0xb61258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 11953826,
+      "offset_hex": "0xb666a2",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 12063320,
+      "offset_hex": "0xb81258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 12077434,
+      "offset_hex": "0xb8497a",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 12079330,
+      "offset_hex": "0xb850e2",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 12146554,
+      "offset_hex": "0xb9577a",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 12193462,
+      "offset_hex": "0xba0eb6",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 12194392,
+      "offset_hex": "0xba1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 12250262,
+      "offset_hex": "0xbaec96",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 12299630,
+      "offset_hex": "0xbbad6e",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 12325464,
+      "offset_hex": "0xbc1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 12349434,
+      "offset_hex": "0xbc6ffa",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 12371086,
+      "offset_hex": "0xbcc48e",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 12445290,
+      "offset_hex": "0xbde66a",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 12456536,
+      "offset_hex": "0xbe1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 12523954,
+      "offset_hex": "0xbf19b2",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 12587608,
+      "offset_hex": "0xc01258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 12627554,
+      "offset_hex": "0xc0ae62",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 12718680,
+      "offset_hex": "0xc21258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 12734930,
+      "offset_hex": "0xc251d2",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 12827722,
+      "offset_hex": "0xc3bc4a",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 12849752,
+      "offset_hex": "0xc41258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 12890202,
+      "offset_hex": "0xc4b05a",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 12918646,
+      "offset_hex": "0xc51f76",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 12947110,
+      "offset_hex": "0xc58ea6",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 12980824,
+      "offset_hex": "0xc61258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 13042738,
+      "offset_hex": "0xc70432",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 13077930,
+      "offset_hex": "0xc78daa",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 13111702,
+      "offset_hex": "0xc81196",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 13111896,
+      "offset_hex": "0xc81258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 13222146,
+      "offset_hex": "0xc9c102",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 13242968,
+      "offset_hex": "0xca1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 13289786,
+      "offset_hex": "0xcac93a",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 13309386,
+      "offset_hex": "0xcb15ca",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 13346522,
+      "offset_hex": "0xcba6da",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 13374040,
+      "offset_hex": "0xcc1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 13395610,
+      "offset_hex": "0xcc669a",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 13447306,
+      "offset_hex": "0xcd308a",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 13489746,
+      "offset_hex": "0xcdd652",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 13505112,
+      "offset_hex": "0xce1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 13636184,
+      "offset_hex": "0xd01258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 13767256,
+      "offset_hex": "0xd21258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 13898328,
+      "offset_hex": "0xd41258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 14029400,
+      "offset_hex": "0xd61258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 14160472,
+      "offset_hex": "0xd81258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 14291544,
+      "offset_hex": "0xda1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 14422616,
+      "offset_hex": "0xdc1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 14553688,
+      "offset_hex": "0xde1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 14684760,
+      "offset_hex": "0xe01258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 14815832,
+      "offset_hex": "0xe21258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 14946904,
+      "offset_hex": "0xe41258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 15077976,
+      "offset_hex": "0xe61258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 15209048,
+      "offset_hex": "0xe81258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 15340120,
+      "offset_hex": "0xea1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 15471192,
+      "offset_hex": "0xec1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 15602264,
+      "offset_hex": "0xee1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 15733336,
+      "offset_hex": "0xf01258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 15864408,
+      "offset_hex": "0xf21258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 15995480,
+      "offset_hex": "0xf41258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 16126552,
+      "offset_hex": "0xf61258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 16257624,
+      "offset_hex": "0xf81258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 16388696,
+      "offset_hex": "0xfa1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 16519768,
+      "offset_hex": "0xfc1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 16650840,
+      "offset_hex": "0xfe1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 16781912,
+      "offset_hex": "0x1001258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 16912984,
+      "offset_hex": "0x1021258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 17044056,
+      "offset_hex": "0x1041258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 17175128,
+      "offset_hex": "0x1061258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 17306200,
+      "offset_hex": "0x1081258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 17437272,
+      "offset_hex": "0x10a1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 17542718,
+      "offset_hex": "0x10bae3e",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 17568344,
+      "offset_hex": "0x10c1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 17576186,
+      "offset_hex": "0x10c30fa",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 17667866,
+      "offset_hex": "0x10d971a",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 17699416,
+      "offset_hex": "0x10e1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 17758654,
+      "offset_hex": "0x10ef9be",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 17830488,
+      "offset_hex": "0x1101258",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 17845727,
+      "offset_hex": "0x1104ddf",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 17846362,
+      "offset_hex": "0x110505a",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 17924698,
+      "offset_hex": "0x111825a",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 17961560,
+      "offset_hex": "0x1121258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 18015514,
+      "offset_hex": "0x112e51a",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 18092632,
+      "offset_hex": "0x1141258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 18104190,
+      "offset_hex": "0x1143f7e",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 18204106,
+      "offset_hex": "0x115c5ca",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 18223704,
+      "offset_hex": "0x1161258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 18304614,
+      "offset_hex": "0x1174e66",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 18354776,
+      "offset_hex": "0x1181258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 18408838,
+      "offset_hex": "0x118e586",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 18485848,
+      "offset_hex": "0x11a1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 18511742,
+      "offset_hex": "0x11a777e",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 18602366,
+      "offset_hex": "0x11bd97e",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 18616920,
+      "offset_hex": "0x11c1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 18698110,
+      "offset_hex": "0x11d4f7e",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 18747992,
+      "offset_hex": "0x11e1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 18780702,
+      "offset_hex": "0x11e921e",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 18865946,
+      "offset_hex": "0x11fdf1a",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 18879064,
+      "offset_hex": "0x1201258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 18961090,
+      "offset_hex": "0x12152c2",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 19010136,
+      "offset_hex": "0x1221258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 19057958,
+      "offset_hex": "0x122cd26",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 19130822,
+      "offset_hex": "0x123e9c6",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 19141208,
+      "offset_hex": "0x1241258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 19193478,
+      "offset_hex": "0x124de86",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 19260158,
+      "offset_hex": "0x125e2fe",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 19272280,
+      "offset_hex": "0x1261258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 19338934,
+      "offset_hex": "0x12716b6",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 19403352,
+      "offset_hex": "0x1281258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 19414514,
+      "offset_hex": "0x1283df2",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 19475106,
+      "offset_hex": "0x1292aa2",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 19534424,
+      "offset_hex": "0x12a1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 19543730,
+      "offset_hex": "0x12a36b2",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 19584298,
+      "offset_hex": "0x12ad52a",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 19607054,
+      "offset_hex": "0x12b2e0e",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 19629882,
+      "offset_hex": "0x12b873a",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 19652630,
+      "offset_hex": "0x12be016",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 19665496,
+      "offset_hex": "0x12c1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 19680022,
+      "offset_hex": "0x12c4b16",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 19691646,
+      "offset_hex": "0x12c787e",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 19705918,
+      "offset_hex": "0x12cb03e",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 19720302,
+      "offset_hex": "0x12ce86e",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 19735026,
+      "offset_hex": "0x12d21f2",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 19750182,
+      "offset_hex": "0x12d5d26",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 19796568,
+      "offset_hex": "0x12e1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 19804030,
+      "offset_hex": "0x12e2f7e",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 19882246,
+      "offset_hex": "0x12f6106",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 19912310,
+      "offset_hex": "0x12fd676",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 19927640,
+      "offset_hex": "0x1301258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 19940286,
+      "offset_hex": "0x13043be",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 19963810,
+      "offset_hex": "0x1309fa2",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 19987438,
+      "offset_hex": "0x130fbee",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 20009358,
+      "offset_hex": "0x131518e",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 20032270,
+      "offset_hex": "0x131ab0e",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 20057418,
+      "offset_hex": "0x1320d4a",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 20058712,
+      "offset_hex": "0x1321258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 20086074,
+      "offset_hex": "0x1327d3a",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 20110890,
+      "offset_hex": "0x132de2a",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 20136058,
+      "offset_hex": "0x133407a",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 20160570,
+      "offset_hex": "0x133a03a",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 20185790,
+      "offset_hex": "0x13402be",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 20189784,
+      "offset_hex": "0x1341258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 20213874,
+      "offset_hex": "0x1347072",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 20236962,
+      "offset_hex": "0x134caa2",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 20259818,
+      "offset_hex": "0x13523ea",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 20283974,
+      "offset_hex": "0x1358246",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 20305886,
+      "offset_hex": "0x135d7de",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 20320856,
+      "offset_hex": "0x1361258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 20334094,
+      "offset_hex": "0x136460e",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 20357934,
+      "offset_hex": "0x136a32e",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 20382126,
+      "offset_hex": "0x13701ae",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 20405558,
+      "offset_hex": "0x1375d36",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 20428938,
+      "offset_hex": "0x137b88a",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 20451928,
+      "offset_hex": "0x1381258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 20463778,
+      "offset_hex": "0x13840a2",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 20486334,
+      "offset_hex": "0x13898be",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 20538462,
+      "offset_hex": "0x139645e",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 20583000,
+      "offset_hex": "0x13a1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 20593070,
+      "offset_hex": "0x13a39ae",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 20642730,
+      "offset_hex": "0x13afbaa",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 20647254,
+      "offset_hex": "0x13b0d56",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 20709642,
+      "offset_hex": "0x13c010a",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 20713978,
+      "offset_hex": "0x13c11fa",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 20714072,
+      "offset_hex": "0x13c1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 20772018,
+      "offset_hex": "0x13cf4b2",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 20829690,
+      "offset_hex": "0x13dd5fa",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 20845144,
+      "offset_hex": "0x13e1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 20887866,
+      "offset_hex": "0x13eb93a",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 20973570,
+      "offset_hex": "0x1400802",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 20976216,
+      "offset_hex": "0x1401258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 21002486,
+      "offset_hex": "0x14078f6",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 21047334,
+      "offset_hex": "0x1412826",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 21107288,
+      "offset_hex": "0x1421258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 21125402,
+      "offset_hex": "0x142591a",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 21137502,
+      "offset_hex": "0x142885e",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 21238360,
+      "offset_hex": "0x1441258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 21250702,
+      "offset_hex": "0x144428e",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 21317210,
+      "offset_hex": "0x145465a",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 21369432,
+      "offset_hex": "0x1461258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 21384006,
+      "offset_hex": "0x1464b46",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 21443630,
+      "offset_hex": "0x147342e",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 21496166,
+      "offset_hex": "0x1480166",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 21500504,
+      "offset_hex": "0x1481258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 21561450,
+      "offset_hex": "0x149006a",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 21614486,
+      "offset_hex": "0x149cf96",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 21631576,
+      "offset_hex": "0x14a1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 21676318,
+      "offset_hex": "0x14ac11e",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 21747466,
+      "offset_hex": "0x14bd70a",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 21762648,
+      "offset_hex": "0x14c1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 21808854,
+      "offset_hex": "0x14cc6d6",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 21852050,
+      "offset_hex": "0x14d6f92",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 21891802,
+      "offset_hex": "0x14e0ada",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 21893720,
+      "offset_hex": "0x14e1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 21947374,
+      "offset_hex": "0x14ee3ee",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 22012374,
+      "offset_hex": "0x14fe1d6",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 22024792,
+      "offset_hex": "0x1501258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 22135754,
+      "offset_hex": "0x151c3ca",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 22155864,
+      "offset_hex": "0x1521258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 22234130,
+      "offset_hex": "0x1534412",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 22241850,
+      "offset_hex": "0x153623a",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 22286936,
+      "offset_hex": "0x1541258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 22321334,
+      "offset_hex": "0x15498b6",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 22418008,
+      "offset_hex": "0x1561258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 22425638,
+      "offset_hex": "0x1563026",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 22518302,
+      "offset_hex": "0x1579a1e",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 22549080,
+      "offset_hex": "0x1581258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 22593834,
+      "offset_hex": "0x158c12a",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 22617810,
+      "offset_hex": "0x1591ed2",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 22680152,
+      "offset_hex": "0x15a1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 22685090,
+      "offset_hex": "0x15a25a2",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 22747706,
+      "offset_hex": "0x15b1a3a",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 22811224,
+      "offset_hex": "0x15c1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 22830126,
+      "offset_hex": "0x15c5c2e",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 22925326,
+      "offset_hex": "0x15dd00e",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 22942296,
+      "offset_hex": "0x15e1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 22984858,
+      "offset_hex": "0x15eb89a",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 23063246,
+      "offset_hex": "0x15feace",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 23073368,
+      "offset_hex": "0x1601258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 23162994,
+      "offset_hex": "0x1617072",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 23203614,
+      "offset_hex": "0x1620f1e",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 23204440,
+      "offset_hex": "0x1621258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 23292730,
+      "offset_hex": "0x1636b3a",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 23318162,
+      "offset_hex": "0x163ce92",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 23335512,
+      "offset_hex": "0x1641258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 23409722,
+      "offset_hex": "0x165343a",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 23420962,
+      "offset_hex": "0x1656022",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 23466584,
+      "offset_hex": "0x1661258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 23479018,
+      "offset_hex": "0x16642ea",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 23520802,
+      "offset_hex": "0x166e622",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 23591146,
+      "offset_hex": "0x167f8ea",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 23597656,
+      "offset_hex": "0x1681258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 23660130,
+      "offset_hex": "0x1690662",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 23723150,
+      "offset_hex": "0x169fc8e",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 23728728,
+      "offset_hex": "0x16a1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 23796774,
+      "offset_hex": "0x16b1c26",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 23859800,
+      "offset_hex": "0x16c1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 23869706,
+      "offset_hex": "0x16c390a",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 23987802,
+      "offset_hex": "0x16e065a",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 23990872,
+      "offset_hex": "0x16e1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 24057334,
+      "offset_hex": "0x16f15f6",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 24072222,
+      "offset_hex": "0x16f501e",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 24114822,
+      "offset_hex": "0x16ff686",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 24121944,
+      "offset_hex": "0x1701258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 24168986,
+      "offset_hex": "0x170ca1a",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 24236118,
+      "offset_hex": "0x171d056",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 24253016,
+      "offset_hex": "0x1721258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 24313850,
+      "offset_hex": "0x172fffa",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 24358990,
+      "offset_hex": "0x173b04e",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 24384088,
+      "offset_hex": "0x1741258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 24399678,
+      "offset_hex": "0x1744f3e",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 24454310,
+      "offset_hex": "0x17524a6",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 24511742,
+      "offset_hex": "0x17604fe",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 24515160,
+      "offset_hex": "0x1761258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 24567342,
+      "offset_hex": "0x176de2e",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 24627058,
+      "offset_hex": "0x177c772",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 24646232,
+      "offset_hex": "0x1781258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 24682470,
+      "offset_hex": "0x1789fe6",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 24761498,
+      "offset_hex": "0x179d49a",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 24777304,
+      "offset_hex": "0x17a1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 24857762,
+      "offset_hex": "0x17b4ca2",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 24903906,
+      "offset_hex": "0x17c00e2",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 24908376,
+      "offset_hex": "0x17c1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 24952086,
+      "offset_hex": "0x17cbd16",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 25000378,
+      "offset_hex": "0x17d79ba",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 25039448,
+      "offset_hex": "0x17e1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 25062602,
+      "offset_hex": "0x17e6cca",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 25117126,
+      "offset_hex": "0x17f41c6",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 25170520,
+      "offset_hex": "0x1801258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 25181002,
+      "offset_hex": "0x1803b4a",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 25239770,
+      "offset_hex": "0x18120da",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 25300222,
+      "offset_hex": "0x1820cfe",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 25301592,
+      "offset_hex": "0x1821258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 25357554,
+      "offset_hex": "0x182ecf2",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 25403130,
+      "offset_hex": "0x1839efa",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 25430974,
+      "offset_hex": "0x1840bbe",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 25432664,
+      "offset_hex": "0x1841258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 25488218,
+      "offset_hex": "0x184eb5a",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 25536430,
+      "offset_hex": "0x185a7ae",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 25563736,
+      "offset_hex": "0x1861258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 25586070,
+      "offset_hex": "0x1866996",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 25641690,
+      "offset_hex": "0x18742da",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 25680090,
+      "offset_hex": "0x187d8da",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 25694808,
+      "offset_hex": "0x1881258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 25736546,
+      "offset_hex": "0x188b562",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 25774118,
+      "offset_hex": "0x1894826",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 25812170,
+      "offset_hex": "0x189dcca",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 25825880,
+      "offset_hex": "0x18a1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 25851986,
+      "offset_hex": "0x18a7852",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 25904850,
+      "offset_hex": "0x18b46d2",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 25949054,
+      "offset_hex": "0x18bf37e",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 25956952,
+      "offset_hex": "0x18c1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 26006254,
+      "offset_hex": "0x18cd2ee",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 26088024,
+      "offset_hex": "0x18e1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 26110702,
+      "offset_hex": "0x18e6aee",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 26219096,
+      "offset_hex": "0x1901258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 26227086,
+      "offset_hex": "0x190318e",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 26334474,
+      "offset_hex": "0x191d50a",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 26350168,
+      "offset_hex": "0x1921258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 26368458,
+      "offset_hex": "0x19259ca",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 26460730,
+      "offset_hex": "0x193c23a",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 26481240,
+      "offset_hex": "0x1941258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 26503646,
+      "offset_hex": "0x19469de",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 26573470,
+      "offset_hex": "0x1957a9e",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 26612312,
+      "offset_hex": "0x1961258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 26639058,
+      "offset_hex": "0x1967ad2",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 26709098,
+      "offset_hex": "0x1978c6a",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 26717678,
+      "offset_hex": "0x197adee",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 26743384,
+      "offset_hex": "0x1981258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 26805206,
+      "offset_hex": "0x19903d6",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 26872430,
+      "offset_hex": "0x19a0a6e",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 26874456,
+      "offset_hex": "0x19a1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 26923434,
+      "offset_hex": "0x19ad1aa",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 26976138,
+      "offset_hex": "0x19b9f8a",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 27005528,
+      "offset_hex": "0x19c1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 27026934,
+      "offset_hex": "0x19c65f6",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 27115554,
+      "offset_hex": "0x19dc022",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 27136600,
+      "offset_hex": "0x19e1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 27187162,
+      "offset_hex": "0x19ed7da",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 27216154,
+      "offset_hex": "0x19f491a",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 27244866,
+      "offset_hex": "0x19fb942",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 27267672,
+      "offset_hex": "0x1a01258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 27300790,
+      "offset_hex": "0x1a093b6",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 27360510,
+      "offset_hex": "0x1a17cfe",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 27398744,
+      "offset_hex": "0x1a21258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 27426026,
+      "offset_hex": "0x1a27cea",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 27483950,
+      "offset_hex": "0x1a35f2e",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 27529816,
+      "offset_hex": "0x1a41258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 27546998,
+      "offset_hex": "0x1a45576",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 27570678,
+      "offset_hex": "0x1a4b1f6",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 27605454,
+      "offset_hex": "0x1a539ce",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 27660888,
+      "offset_hex": "0x1a61258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 27708122,
+      "offset_hex": "0x1a6cada",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 27788534,
+      "offset_hex": "0x1a804f6",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 27791960,
+      "offset_hex": "0x1a81258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 27879838,
+      "offset_hex": "0x1a9699e",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 27923032,
+      "offset_hex": "0x1aa1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 27939110,
+      "offset_hex": "0x1aa5126",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 27995834,
+      "offset_hex": "0x1ab2eba",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 28054104,
+      "offset_hex": "0x1ac1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 28085518,
+      "offset_hex": "0x1ac8d0e",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 28132002,
+      "offset_hex": "0x1ad42a2",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 28158482,
+      "offset_hex": "0x1adaa12",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 28185176,
+      "offset_hex": "0x1ae1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 28214058,
+      "offset_hex": "0x1ae832a",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 28260470,
+      "offset_hex": "0x1af3876",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 28269210,
+      "offset_hex": "0x1af5a9a",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 28316248,
+      "offset_hex": "0x1b01258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 28331366,
+      "offset_hex": "0x1b04d66",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 28352742,
+      "offset_hex": "0x1b0a0e6",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 28404974,
+      "offset_hex": "0x1b16cee",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 28447320,
+      "offset_hex": "0x1b21258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 28476306,
+      "offset_hex": "0x1b28392",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 28491430,
+      "offset_hex": "0x1b2bea6",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 28559834,
+      "offset_hex": "0x1b3c9da",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 28578392,
+      "offset_hex": "0x1b41258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 28604418,
+      "offset_hex": "0x1b47802",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 28654246,
+      "offset_hex": "0x1b53aa6",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 28705990,
+      "offset_hex": "0x1b604c6",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 28709464,
+      "offset_hex": "0x1b61258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 28764766,
+      "offset_hex": "0x1b6ea5e",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 28832570,
+      "offset_hex": "0x1b7f33a",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 28840536,
+      "offset_hex": "0x1b81258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 28850618,
+      "offset_hex": "0x1b839ba",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 28965074,
+      "offset_hex": "0x1b9f8d2",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 28971608,
+      "offset_hex": "0x1ba1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 28985046,
+      "offset_hex": "0x1ba46d6",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 29039338,
+      "offset_hex": "0x1bb1aea",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 29093246,
+      "offset_hex": "0x1bbed7e",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 29102680,
+      "offset_hex": "0x1bc1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 29154066,
+      "offset_hex": "0x1bcdb12",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 29209642,
+      "offset_hex": "0x1bdb42a",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 29233752,
+      "offset_hex": "0x1be1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 29244278,
+      "offset_hex": "0x1be3b76",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 29306846,
+      "offset_hex": "0x1bf2fde",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 29364824,
+      "offset_hex": "0x1c01258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 29376434,
+      "offset_hex": "0x1c03fb2",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 29452270,
+      "offset_hex": "0x1c167ee",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 29495896,
+      "offset_hex": "0x1c21258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 29574018,
+      "offset_hex": "0x1c34382",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 29626968,
+      "offset_hex": "0x1c41258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 29688902,
+      "offset_hex": "0x1c50446",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 29758040,
+      "offset_hex": "0x1c61258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 29778534,
+      "offset_hex": "0x1c66266",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 29877850,
+      "offset_hex": "0x1c7e65a",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 29889112,
+      "offset_hex": "0x1c81258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 30004838,
+      "offset_hex": "0x1c9d666",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 30020184,
+      "offset_hex": "0x1ca1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 30047334,
+      "offset_hex": "0x1ca7c66",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 30113894,
+      "offset_hex": "0x1cb8066",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 30151256,
+      "offset_hex": "0x1cc1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 30169894,
+      "offset_hex": "0x1cc5b26",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 30212886,
+      "offset_hex": "0x1cd0316",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 30270634,
+      "offset_hex": "0x1cde4aa",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 30282328,
+      "offset_hex": "0x1ce1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 30352174,
+      "offset_hex": "0x1cf232e",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 30381746,
+      "offset_hex": "0x1cf96b2",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 30413400,
+      "offset_hex": "0x1d01258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 30476990,
+      "offset_hex": "0x1d10abe",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 30544472,
+      "offset_hex": "0x1d21258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 30593390,
+      "offset_hex": "0x1d2d16e",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 30675544,
+      "offset_hex": "0x1d41258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 30767842,
+      "offset_hex": "0x1d57ae2",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 30806616,
+      "offset_hex": "0x1d61258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 30866694,
+      "offset_hex": "0x1d6fd06",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 30937688,
+      "offset_hex": "0x1d81258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 30975978,
+      "offset_hex": "0x1d8a7ea",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 31068760,
+      "offset_hex": "0x1da1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 31088030,
+      "offset_hex": "0x1da5d9e",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 31139210,
+      "offset_hex": "0x1db258a",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 31156230,
+      "offset_hex": "0x1db6806",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 31199832,
+      "offset_hex": "0x1dc1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 31238678,
+      "offset_hex": "0x1dcaa16",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 31284878,
+      "offset_hex": "0x1dd5e8e",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 31330904,
+      "offset_hex": "0x1de1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 31395934,
+      "offset_hex": "0x1df105e",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 31461976,
+      "offset_hex": "0x1e01258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 31535282,
+      "offset_hex": "0x1e130b2",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 31593048,
+      "offset_hex": "0x1e21258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 31702262,
+      "offset_hex": "0x1e3bcf6",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 31724120,
+      "offset_hex": "0x1e41258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 31806478,
+      "offset_hex": "0x1e5540e",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 31855192,
+      "offset_hex": "0x1e61258",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 31865587,
+      "offset_hex": "0x1e63af3",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 31913222,
+      "offset_hex": "0x1e6f506",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 31986264,
+      "offset_hex": "0x1e81258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 32037434,
+      "offset_hex": "0x1e8da3a",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 32102714,
+      "offset_hex": "0x1e9d93a",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 32117214,
+      "offset_hex": "0x1ea11de",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 32117336,
+      "offset_hex": "0x1ea1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 32222606,
+      "offset_hex": "0x1ebad8e",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 32248408,
+      "offset_hex": "0x1ec1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 32307086,
+      "offset_hex": "0x1ecf78e",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 32379480,
+      "offset_hex": "0x1ee1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 32394686,
+      "offset_hex": "0x1ee4dbe",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 32493898,
+      "offset_hex": "0x1efd14a",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 32510552,
+      "offset_hex": "0x1f01258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 32569550,
+      "offset_hex": "0x1f0f8ce",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 32618538,
+      "offset_hex": "0x1f1b82a",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 32641624,
+      "offset_hex": "0x1f21258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 32672322,
+      "offset_hex": "0x1f28a42",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 32676574,
+      "offset_hex": "0x1f29ade",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 32696446,
+      "offset_hex": "0x1f2e87e",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 32756554,
+      "offset_hex": "0x1f3d34a",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 32772696,
+      "offset_hex": "0x1f41258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 32846222,
+      "offset_hex": "0x1f5318e",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 32850262,
+      "offset_hex": "0x1f54156",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 32903768,
+      "offset_hex": "0x1f61258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 32916034,
+      "offset_hex": "0x1f64242",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 32980914,
+      "offset_hex": "0x1f73fb2",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 33034840,
+      "offset_hex": "0x1f81258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 33053578,
+      "offset_hex": "0x1f85b8a",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 33106022,
+      "offset_hex": "0x1f92866",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 33143054,
+      "offset_hex": "0x1f9b90e",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 33165912,
+      "offset_hex": "0x1fa1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 33200978,
+      "offset_hex": "0x1fa9b52",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 33264010,
+      "offset_hex": "0x1fb918a",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 33296984,
+      "offset_hex": "0x1fc1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 33323666,
+      "offset_hex": "0x1fc7a92",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 33386202,
+      "offset_hex": "0x1fd6eda",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 33399722,
+      "offset_hex": "0x1fda3aa",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 33428056,
+      "offset_hex": "0x1fe1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 33460658,
+      "offset_hex": "0x1fe91b2",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 33507698,
+      "offset_hex": "0x1ff4972",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 33559128,
+      "offset_hex": "0x2001258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 33573022,
+      "offset_hex": "0x200489e",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 33607874,
+      "offset_hex": "0x200d0c2",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 33662718,
+      "offset_hex": "0x201a6fe",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 33690200,
+      "offset_hex": "0x2021258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 33721090,
+      "offset_hex": "0x2028b02",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 33775518,
+      "offset_hex": "0x2035f9e",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 33821272,
+      "offset_hex": "0x2041258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 33832242,
+      "offset_hex": "0x2043d32",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 33873714,
+      "offset_hex": "0x204df32",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 33896874,
+      "offset_hex": "0x20539aa",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 33947010,
+      "offset_hex": "0x205fd82",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 33952344,
+      "offset_hex": "0x2061258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 33977074,
+      "offset_hex": "0x20672f2",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 34031738,
+      "offset_hex": "0x207487a",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 34083416,
+      "offset_hex": "0x2081258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 34093966,
+      "offset_hex": "0x2083b8e",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 34129954,
+      "offset_hex": "0x208c822",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 34186302,
+      "offset_hex": "0x209a43e",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 34214488,
+      "offset_hex": "0x20a1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 34256154,
+      "offset_hex": "0x20ab51a",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 34259914,
+      "offset_hex": "0x20ac3ca",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 34284850,
+      "offset_hex": "0x20b2532",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 34345560,
+      "offset_hex": "0x20c1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 34380050,
+      "offset_hex": "0x20c9912",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 34449726,
+      "offset_hex": "0x20da93e",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 34476632,
+      "offset_hex": "0x20e1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 34506866,
+      "offset_hex": "0x20e8872",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 34557750,
+      "offset_hex": "0x20f4f36",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 34607704,
+      "offset_hex": "0x2101258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 34612178,
+      "offset_hex": "0x21023d2",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 34649030,
+      "offset_hex": "0x210b3c6",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 34715074,
+      "offset_hex": "0x211b5c2",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 34738776,
+      "offset_hex": "0x2121258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 34752534,
+      "offset_hex": "0x2124816",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 34819006,
+      "offset_hex": "0x2134bbe",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 34832246,
+      "offset_hex": "0x2137f76",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 34869848,
+      "offset_hex": "0x2141258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 34883306,
+      "offset_hex": "0x21446ea",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 34891662,
+      "offset_hex": "0x214678e",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 34999906,
+      "offset_hex": "0x2160e62",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 35000920,
+      "offset_hex": "0x2161258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 35020602,
+      "offset_hex": "0x2165f3a",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 35084082,
+      "offset_hex": "0x2175732",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 35131992,
+      "offset_hex": "0x2181258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 35155218,
+      "offset_hex": "0x2186d12",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 35228634,
+      "offset_hex": "0x2198bda",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 35263064,
+      "offset_hex": "0x21a1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 35309126,
+      "offset_hex": "0x21ac646",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 35329522,
+      "offset_hex": "0x21b15f2",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 35393830,
+      "offset_hex": "0x21c1126",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 35394136,
+      "offset_hex": "0x21c1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 35438406,
+      "offset_hex": "0x21cbf46",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 35513282,
+      "offset_hex": "0x21de3c2",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 35525208,
+      "offset_hex": "0x21e1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 35600146,
+      "offset_hex": "0x21f3712",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 35601270,
+      "offset_hex": "0x21f3b76",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 35656280,
+      "offset_hex": "0x2201258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 35686042,
+      "offset_hex": "0x220869a",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 35767438,
+      "offset_hex": "0x221c48e",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 35787352,
+      "offset_hex": "0x2221258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 35819546,
+      "offset_hex": "0x222901a",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 35859298,
+      "offset_hex": "0x2232b62",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 35867150,
+      "offset_hex": "0x2234a0e",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 35918424,
+      "offset_hex": "0x2241258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 35924626,
+      "offset_hex": "0x2242a92",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 35947206,
+      "offset_hex": "0x22482c6",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 35971390,
+      "offset_hex": "0x224e13e",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 35981222,
+      "offset_hex": "0x22507a6",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 35984774,
+      "offset_hex": "0x2251586",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 35988758,
+      "offset_hex": "0x2252516",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 35993146,
+      "offset_hex": "0x225363a",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 35996030,
+      "offset_hex": "0x225417e",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 36003166,
+      "offset_hex": "0x2255d5e",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 36011554,
+      "offset_hex": "0x2257e22",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 36049496,
+      "offset_hex": "0x2261258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 36070586,
+      "offset_hex": "0x22664ba",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 36119974,
+      "offset_hex": "0x22725a6",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 36173006,
+      "offset_hex": "0x227f4ce",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 36180568,
+      "offset_hex": "0x2281258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 36233430,
+      "offset_hex": "0x228e0d6",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 36290222,
+      "offset_hex": "0x229beae",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 36311640,
+      "offset_hex": "0x22a1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 36353482,
+      "offset_hex": "0x22ab5ca",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 36399946,
+      "offset_hex": "0x22b6b4a",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 36442712,
+      "offset_hex": "0x22c1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 36512022,
+      "offset_hex": "0x22d2116",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 36555586,
+      "offset_hex": "0x22dcb42",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 36573784,
+      "offset_hex": "0x22e1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 36621086,
+      "offset_hex": "0x22ecb1e",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 36680974,
+      "offset_hex": "0x22fb50e",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 36704856,
+      "offset_hex": "0x2301258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 36743678,
+      "offset_hex": "0x230a9fe",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 36813298,
+      "offset_hex": "0x231b9f2",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 36835928,
+      "offset_hex": "0x2321258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 36891314,
+      "offset_hex": "0x232eab2",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 36959826,
+      "offset_hex": "0x233f652",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 36967000,
+      "offset_hex": "0x2341258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 37037522,
+      "offset_hex": "0x23525d2",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 37098072,
+      "offset_hex": "0x2361258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 37105918,
+      "offset_hex": "0x23630fe",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 37184758,
+      "offset_hex": "0x23764f6",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 37229144,
+      "offset_hex": "0x2381258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 37259690,
+      "offset_hex": "0x23889aa",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 37332362,
+      "offset_hex": "0x239a58a",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 37360216,
+      "offset_hex": "0x23a1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 37409342,
+      "offset_hex": "0x23ad23e",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 37477094,
+      "offset_hex": "0x23bdae6",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 37491288,
+      "offset_hex": "0x23c1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 37543798,
+      "offset_hex": "0x23cdf76",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 37613886,
+      "offset_hex": "0x23df13e",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 37622360,
+      "offset_hex": "0x23e1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 37679410,
+      "offset_hex": "0x23ef132",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 37727746,
+      "offset_hex": "0x23fae02",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 37753432,
+      "offset_hex": "0x2401258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 37773242,
+      "offset_hex": "0x2405fba",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 37843266,
+      "offset_hex": "0x2417142",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 37853906,
+      "offset_hex": "0x2419ad2",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 37884504,
+      "offset_hex": "0x2421258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 37907158,
+      "offset_hex": "0x2426ad6",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 37954502,
+      "offset_hex": "0x24323c6",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 38008366,
+      "offset_hex": "0x243f62e",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 38015576,
+      "offset_hex": "0x2441258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 38075270,
+      "offset_hex": "0x244fb86",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 38132638,
+      "offset_hex": "0x245db9e",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 38146648,
+      "offset_hex": "0x2461258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 38208082,
+      "offset_hex": "0x2470252",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 38237654,
+      "offset_hex": "0x24775d6",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 38277720,
+      "offset_hex": "0x2481258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 38321746,
+      "offset_hex": "0x248be52",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 38347782,
+      "offset_hex": "0x2492406",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 38408792,
+      "offset_hex": "0x24a1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 38419970,
+      "offset_hex": "0x24a3e02",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 38461026,
+      "offset_hex": "0x24ade62",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 38521250,
+      "offset_hex": "0x24bc9a2",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 38539864,
+      "offset_hex": "0x24c1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 38603814,
+      "offset_hex": "0x24d0c26",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 38616690,
+      "offset_hex": "0x24d3e72",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 38670936,
+      "offset_hex": "0x24e1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 38688322,
+      "offset_hex": "0x24e5642",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 38712006,
+      "offset_hex": "0x24eb2c6",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 38783962,
+      "offset_hex": "0x24fcbda",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 38802008,
+      "offset_hex": "0x2501258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 38842786,
+      "offset_hex": "0x250b1a2",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 38931502,
+      "offset_hex": "0x2520c2e",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 38933080,
+      "offset_hex": "0x2521258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 39016434,
+      "offset_hex": "0x25357f2",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 39064152,
+      "offset_hex": "0x2541258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 39090358,
+      "offset_hex": "0x25478b6",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 39114974,
+      "offset_hex": "0x254d8de",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 39166146,
+      "offset_hex": "0x255a0c2",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 39195224,
+      "offset_hex": "0x2561258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 39227714,
+      "offset_hex": "0x2569142",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 39276938,
+      "offset_hex": "0x257518a",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 39326296,
+      "offset_hex": "0x2581258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 39347734,
+      "offset_hex": "0x2586616",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 39411246,
+      "offset_hex": "0x2595e2e",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 39439623,
+      "offset_hex": "0x259cd07",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 39457368,
+      "offset_hex": "0x25a1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 39476978,
+      "offset_hex": "0x25a5ef2",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 39565510,
+      "offset_hex": "0x25bb8c6",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 39566614,
+      "offset_hex": "0x25bbd16",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 39588440,
+      "offset_hex": "0x25c1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 39629686,
+      "offset_hex": "0x25cb376",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 39719512,
+      "offset_hex": "0x25e1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 39731750,
+      "offset_hex": "0x25e4226",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 39831430,
+      "offset_hex": "0x25fc786",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 39850584,
+      "offset_hex": "0x2601258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 39872290,
+      "offset_hex": "0x2606722",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 39970258,
+      "offset_hex": "0x261e5d2",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 39981656,
+      "offset_hex": "0x2621258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 39989374,
+      "offset_hex": "0x262307e",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 40055230,
+      "offset_hex": "0x26331be",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 40112728,
+      "offset_hex": "0x2641258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 40153654,
+      "offset_hex": "0x264b236",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 40243198,
+      "offset_hex": "0x2660ffe",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 40243800,
+      "offset_hex": "0x2661258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 40268538,
+      "offset_hex": "0x26672fa",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 40312206,
+      "offset_hex": "0x2671d8e",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 40331370,
+      "offset_hex": "0x267686a",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 40374872,
+      "offset_hex": "0x2681258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 40409126,
+      "offset_hex": "0x2689826",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 40410186,
+      "offset_hex": "0x2689c4a",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 40505944,
+      "offset_hex": "0x26a1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 40510398,
+      "offset_hex": "0x26a23be",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 40516006,
+      "offset_hex": "0x26a39a6",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 40562814,
+      "offset_hex": "0x26af07e",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 40622178,
+      "offset_hex": "0x26bd862",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 40637016,
+      "offset_hex": "0x26c1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 40674326,
+      "offset_hex": "0x26ca416",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 40736998,
+      "offset_hex": "0x26d98e6",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 40768088,
+      "offset_hex": "0x26e1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 40832510,
+      "offset_hex": "0x26f0dfe",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 40899160,
+      "offset_hex": "0x2701258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 40949938,
+      "offset_hex": "0x270d8b2",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 41030232,
+      "offset_hex": "0x2721258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 41072082,
+      "offset_hex": "0x272b5d2",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 41161304,
+      "offset_hex": "0x2741258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 41187358,
+      "offset_hex": "0x274781e",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 41292376,
+      "offset_hex": "0x2761258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 41302786,
+      "offset_hex": "0x2763b02",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 41412150,
+      "offset_hex": "0x277e636",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 41423448,
+      "offset_hex": "0x2781258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 41481478,
+      "offset_hex": "0x278f506",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 41554520,
+      "offset_hex": "0x27a1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 41559742,
+      "offset_hex": "0x27a26be",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 41600870,
+      "offset_hex": "0x27ac766",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 41658054,
+      "offset_hex": "0x27ba6c6",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 41685592,
+      "offset_hex": "0x27c1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 41711666,
+      "offset_hex": "0x27c7832",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 41748970,
+      "offset_hex": "0x27d09ea",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 41812506,
+      "offset_hex": "0x27e021a",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 41816664,
+      "offset_hex": "0x27e1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 41857142,
+      "offset_hex": "0x27eb076",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 41902462,
+      "offset_hex": "0x27f617e",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 41902493,
+      "offset_hex": "0x27f619d",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 41947736,
+      "offset_hex": "0x2801258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 42078808,
+      "offset_hex": "0x2821258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 42130770,
+      "offset_hex": "0x282dd52",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 42209880,
+      "offset_hex": "0x2841258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 42340952,
+      "offset_hex": "0x2861258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 42356246,
+      "offset_hex": "0x2864e16",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 42472024,
+      "offset_hex": "0x2881258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 42603096,
+      "offset_hex": "0x28a1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 42607942,
+      "offset_hex": "0x28a2546",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 42734168,
+      "offset_hex": "0x28c1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 42856906,
+      "offset_hex": "0x28df1ca",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 42865240,
+      "offset_hex": "0x28e1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 42996312,
+      "offset_hex": "0x2901258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 43123878,
+      "offset_hex": "0x29204a6",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 43127384,
+      "offset_hex": "0x2921258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 43258456,
+      "offset_hex": "0x2941258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 43389528,
+      "offset_hex": "0x2961258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 43520600,
+      "offset_hex": "0x2981258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 43651672,
+      "offset_hex": "0x29a1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 43727300,
+      "offset_hex": "0x29b39c4",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 43760450,
+      "offset_hex": "0x29bbb42",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 43782744,
+      "offset_hex": "0x29c1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 43913816,
+      "offset_hex": "0x29e1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 43974657,
+      "offset_hex": "0x29f0001",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 43975393,
+      "offset_hex": "0x29f02e1",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 43976131,
+      "offset_hex": "0x29f05c3",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 43976890,
+      "offset_hex": "0x29f08ba",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 43977620,
+      "offset_hex": "0x29f0b94",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 43979116,
+      "offset_hex": "0x29f116c",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 43979847,
+      "offset_hex": "0x29f1447",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 43993832,
+      "offset_hex": "0x29f4ae8",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 44044888,
+      "offset_hex": "0x2a01258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 44175960,
+      "offset_hex": "0x2a21258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 44246376,
+      "offset_hex": "0x2a32568",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 44307032,
+      "offset_hex": "0x2a41258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 44438104,
+      "offset_hex": "0x2a61258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 44509860,
+      "offset_hex": "0x2a72aa4",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 44509891,
+      "offset_hex": "0x2a72ac3",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 44514708,
+      "offset_hex": "0x2a73d94",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 44515751,
+      "offset_hex": "0x2a741a7",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 44522799,
+      "offset_hex": "0x2a75d2f",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 44524978,
+      "offset_hex": "0x2a765b2",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 44528852,
+      "offset_hex": "0x2a774d4",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 44536304,
+      "offset_hex": "0x2a791f0",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 44540278,
+      "offset_hex": "0x2a7a176",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 44544201,
+      "offset_hex": "0x2a7b0c9",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 44545030,
+      "offset_hex": "0x2a7b406",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 44548326,
+      "offset_hex": "0x2a7c0e6",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 44552103,
+      "offset_hex": "0x2a7cfa7",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 44554357,
+      "offset_hex": "0x2a7d875",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 44556298,
+      "offset_hex": "0x2a7e00a",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 44558848,
+      "offset_hex": "0x2a7ea00",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 44559411,
+      "offset_hex": "0x2a7ec33",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 44562749,
+      "offset_hex": "0x2a7f93d",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 44565996,
+      "offset_hex": "0x2a805ec",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 44569176,
+      "offset_hex": "0x2a81258",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 44639133,
+      "offset_hex": "0x2a9239d",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 44640123,
+      "offset_hex": "0x2a9277b",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 44641576,
+      "offset_hex": "0x2a92d28",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 44642524,
+      "offset_hex": "0x2a930dc",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 44646404,
+      "offset_hex": "0x2a94004",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 44647164,
+      "offset_hex": "0x2a942fc",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 44648956,
+      "offset_hex": "0x2a949fc",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 44649823,
+      "offset_hex": "0x2a94d5f",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 44652540,
+      "offset_hex": "0x2a957fc",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 44655045,
+      "offset_hex": "0x2a961c5",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 44655798,
+      "offset_hex": "0x2a964b6",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 44660208,
+      "offset_hex": "0x2a975f0",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 44668395,
+      "offset_hex": "0x2a995eb",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 44672627,
+      "offset_hex": "0x2a9a673",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 44674354,
+      "offset_hex": "0x2a9ad32",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 44680496,
+      "offset_hex": "0x2a9c530",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 44682131,
+      "offset_hex": "0x2a9cb93",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 44684794,
+      "offset_hex": "0x2a9d5fa",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 44687657,
+      "offset_hex": "0x2a9e129",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 44691267,
+      "offset_hex": "0x2a9ef43",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 44693530,
+      "offset_hex": "0x2a9f81a",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 44698639,
+      "offset_hex": "0x2aa0c0f",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 44700008,
+      "offset_hex": "0x2aa1168",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 44700248,
+      "offset_hex": "0x2aa1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 44705566,
+      "offset_hex": "0x2aa271e",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 44709367,
+      "offset_hex": "0x2aa35f7",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 44710650,
+      "offset_hex": "0x2aa3afa",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 44711850,
+      "offset_hex": "0x2aa3faa",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 44716011,
+      "offset_hex": "0x2aa4feb",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 44722331,
+      "offset_hex": "0x2aa689b",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 44730518,
+      "offset_hex": "0x2aa8896",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 44740039,
+      "offset_hex": "0x2aaadc7",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 44749256,
+      "offset_hex": "0x2aad1c8",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 44750771,
+      "offset_hex": "0x2aad7b3",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 44770554,
+      "offset_hex": "0x2ab24fa",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 44775539,
+      "offset_hex": "0x2ab3873",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 44776504,
+      "offset_hex": "0x2ab3c38",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 44831320,
+      "offset_hex": "0x2ac1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 44962392,
+      "offset_hex": "0x2ae1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 45093464,
+      "offset_hex": "0x2b01258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 45122236,
+      "offset_hex": "0x2b082bc",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 45122267,
+      "offset_hex": "0x2b082db",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 45126634,
+      "offset_hex": "0x2b093ea",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 45137536,
+      "offset_hex": "0x2b0be80",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 45138641,
+      "offset_hex": "0x2b0c2d1",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 45140079,
+      "offset_hex": "0x2b0c86f",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 45224536,
+      "offset_hex": "0x2b21258",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 45242068,
+      "offset_hex": "0x2b256d4",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 45243794,
+      "offset_hex": "0x2b25d92",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 45247821,
+      "offset_hex": "0x2b26d4d",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 45250774,
+      "offset_hex": "0x2b278d6",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 45256308,
+      "offset_hex": "0x2b28e74",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 45259143,
+      "offset_hex": "0x2b29987",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 45261741,
+      "offset_hex": "0x2b2a3ad",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 45269266,
+      "offset_hex": "0x2b2c112",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 45272607,
+      "offset_hex": "0x2b2ce1f",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 45278540,
+      "offset_hex": "0x2b2e54c",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 45279561,
+      "offset_hex": "0x2b2e949",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 45282126,
+      "offset_hex": "0x2b2f34e",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 45285984,
+      "offset_hex": "0x2b30260",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 45291095,
+      "offset_hex": "0x2b31657",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 45292190,
+      "offset_hex": "0x2b31a9e",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 45293619,
+      "offset_hex": "0x2b32033",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 45296991,
+      "offset_hex": "0x2b32d5f",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 45302475,
+      "offset_hex": "0x2b342cb",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 45304176,
+      "offset_hex": "0x2b34970",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 45307248,
+      "offset_hex": "0x2b35570",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 45308847,
+      "offset_hex": "0x2b35baf",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 45355608,
+      "offset_hex": "0x2b41258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 45363560,
+      "offset_hex": "0x2b43168",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 45401876,
+      "offset_hex": "0x2b4c714",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 45486680,
+      "offset_hex": "0x2b61258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 45617752,
+      "offset_hex": "0x2b81258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 45692802,
+      "offset_hex": "0x2b93782",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 45692833,
+      "offset_hex": "0x2b937a1",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 45748824,
+      "offset_hex": "0x2ba1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 45879896,
+      "offset_hex": "0x2bc1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 45959474,
+      "offset_hex": "0x2bd4932",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 46010968,
+      "offset_hex": "0x2be1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 46101215,
+      "offset_hex": "0x2bf72df",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 46102999,
+      "offset_hex": "0x2bf79d7",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 46105005,
+      "offset_hex": "0x2bf81ad",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 46107050,
+      "offset_hex": "0x2bf89aa",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 46108226,
+      "offset_hex": "0x2bf8e42",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 46109430,
+      "offset_hex": "0x2bf92f6",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 46142040,
+      "offset_hex": "0x2c01258",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 46194066,
+      "offset_hex": "0x2c0dd92",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 46273112,
+      "offset_hex": "0x2c21258",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 46287374,
+      "offset_hex": "0x2c24a0e",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 46367349,
+      "offset_hex": "0x2c38275",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 46404184,
+      "offset_hex": "0x2c41258",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 46446148,
+      "offset_hex": "0x2c4b644",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 46525961,
+      "offset_hex": "0x2c5ee09",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 46535256,
+      "offset_hex": "0x2c61258",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 46606385,
+      "offset_hex": "0x2c72831",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 46666328,
+      "offset_hex": "0x2c81258",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 46686886,
+      "offset_hex": "0x2c862a6",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 46762102,
+      "offset_hex": "0x2c98876",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 46797400,
+      "offset_hex": "0x2ca1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 46843494,
+      "offset_hex": "0x2cac666",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 46924515,
+      "offset_hex": "0x2cc02e3",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 46928472,
+      "offset_hex": "0x2cc1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 47002768,
+      "offset_hex": "0x2cd3490",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 47059544,
+      "offset_hex": "0x2ce1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 47085925,
+      "offset_hex": "0x2ce7965",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 47162553,
+      "offset_hex": "0x2cfa4b9",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 47190616,
+      "offset_hex": "0x2d01258",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 47241033,
+      "offset_hex": "0x2d0d749",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 47314928,
+      "offset_hex": "0x2d1f7f0",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 47321688,
+      "offset_hex": "0x2d21258",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 47398097,
+      "offset_hex": "0x2d33cd1",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 47452760,
+      "offset_hex": "0x2d41258",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 47477811,
+      "offset_hex": "0x2d47433",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 47554603,
+      "offset_hex": "0x2d5a02b",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 47583832,
+      "offset_hex": "0x2d61258",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 47635814,
+      "offset_hex": "0x2d6dd66",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 47714904,
+      "offset_hex": "0x2d81258",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 47730242,
+      "offset_hex": "0x2d84e42",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 47811458,
+      "offset_hex": "0x2d98b82",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 47845976,
+      "offset_hex": "0x2da1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 47890439,
+      "offset_hex": "0x2dac007",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 47974700,
+      "offset_hex": "0x2dc092c",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 47977048,
+      "offset_hex": "0x2dc1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 48055452,
+      "offset_hex": "0x2dd449c",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 48108120,
+      "offset_hex": "0x2de1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 48150509,
+      "offset_hex": "0x2deb7ed",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 48227396,
+      "offset_hex": "0x2dfe444",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 48239192,
+      "offset_hex": "0x2e01258",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 48306612,
+      "offset_hex": "0x2e119b4",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 48307325,
+      "offset_hex": "0x2e11c7d",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 48308066,
+      "offset_hex": "0x2e11f62",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 48308811,
+      "offset_hex": "0x2e1224b",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 48309580,
+      "offset_hex": "0x2e1254c",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 48311494,
+      "offset_hex": "0x2e12cc6",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 48313464,
+      "offset_hex": "0x2e13478",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 48315522,
+      "offset_hex": "0x2e13c82",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 48317320,
+      "offset_hex": "0x2e14388",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 48319546,
+      "offset_hex": "0x2e14c3a",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 48321636,
+      "offset_hex": "0x2e15464",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 48323718,
+      "offset_hex": "0x2e15c86",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 48326068,
+      "offset_hex": "0x2e165b4",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 48328690,
+      "offset_hex": "0x2e16ff2",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 48330476,
+      "offset_hex": "0x2e176ec",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 48332282,
+      "offset_hex": "0x2e17dfa",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 48333920,
+      "offset_hex": "0x2e18460",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 48335606,
+      "offset_hex": "0x2e18af6",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 48337568,
+      "offset_hex": "0x2e192a0",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 48339838,
+      "offset_hex": "0x2e19b7e",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 48341424,
+      "offset_hex": "0x2e1a1b0",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 48343102,
+      "offset_hex": "0x2e1a83e",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 48344700,
+      "offset_hex": "0x2e1ae7c",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 48346374,
+      "offset_hex": "0x2e1b506",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 48346796,
+      "offset_hex": "0x2e1b6ac",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 48351206,
+      "offset_hex": "0x2e1c7e6",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 48355260,
+      "offset_hex": "0x2e1d7bc",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 48359190,
+      "offset_hex": "0x2e1e716",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 48363476,
+      "offset_hex": "0x2e1f7d4",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 48367622,
+      "offset_hex": "0x2e20806",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 48370264,
+      "offset_hex": "0x2e21258",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 48375236,
+      "offset_hex": "0x2e225c4",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 48377822,
+      "offset_hex": "0x2e22fde",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 48380592,
+      "offset_hex": "0x2e23ab0",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 48383846,
+      "offset_hex": "0x2e24766",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 48388036,
+      "offset_hex": "0x2e257c4",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 48392802,
+      "offset_hex": "0x2e26a62",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 48396916,
+      "offset_hex": "0x2e27a74",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 48401114,
+      "offset_hex": "0x2e28ada",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 48403356,
+      "offset_hex": "0x2e2939c",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 48404386,
+      "offset_hex": "0x2e297a2",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 48405636,
+      "offset_hex": "0x2e29c84",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 48406878,
+      "offset_hex": "0x2e2a15e",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 48407776,
+      "offset_hex": "0x2e2a4e0",
+      "status": "candidate"
+    },
+    {
+      "kind": "xz",
+      "offset": 48408678,
+      "offset_hex": "0x2e2a866",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 48501336,
+      "offset_hex": "0x2e41258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 48632408,
+      "offset_hex": "0x2e61258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 48763480,
+      "offset_hex": "0x2e81258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 48894552,
+      "offset_hex": "0x2ea1258",
+      "status": "candidate"
+    },
+    {
+      "kind": "ubi",
+      "offset": 49025624,
+      "offset_hex": "0x2ec1258",
+      "status": "candidate"
+    }
+  ],
+  "header_strings": [
+    {
+      "offset": 20,
+      "text": "fw-type:Cloud"
+    },
+    {
+      "offset": 4116,
+      "text": "support-list"
+    },
+    {
+      "offset": 4160,
+      "text": "SupportList:"
+    },
+    {
+      "offset": 4173,
+      "text": "{product_name:Archer BE5000,product_ver:1.0.0,special_id:55530000}"
+    },
+    {
+      "offset": 4240,
+      "text": "{product_name:Archer BE260,product_ver:1.0.0,special_id:55530000}"
+    },
+    {
+      "offset": 4306,
+      "text": "{product_name:Archer BE260,product_ver:1.0.0,special_id:4A500000}"
+    },
+    {
+      "offset": 4372,
+      "text": "{product_name:Archer BE5000,product_ver:1.0.0,special_id:4A500000}"
+    },
+    {
+      "offset": 4439,
+      "text": "{product_name:Archer BE5100,product_ver:1.0.0,special_id:4B520000}"
+    },
+    {
+      "offset": 4506,
+      "text": "{product_name:Archer BE4600,product_ver:1.0.0,special_id:55530000}soft-version"
+    },
+    {
+      "offset": 4615,
+      "text": "Psoft_ver:1.2.0 Build 20260420 rel.13798"
+    },
+    {
+      "offset": 4656,
+      "text": "fw_id:0466A6B8FF070AAFA09339102D2B1CB9"
+    }
+  ],
+  "warning": "Decoded analysis COPY retains an invalid signature for its changed payload. NEVER flash it.",
+  "original_sha256": "2636aa5eb9fbb91c5840d9f16c25b7bf00e99640c1c626ff3c081957603dd0be",
+  "member": "be260v1-be5000v1-be4600v1-us-up-all-ver1-2-0-P1[20260420-rel13798]_2048_sign_2026-04-20_03.50.58.bin",
+  "nm_source_sha256": "c82430468775e35f508d04dae7a47d0b88133a811f032a25ef01d4558b73575d",
+  "rsa_pss_sha256_verified": true,
+  "aes_cbc_payload_decoded": true
+}
