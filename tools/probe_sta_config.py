@@ -22,6 +22,24 @@ SECURITY_PLANS = {
     'wpa2': ('psk', 'rsn', 'aes'),
     'wpa3-transition': ('psk_sae', 'sae_transition', 'aes'),
 }
+STATUS_FIELDS = ('connect_status', 'connected_5g', 'status_5g')
+SAFE_STATUS_VALUES = frozenset(('connected', 'connecting', 'disconnected', 'disabled', 'enabled', 'on', 'off'))
+
+
+def status_observation(state):
+    """Return only a fixed-label observation from the STA getter."""
+    if not isinstance(state, dict):
+        return {'field': 'unavailable'}
+    for field in STATUS_FIELDS:
+        if field not in state:
+            continue
+        value = state[field]
+        if type(value) is bool:
+            return {'field': field, 'value': 'on' if value else 'off'}
+        if isinstance(value, str):
+            return {'field': field, 'value': value if value in SAFE_STATUS_VALUES else 'present'}
+        return {'field': field, 'value': 'present'}
+    return {'field': 'unavailable'}
 
 
 def connection_plan(ssid, psk, security='wpa2'):
@@ -102,6 +120,7 @@ def probe(transport, crypto, admin_provider, network_provider, *, sleep=time.sle
         if any(state.get(k) != v for k, v in plan.items()) or state.get('enable_2g') != 'off':
             raise Failure('STA configuration readback differs from the requested fields')
         report['configuration_verified'] = True
+        report['status_after_write'] = status_observation(state)
         stage('STA configuration verified; observation window: up to 45 seconds')
         if ipv6 is not None:
             report['ipv6_enabled'] = ipv6.enabled()
@@ -134,6 +153,7 @@ def probe(transport, crypto, admin_provider, network_provider, *, sleep=time.sle
                 if any(restored.get(k) != v for k, v in original.items()) or restored.get('enable_2g') != 'off':
                     raise Failure('rollback readback differs from the initial configuration')
                 report['rollback'] = 'verified'
+                report['status_after_restore'] = status_observation(restored)
             except Failure as error:
                 report['rollback_reason'] = str(error)
             if report['rollback'] == 'verified' and ipv6 is not None:

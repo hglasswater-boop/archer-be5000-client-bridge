@@ -5,7 +5,7 @@ from unittest.mock import patch
 from urllib.parse import parse_qs
 
 from tools.probe_sta_config import (FIELDS, STA, connection_plan, main, original_state,
-                                   probe, request)
+                                   probe, request, status_observation)
 from tools.read_sta_state import Failure, LOGOUT
 
 INITIAL = {'enable_2g': 'off', 'enable_5g': 'off', 'ssid_5g': '', 'psk_key_5g': '',
@@ -83,6 +83,8 @@ class ProbeTests(unittest.TestCase):
         self.assertEqual(device.writes[1], {'operation': 'write', 'enable_5g': 'off'})
         self.assertEqual(result['association'], 'not-measured')
         self.assertEqual(result['forwarding'], 'not-measured')
+        self.assertEqual(result['status_after_write'], {'field': 'unavailable'})
+        self.assertEqual(result['status_after_restore'], {'field': 'unavailable'})
         for secret in ('TEST_SSID', 'WiFiTestSecret', 'AdminTestSecret', 'own-token'):
             self.assertNotIn(secret, json.dumps(result))
 
@@ -158,6 +160,15 @@ class ProbeTests(unittest.TestCase):
         self.assertEqual(plan['psk_cipher_5g'], 'aes')
         with self.assertRaises(Failure):
             connection_plan('test', 'WiFiTestSecret', 'wpa3-only-unknown')
+
+    def test_status_observation_uses_fixed_labels_only(self):
+        self.assertEqual(status_observation({'connect_status': 'connected'}),
+                         {'field': 'connect_status', 'value': 'connected'})
+        self.assertEqual(status_observation({'connected_5g': True}),
+                         {'field': 'connected_5g', 'value': 'on'})
+        self.assertEqual(status_observation({'status_5g': 'private'}),
+                         {'field': 'status_5g', 'value': 'present'})
+        self.assertEqual(status_observation({'ssid_5g': 'PRIVATE'}), {'field': 'unavailable'})
 
     def test_plan_mode_does_not_connect_or_prompt(self):
         with patch('tools.probe_sta_config.Transport') as transport:

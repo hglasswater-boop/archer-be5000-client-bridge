@@ -57,5 +57,5 @@ with open('artifacts/volumes-reproduction/volume-2.bin', 'rb') as source:
 ```
 
 他の選択path/hashはrootfs-selected.jsonを参照。hostapd / wpa_supplicantはwpadへのimage内symlinkで、別々の実行fileと扱わない。ホスト上でsymlinkを生成しない。
-単体テスト59件は解析toolと限定STA reader/probeの境界・既知vector・設定rollbackを検証する。実機boot / Client Bridge / 長時間安定性の合格を代用しない。
+単体テスト60件は解析toolと限定STA reader/probeの境界・既知vector・設定rollbackを検証する。実機boot / Client Bridge / 長時間安定性の合格を代用しない。
 実機readerは[別の実行手順](read-sta-state.md)に従い、PC有線sourceと通常認証を使用する。offline解析commandへ個体passwordを渡さない。

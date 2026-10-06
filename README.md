@@ -35,7 +35,7 @@ STA機能の候補はあり、恒久的な実現不能と断定した結論で�
 | [Wired management](docs/wired-management.md) | 管理IP分離、PC固定IP、DHCP復元手順 |
 
 実装したのは**オフライン解析PoC**（inspect_firmware / inspect_gpl / decode_cloud / read_ubi）、通常認証で既知STA getterを読む限定client（read_sta_state）、既知の5GHz setterを一回だけ適用してrollbackする限定probe（probe_sta_config）である。Client Bridgeの永続化scriptや書込みimageは作成していない。
-`python -m unittest discover -s tests -v`: **59 PASS、skipなし**。実配布物の署名/復号/UBI/SquashFS読み取り、限定clientの実機公開feature preflight・通常login・STA read・logout、およびsetter probeの失敗時rollback境界を検証した。
+`python -m unittest discover -s tests -v`: **60 PASS、skipなし**。実配布物の署名/復号/UBI/SquashFS読み取り、限定clientの実機公開feature preflight・通常login・STA read・logout、およびsetter probeの失敗時rollback境界を検証した。
 firmware / GPL archive / 復号image / rootfs本文 / 個体情報はgit対象外。
 
 ## 判定項目

@@ -184,8 +184,8 @@ association / forwarding / AP完全停止の合格とは区別する。
 
 有線管理IPを分離し、BE5000 DHCPをoffへ保存した状態で、通常認証の既知routeに対して5GHzだけを一度writeした。WPA2/AES候補と、公開frontendが示すWPA2/WPA3混在の`psk_sae` / `sae_transition` / AES mappingをそれぞれ使い、4秒後のreadbackで6 fieldと2.4GHz offを確認した。
 
-各試行は最初に5GHzをoffへ戻し、開始時の6 fieldをwriteし直して4秒後に初期値・両band offを照合した。どちらも `configuration-probe-complete`、`disable_accepted=true`、`restore_accepted=true`、`rollback=verified`、logout completeだった。最新の混在候補の記録はローカルの[sta-probe report](../local-evidence/sta-probe-20261006T222209515794Z.json)にあり、個体SSID/PSK/tokenは保存していない。
+各試行は最初に5GHzをoffへ戻し、開始時の6 fieldをwriteし直して4秒後に初期値・両band offを照合した。どちらも `configuration-probe-complete`、`disable_accepted=true`、`restore_accepted=true`、`rollback=verified`、logout completeだった。最新の混在候補の記録はローカルの[sta-probe report](../local-evidence/sta-probe-20261006T223014392560Z.json)にあり、個体SSID/PSK/tokenは保存していない。
 
 同じ試行のIPv6 link-local controlでは、管理Wi-Fi側のcontrol replyは得られたが、BE5000直結Ethernet側のreplyは有効期間中も得られなかった。Ethernet側にRA/IPv6 addressがないため、この結果だけでSTA association、ND変換、bridge forwardingのどれかを失敗と特定できない。reportの`association`は`not-measured`、`forwarding`は`IPv6-link-local-probe-only`のままである。
 
-したがって、MLO対応SSIDを設定候補にできること、既知setterの受理・rollbackを確認できることまでは進んだが、MLO client negotiation、複数LAN端末のIPv4/IPv6転送、MAC変換、AP停止後のSTA維持、再起動後の永続性は未測定である。
+getterは接続状態フィールド自体を返さず、reportの`status_after_write`/`status_after_restore`も`unavailable`だった。したがって、MLO対応SSIDを設定候補にできること、既知setterの受理・rollbackを確認できることまでは進んだが、MLO client negotiation、複数LAN端末のIPv4/IPv6転送、MAC変換、AP停止後のSTA維持、再起動後の永続性は未測定である。

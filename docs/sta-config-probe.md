@@ -60,7 +60,7 @@ FWの書込み、SSH/firewall変更、mesh daemon停止、AP停止は対象外�
 
 ## 実機結果
 
-WPA2/AES候補とWPA2/WPA3混在候補を一度ずつ実行し、どちらも設定writeの受理、4秒後の6 field readback、5GHz無効化、開始時設定へのrestore、logoutを確認した。最新の混在候補は`configuration-probe-complete`、`rollback=verified`で終了した。設定値の受理・復元までであり、association、MLO link aggregation、IPv4/IPv6 forwarding、AP停止、再起動後の永続性は未測定である。
+WPA2/AES候補とWPA2/WPA3混在候補を一度ずつ実行し、どちらも設定writeの受理、4秒後の6 field readback、5GHz無効化、開始時設定へのrestore、logoutを確認した。最新の混在候補は`configuration-probe-complete`、`rollback=verified`で終了した。getterは既知の接続状態フィールドを返さず、status observationは`unavailable`だった。設定値の受理・復元までであり、association、MLO link aggregation、IPv4/IPv6 forwarding、AP停止、再起動後の永続性は未測定である。
 
 同時に行ったIPv6 probeは、管理Wi-Fi側のcontrol replyを得た一方、BE5000直結Ethernet側のreplyを得られなかった。Ethernet側にIPv6 address/RAがないため、これはassociation失敗の直接証拠ではなく、reportでは`association=not-measured`として扱う。
 
