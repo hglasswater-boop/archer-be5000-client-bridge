@@ -1,0 +1,65 @@
+{
+  "gpl_loader_sources": [
+    {
+      "name": "./Iplatform/openwrt/ibase/lua/src/src/lundump.h",
+      "size": 888,
+      "sha256": "1c7fba6fd5dfb981e4ffde498acb0f4f8163eb4d0ef32b966f1b60a2d4154356"
+    },
+    {
+      "name": "./Iplatform/openwrt/ibase/lua/src/src/ldump.c",
+      "size": 3260,
+      "sha256": "7e72ee377dccb3add1fd97a3b73d0ca0e389db43c5c876659106bd2552406e47"
+    },
+    {
+      "name": "./Iplatform/openwrt/ibase/lua/src/src/lundump.c",
+      "size": 5773,
+      "sha256": "e66197e31b6782fe868f15826daeb5be9994b2315be7a87f5a7cbb70c88b0f06"
+    },
+    {
+      "name": "./Iplatform/openwrt/ibase/lua/src/src/lopcodes.c",
+      "size": 2884,
+      "sha256": "4e6abd24219d707a50eb11bfb7c01cffe046b823d8b78bd2b40218a49d6f8119"
+    },
+    {
+      "name": "./Iplatform/openwrt/ibase/lua/src/src/lopcodes.h",
+      "size": 8086,
+      "sha256": "12c8c9e289455697808f7c925b1578f50dce8ba0bbb0666b8ee8d26d7445d59d"
+    }
+  ],
+  "gpl_type_sources": [
+    {
+      "name": "./Iplatform/openwrt/ibase/lua/src/src/lobject.h",
+      "size": 10496,
+      "sha256": "e1e366a72f8e4e4dbaa488bdc926974bf99cd80f3b6a536d26b38d4578e53cda"
+    },
+    {
+      "name": "./Iplatform/openwrt/ibase/lua/src/src/lua.h",
+      "size": 12823,
+      "sha256": "c9f1c5d14636d078a7c13e7d48c4f4df603cb53db9ee1dad9b5b5e561f239260"
+    },
+    {
+      "name": "./Iplatform/openwrt/ibase/lua/src/src/lcode.c",
+      "size": 23938,
+      "sha256": "8a71a06fc61163ad2d4912d673b1a3603e345b00aedf841d4116644039d8f60b"
+    }
+  ],
+  "expected_header_hex": "1b4c75615100010404040804",
+  "interpretation": "GPL vendor Lua 5.1 opcode order, LNUM_INT32; no execution; not proof of full GPL/latest binary equivalence",
+  "latest_controller": {
+    "sha256": "92a2028c231c98d78c5eeb6a73eff230380ebafe4955526bf91892cfc2e3acb9",
+    "functions": 161,
+    "bytes_consumed": 123433
+  },
+  "latest_model": {
+    "sha256": "bcf69a212634ea32fca8ca4344e4f8fbccee2ede0f53d131bcb5d4fa40edf743",
+    "functions": 149,
+    "bytes_consumed": 94243
+  },
+  "static_dispatch": {
+    "write": "write_rootap",
+    "write_persistence": "Apcfg.write contains commit",
+    "read": "read_rootap",
+    "form": "wireless_connect_to_network",
+    "http_reachability": "NOT VERIFIED"
+  }
+}

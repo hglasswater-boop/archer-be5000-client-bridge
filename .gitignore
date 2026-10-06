@@ -1,5 +1,6 @@
 /artifacts/
 /local-evidence/
+/router-backup-*.bin
 __pycache__/
 *.pyc
 /.codex-remote-attachments/

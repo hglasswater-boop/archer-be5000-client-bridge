@@ -29,6 +29,7 @@ STA機能の候補はあり、恒久的な実現不能と断定した結論で�
 | [Testing](docs/testing.md) | baseline、IPv4/IPv6/SMB/探索、TCP reset、12〜24時間 |
 | [Deployment](docs/deployment.md) | 条件が満たされた後の投入順序 |
 | [Reproduction](docs/reproduce.md) | オフライン解析の再現コマンド、境界 |
+| [Runtime investigation](docs/runtime-investigation.md) | 設定backup取得、実機ログ、STA設定経路とwifixの追加解析 |
 
 実装したのは**オフライン解析PoC**（inspect_firmware / inspect_gpl / decode_cloud / read_ubi）。Client Bridge設定scriptや書込みimageは作成していない。
 `python -m unittest discover -s tests -v`: **23 PASS、skipなし**。実配布物の署名/復号/UBI/SquashFS読み取りも成功。
