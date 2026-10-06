@@ -23,9 +23,9 @@ GPLのMAC_REPEATER機能名だけでは、親機に1 MACとして見える変換
 最新FWには5GHz bSTA apclii0とbr-lan、GPLにAPCLI / MWDS / MAC_REPEATERがあり、候補の存在は確認できる。しかし以下の壁がある。
 
 - 実機UIで選択可能なモードはrouter/APのみ。WDS設定入口は確認できず、画面内検索も0件。
-- SSH/Telnet接続はtimeout。通常Web loginでSTA getterには到達したが、setterの副作用・復元や使用可能なshellは未確立。
+- SSH/Telnet接続はtimeout。通常Web loginでSTA getterに到達し、既知の5GHz setterは限定probeで受理・読み戻し・復元まで確認したが、使用可能なshell、association、forwardingは未確立。
 - apsd停止時にtpbrをdetachするため、mesh daemon全停止とLAN forwardingの維持は両立が実証されていない。
 - 5GHz AP VAPの停止時にSTA/PHYも停止するか、driver再起動を誘発するか不明。SSID非表示だけではAP停止要件を満たさない。
-- 通常STA経路のWPA2/WPA3/PMF/DFSでの再接続動作が未確認。BE700のhardware/FW・4addr互換性はFull L2を選ぶ場合の追加項目。
+- 通常STA経路のWPA2/WPA3/PMF/DFSでの再接続動作が未確認。MLO対応SSIDで混在security mappingの設定値は受理されたが、MLO client negotiation・link aggregationは未測定。BE700のhardware/FW・4addr互換性はFull L2を選ぶ場合の追加項目。
 
-このためSTA setter / bridge / kill scriptはまだ出さない。rootfs再packやbootloader変更に進む理由はなく、成立した認証済みgetterを起点に変更の副作用・管理rollback・recoveryを確立する。**現時点の安全なClient Bridge投入はNOT PRACTICAL**。技術的にSTA bridgeが永続的に不可能と断定したものではない。
+このため永続的なSTA設定script / bridge / kill scriptはまだ出さない。rootfs再packやbootloader変更に進む理由はなく、認証済みgetterと限定setterを起点にassociation、forwarding、管理rollback、recoveryを確立する。**現時点の安全なClient Bridge投入はNOT PRACTICAL**。技術的にSTA bridgeが永続的に不可能と断定したものではない。

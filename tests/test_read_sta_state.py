@@ -11,7 +11,7 @@ from urllib.parse import parse_qs
 
 from tools.read_sta_state import (
     Crypto, Failure, Protocol, Transport, collect, sanitize_sta, signature_text,
-    split_signature, validate_password, write_report,
+    split_signature, validate_password, write_report, sanitize_network,
 )
 
 
@@ -60,6 +60,30 @@ class BoundaryTests(unittest.TestCase):
                     transport.post(route, payload)
                 connection.assert_not_called()
 
+    def test_mode_flags_are_bounded_and_keys_are_omitted(self):
+        result = sanitize_sta({'wds_mode_5g': '2', 'locktoap_5g': 'off',
+                               'psk_version_5g': 'sae_transition', 'psk_key_5g': 'SECRET'})
+        self.assertEqual(result['values']['wds_mode_5g'], '2')
+        self.assertEqual(result['values']['psk_version_5g'], 'sae_transition')
+        self.assertNotIn('SECRET', json.dumps(result))
+
+    def test_secret_shape_uses_only_fixed_labels(self):
+        result = sanitize_sta({'ssid_5g': 'PRIVATE', 'psk_key_5g': '********',
+                               'ssid_2g': '', 'psk_key_2g': None})
+        self.assertEqual(result['redacted_fields'], {'ssid_5g': 'present',
+            'psk_key_5g': 'masked', 'ssid_2g': 'empty', 'psk_key_2g': 'invalid-type'})
+        self.assertNotIn('PRIVATE', json.dumps(result))
+
+    def test_network_report_validates_addresses_and_excludes_secrets(self):
+        result = sanitize_network({'ipaddr': '192.168.0.1', 'enable': 'on',
+                                   'ipaddr_start': '192.168.0.50', 'leasetime': 120,
+                                   'password': 'SECRET', 'dns1': 'PRIVATE',
+                                   'gateway': 'not-an-address'})
+        self.assertEqual(result['values'], {'ipaddr': '192.168.0.1', 'enable': 'on',
+                                           'ipaddr_start': '192.168.0.50', 'leasetime': 120})
+        self.assertNotIn('SECRET', json.dumps(result))
+        self.assertNotIn('PRIVATE', json.dumps(result))
+
 
 class FakeCrypto:
     def call(self, operation, **kwargs):
@@ -101,6 +125,10 @@ class FakeTransport:
                             'data': {'addr': 'PRIVATE'}}
         elif route.endswith('form=logout'):
             response = {'success': True, 'data': {}}
+        elif route.endswith('form=lan_ipv4'):
+            response = {'success': True, 'data': {'ipaddr': '192.168.0.1', 'password': 'SECRET'}}
+        elif route.endswith('form=setting'):
+            response = {'success': True, 'data': {'enable': 'on'}}
         elif self.fail_read:
             raise Failure('network request failed')
         else:
@@ -157,8 +185,40 @@ class LifecycleTests(unittest.TestCase):
             result = collect(transport, FakeCrypto(), lambda: input())
         self.assertEqual(result['outcome'], 'stopped')
 
+    def test_network_baseline_adds_only_two_read_requests(self):
+        transport = FakeTransport()
+        result = collect(transport, FakeCrypto(), lambda: 'ExistingPassword', network_baseline=True)
+        self.assertEqual(result['outcome'], 'read-complete')
+        self.assertEqual(len(transport.calls), 9)
+        self.assertEqual(result['authenticated_reads']['/admin/network?form=lan_ipv4']['values'],
+                         {'ipaddr': '192.168.0.1'})
+        self.assertNotIn('SECRET', json.dumps(result))
+
+    def test_common_sta_status_is_not_sent_and_failure_identifies_route(self):
+        transport = FakeTransport(fail_read=True)
+        result = collect(transport, FakeCrypto(), lambda: 'ExistingPassword', network_baseline=True)
+        self.assertEqual(result['failed_read'], '/admin/system?form=sysmode')
+        self.assertEqual(result['logout'], 'complete')
+        self.assertFalse(any('wireless_connect_status' in c[0] for c in transport.calls))
+
 
 class HttpTests(unittest.TestCase):
+    def test_changed_management_address_is_explicit_and_source_bound(self):
+        with patch('http.client.HTTPConnection') as factory:
+            response = factory.return_value.getresponse.return_value
+            response.status = 200
+            response.read.return_value = b'{"success":true,"data":{}}'
+            Transport('192.168.1.210', '192.168.1.1').post('/device_config?form=config', b'operation=read')
+            factory.assert_called_once_with('192.168.1.1', 80, timeout=5,
+                                            source_address=('192.168.1.210', 0))
+        for source, target in [('192.168.0.52', '192.168.1.1'),
+                               ('192.168.1.210', '192.168.0.1'),
+                               ('192.168.1.210', '192.168.1.2'),
+                               ('192.168.1.1', '192.168.1.1'),
+                               ('192.168.1.210', 'example.com')]:
+            with self.assertRaises(Failure):
+                Transport(source, target)
+
     def test_source_bind_redirect_and_oversize_rejection(self):
         for status, body in [(302, b'{}'), (200, b'x' * 65537)]:
             with patch('http.client.HTTPConnection') as factory:

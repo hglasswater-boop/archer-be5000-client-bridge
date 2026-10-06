@@ -15,6 +15,8 @@ STA setter、mode変更、再起動、firewall変更、firmware書込みを持�
 | /login?form=login | operation=login、既存passwordのRSA暗号文。confirmを送らない |
 | /admin/system?form=sysmode | operation=read、認証済み動作mode |
 | /admin/wireless?form=wireless_connect_to_network | operation=read、root AP/STA設定 |
+| /admin/network?form=lan_ipv4 | --network-baseline時だけoperation=read、LAN管理IP |
+| /admin/dhcps?form=setting | --network-baseline時だけoperation=read、DHCP server設定 |
 | /admin/system?form=logout | 空payload、自分で作成したsessionの終了を一度試す |
 
 URLは/cgi-bin/luci/;stok=に続く通常のWeb UI経路。
@@ -38,7 +40,9 @@ STA設定のreadが受理されたことは、setterの安全性、association�
 ## 実行
 
 PCをBE5000へ直接有線接続したまま、source IPと対象MACが一致することを先に確認する。
-Wi-Fi側にも192.168.0.1があるため、source IP省略を許さない。
+管理IP変更前はWi-Fi側にも192.168.0.1があるため、source IP省略を許さない。
+ユーザーがBE5000を192.168.1.1/24へ変更した後も、有線sourceへのbindを必須とする。
+--target-ipは確認済み管理候補192.168.0.1 / 192.168.1.1だけを許可し、sourceが同じ/24にない場合は通信前に停止する。
 既存の管理画面はユーザー自身でlogoutしておくとsession衝突を避けられる。clientは衝突を強制解除しない。
 
 ```powershell
@@ -46,10 +50,24 @@ Set-Location C:\Ddrive\project_BE5000
 python -m tools.read_sta_state --source-ip 192.168.0.52
 ```
 
+今回の管理IP変更後、PCの有線固定IPで読む場合:
+
+```powershell
+python -m tools.read_sta_state --target-ip 192.168.1.1 --source-ip 192.168.1.52 --network-baseline
+```
+
 既存の管理passwordはこのPCのterminalで一度だけ入力する。入力を表示せず、chat・引数・環境変数・fileから受け取らない。
 非対話環境ではpasswordを要求せず停止する。
 nodeがPATHにない場合は--nodeで実行fileを指定する。依存packageの追加installは不要。
 --preflight-onlyはpassword/loginを使わず、公開feature照合だけを行う。
+--network-baselineは既知frontendのLAN・DHCP getterを追加する。
+LAN/DHCPのIP範囲はlocal-evidence内のreportへ記録し、個体のSSID/PSK等は引き続き除外する。
+2026-10-07に変更後のLAN IPとDHCP設定を通常認証で読み取れた。
+共通wireless_connect_status getterを含めた初回試行はHTTP応答拒否で停止し、logoutは成功した。
+このgetterはwireless_sta_ifname profileとwpa_cliに依存し、最新公開profileで必要なkeyが見当たらない。
+製品によるHTTP status/sizeの詳細を初回clientが保持していないため、具体的なerror codeは未確定。
+失敗したgetterをbaselineから外し、LAN/DHCP/通常STA設定の4 getter・logoutの成功を別試行で確認した。
+失敗はdriverのassociation失敗を意味しない。clientは現在この共通status経路を要求しない。
 
 出力はrepository内のgitignoreされたlocal-evidence/へ新規作成する。既存fileは上書きしない。
 password・PSK・暗号key・token・cookieをreport/consoleへ保存しない。未知fieldは値を保存せずfield名だけを記録する。

@@ -1,8 +1,9 @@
 # Deployment gate
 
-現時点で実機投入可能なClient Bridge PoCはない。通常認証によるSTA getterは成立したが、setterの安全な適用・復元、複数LAN端末のMAC変換/proxy、AP完全停止時のSTA維持、brick recoveryが未確立。
+現時点で実機投入可能なClient Bridge PoCはない。通常認証によるSTA getterと、5GHz限定setterの一回適用・読み戻し・無効化・復元は成立したが、STA association、複数LAN端末のMAC変換/proxy、AP完全停止時のSTA維持、brick recoveryが未確立。
 BE700は通常APとして扱う。4addr互換性は通常STA PoCの先行条件から外し、Full L2方式を選ぶ場合のみ確認する。
-現在までの実機操作はUIの読み取り、機種/FW照合、限定したTCP接続確認。新規管理password作成はユーザー操作。未保存quick setupは適用せず終了。AP / EasyMesh / DHCP / NAT / FWの変更を行っていない。
+現在までの実機操作はUIの読み取り、機種/FW照合、限定したTCP接続確認、管理IP変更、DHCP停止、限定STA setter probeである。新規管理password作成はユーザー操作。未保存quick setupは適用せず終了。AP / EasyMesh / NAT / FWの変更は行っていない。setter probeの各試行は終了時にSTAを無効化し、開始時の設定へ戻した。
+MLO対応SSIDを候補にした混在security mappingのreadbackまでは確認したが、MLO client negotiation、link aggregation、forwardingは未測定である。
 
 ## 条件が満たされた後の投入順序
 

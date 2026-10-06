@@ -20,6 +20,7 @@ ROOT = Path(__file__).resolve().parents[1]
 PUBLIC = frozenset(['/device_config?form=config', '/login?form=keys', '/login?form=auth'])
 READS = frozenset(['/admin/system?form=sysmode',
                    '/admin/wireless?form=wireless_connect_to_network'])
+NETWORK_READS = frozenset(['/admin/network?form=lan_ipv4', '/admin/dhcps?form=setting'])
 LOGIN = '/login?form=login'
 LOGOUT = '/admin/system?form=logout'
 LIMIT = 65536
@@ -129,17 +130,20 @@ class Protocol:
 
 
 class Transport:
-    def __init__(self, source_ip):
+    def __init__(self, source_ip, target_ip='192.168.0.1'):
         try:
+            if target_ip not in ('192.168.0.1', '192.168.1.1'):
+                raise ValueError()
             address = ipaddress.IPv4Address(source_ip)
-            if address not in ipaddress.IPv4Network('192.168.0.0/24') or int(address) & 255 in (0, 1, 255):
+            network = ipaddress.IPv4Network(target_ip + '/24', strict=False)
+            if address not in network or int(address) & 255 in (0, 1, 255):
                 raise ValueError()
         except ValueError:
-            raise Failure('source IPv4 must be a PC address in 192.168.0.0/24') from None
-        self.source_ip, self.cookie = str(address), ''
+            raise Failure('target must be an approved management IP; source must be a PC address in its /24') from None
+        self.source_ip, self.target_ip, self.cookie = str(address), target_ip, ''
 
     def post(self, route, payload, token=''):
-        if route not in PUBLIC | READS | {LOGIN, LOGOUT}:
+        if route not in PUBLIC | READS | NETWORK_READS | {LOGIN, LOGOUT}:
             raise Failure('request route is not allowlisted')
         if not isinstance(payload, bytes) or len(payload) > 16384:
             raise Failure('request payload invalid')
@@ -160,7 +164,7 @@ class Transport:
                 raise Failure('login must not reuse a token')
             if route != LOGIN and (not re.fullmatch(r'[0-9a-f]{16,128}', token) or not self.cookie):
                 raise Failure('authenticated session required')
-        connection = http.client.HTTPConnection('192.168.0.1', 80, timeout=5,
+        connection = http.client.HTTPConnection(self.target_ip, 80, timeout=5,
                                                 source_address=(self.source_ip, 0))
         try:
             headers = {'Content-Type': 'application/x-www-form-urlencoded', 'Cache-Control': 'no-cache'}
@@ -197,18 +201,69 @@ def sanitize_sta(data):
     # Explicit allowlist. Unknown/nested fields are never copied into evidence.
     safe_names = {'mode', 'support', 'enable_2g', 'enable_5g', 'enable',
                   'connected_2g', 'connected_5g', 'status_2g', 'status_5g',
-                  'wds_status', 'encryption_2g', 'encryption_5g'}
+                  'wds_status', 'encryption_2g', 'encryption_5g', 'connect_status',
+                  'wds_mode_2g', 'wds_mode_5g', 'locktoap_2g', 'locktoap_5g',
+                  'psk_version_2g', 'psk_version_5g', 'psk_cipher_2g', 'psk_cipher_5g'}
     safe_values = {'router', 'ap', 'client', 'repeater', 'hotspot', 'yes', 'no',
                    'on', 'off', 'connected', 'disconnected', 'disabled', 'enabled',
-                   'psk', 'psk_sae', 'none', 'wpa2', 'wpa3', 'AES', 'RSN'}
+                   'psk', 'psk_sae', 'none', 'wpa2', 'wpa3', 'AES', 'RSN', 'rsn',
+                   'sae_transition', 'sae_only', 'aes', 'auto', 'wpa', 'tkip',
+                   'connecting', '0', '1', '2'}
     fields = sorted(k for k in data if isinstance(k, str) and re.fullmatch(r'[A-Za-z0-9_]{1,80}', k))
     values = {k: v for k, v in data.items() if k in safe_names and (
         type(v) is bool or type(v) is int and -1 <= v <= 10 or
         isinstance(v, str) and v in safe_values)}
-    return {'fields': fields, 'values': values}
+    secret_fields = {}
+    for key in ('ssid_2g', 'ssid_5g', 'psk_key_2g', 'psk_key_5g'):
+        if key in data:
+            value = data[key]
+            secret_fields[key] = ('invalid-type' if not isinstance(value, str) else
+                                  'empty' if value == '' else
+                                  'masked' if re.fullmatch(r'\*+', value) else 'present')
+    return {'fields': fields, 'values': values, 'redacted_fields': secret_fields}
 
 
-def collect(transport, crypto, password_provider, *, preflight_only=False):
+def sanitize_network(data):
+    result = sanitize_sta(data)
+    for key, value in data.items():
+        if key in ('ipaddr', 'ipaddr_start', 'ipaddr_end', 'netmask', 'gateway', 'start', 'end'):
+            try:
+                result['values'][key] = str(ipaddress.IPv4Address(value)) if isinstance(value, str) else ''
+            except ValueError:
+                continue
+            if not result['values'][key]:
+                del result['values'][key]
+        elif key in ('leasetime', 'lease_time') and type(value) is int and 1 <= value <= 10080:
+            result['values'][key] = value
+    return result
+
+
+def login_session(transport, crypto, password_provider):
+    """Normal local login only. Caller owns logout; never forces other sessions out."""
+    keys = success(transport.post('/login?form=keys', b'operation=read'), 'keys')
+    if not isinstance(keys, dict) or keys.get('mode') != 'router' or keys.get('username') != '':
+        raise Failure('unexpected login mode')
+    credentials = public_key(keys.get('password'))
+    password = password_provider()
+    validate_password(password)
+    challenge = success(transport.post('/login?form=auth', b'operation=read'), 'challenge')
+    if not isinstance(challenge, dict):
+        raise Failure('unexpected challenge')
+    protocol = Protocol(crypto, challenge.get('key'), challenge.get('seq'),
+                        hashlib.sha256(('admin' + password).encode()).hexdigest())
+    encrypted_password = crypto.call('rsa-v15', n=credentials[0], e=credentials[1], data=password)
+    del password
+    body = protocol.encrypt(urlencode({'password': encrypted_password, 'operation': 'login'}), login=True)
+    login_data = success(protocol.decrypt(transport.post(LOGIN, body)), 'login')
+    if not isinstance(login_data, dict) or not isinstance(login_data.get('stok'), str) or not re.fullmatch(
+            r'[0-9a-f]{16,128}', login_data['stok']):
+        raise Failure('login token missing')
+    if not transport.cookie:
+        raise Failure('login cookie missing')
+    return protocol, login_data['stok']
+
+
+def collect(transport, crypto, password_provider, *, preflight_only=False, network_baseline=False):
     report = {'outcome': 'stopped', 'logout': 'not-needed', 'authenticated_reads': {}}
     protocol, token = None, ''
     try:
@@ -222,30 +277,13 @@ def collect(transport, crypto, password_provider, *, preflight_only=False):
         if preflight_only:
             report['outcome'] = 'preflight-complete'
             return report
-        keys = success(transport.post('/login?form=keys', b'operation=read'), 'keys')
-        if not isinstance(keys, dict) or keys.get('mode') != 'router' or keys.get('username') != '':
-            raise Failure('unexpected login mode')
-        credentials = public_key(keys.get('password'))
-        password = password_provider()
-        validate_password(password)
-        challenge = success(transport.post('/login?form=auth', b'operation=read'), 'challenge')
-        if not isinstance(challenge, dict):
-            raise Failure('unexpected challenge')
-        protocol = Protocol(crypto, challenge.get('key'), challenge.get('seq'),
-                            hashlib.sha256(('admin' + password).encode()).hexdigest())
-        encrypted_password = crypto.call('rsa-v15', n=credentials[0], e=credentials[1], data=password)
-        del password
-        body = protocol.encrypt(urlencode({'password': encrypted_password, 'operation': 'login'}), login=True)
-        login_data = success(protocol.decrypt(transport.post(LOGIN, body)), 'login')
-        if not isinstance(login_data, dict) or not isinstance(login_data.get('stok'), str) or not re.fullmatch(
-                r'[0-9a-f]{16,128}', login_data['stok']):
-            raise Failure('login token missing')
-        token = login_data['stok']
-        if not transport.cookie:
-            raise Failure('login cookie missing')
-        for route in sorted(READS):
+        protocol, token = login_session(transport, crypto, password_provider)
+        for route in sorted(READS | NETWORK_READS if network_baseline else READS):
+            report['failed_read'] = route
             data = success(protocol.decrypt(transport.post(route, protocol.encrypt('operation=read'), token)), 'read')
-            report['authenticated_reads'][route] = sanitize_sta(data)
+            cleaner = sanitize_network if route.startswith(('/admin/network?', '/admin/dhcps?')) else sanitize_sta
+            report['authenticated_reads'][route] = cleaner(data)
+            del report['failed_read']
         report['outcome'] = 'read-complete'
     except Failure as error:
         report['reason'] = str(error)
@@ -284,19 +322,23 @@ def prompt_password():
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--source-ip', required=True, help='PC Ethernet IPv4, target fixed at 192.168.0.1')
+    parser.add_argument('--source-ip', required=True, help='PC Ethernet IPv4 in the target management subnet')
+    parser.add_argument('--target-ip', choices=('192.168.0.1', '192.168.1.1'), default='192.168.0.1',
+                        help='explicit BE5000 management IP; verify device MAC first')
     parser.add_argument('--node', default=shutil.which('node'), help='Node.js executable')
     parser.add_argument('--preflight-only', action='store_true', help='public feature read only, no login')
+    parser.add_argument('--network-baseline', action='store_true', help='also read LAN/DHCP/STA status baseline')
     args = parser.parse_args(argv)
     try:
         if not args.preflight_only and not args.node:
             raise Failure('Node.js executable required')
         if not args.preflight_only and (not sys.stdin.isatty() or not sys.stderr.isatty()):
             raise Failure('run in an interactive local terminal for password input')
-        transport = Transport(args.source_ip)
-        report = collect(transport, Crypto(args.node), prompt_password, preflight_only=args.preflight_only)
+        transport = Transport(args.source_ip, args.target_ip)
+        report = collect(transport, Crypto(args.node), prompt_password,
+                         preflight_only=args.preflight_only, network_baseline=args.network_baseline)
         stamp = datetime.datetime.now(datetime.timezone.utc)
-        report.update(captured_at=stamp.isoformat(), target='192.168.0.1', source_ip=transport.source_ip,
+        report.update(captured_at=stamp.isoformat(), target=transport.target_ip, source_ip=transport.source_ip,
                       firmware_assumption='JP/1.0 1.2.0 Build 20260420 rel.13798(4A50)')
         target = ROOT / 'local-evidence' / ('sta-read-' + stamp.strftime('%Y%m%dT%H%M%S%fZ') + '.json')
         write_report(target, report)

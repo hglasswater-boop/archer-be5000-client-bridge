@@ -77,15 +77,15 @@ read_rootapはprofileのwireless_sta_5gを取得し、Apcfg:get_root_ap_status�
 共通binaryの分岐なので、BE5000のmodeをclientへ変更できる証明ではない。
 
 **Apcfg.writeにはcommitが含まれる。** write_rootapをRAMだけの一時setterと扱わない。
-modelのwriteにはmesh関連operation / sysmode / profile条件によるwifi reloadやswitch_mode rtorの分岐がある。
-単純なwriteを実行してから副作用を確かめる方法は採らず、section mapping・apply条件・認証dispatch・復元経路を先に追う。
+modelのwriteにはmesh関連operation / sysmode / profile条件によるwifi reloadやswitch_mode rtorの分岐がある。後述の追加追跡で、普通のrootap writeとmesh専用operationを区別した。
+未検証の任意writeを総当たりする方法は採らず、既知のrootap routeに6 fieldだけを渡す一回限りのprobeと、開始時値への明示的なrollbackを先に設計した。
 
 1. controller / model / wifixの処理を追い、JP/1.0の通常STAを設定できる認証済み経路と必要な入力を確定する。
 2. 有線管理を維持し、変更前のruntime状態を読み取れることを確認する。backupの存在だけでこの条件を満たしたとは扱わない。
-3. 一時変更とrollbackを先に資料化・確認し、5GHz associationのみから始める。AP停止、LAN転送、DHCP停止は独立した段階で実測する。
+3. 有線管理IPの重複を解消し、PC固定管理IPを確保してDHCPを先に停止する。その後、限定setterとrollback → 5GHz association → LAN転送 → AP停止を段階的に実測する。
 
 現段階では未確認setterへの要求、firewall解除、無認証login、flash変更は実施していない。
-バックアップ取得は完了したが、Client Bridge実機PoCはNOT RUNのまま。
+既知routeの5GHz限定setterは後述のprobeで受理・読み戻し・無効化・開始時値への復元まで確認した。association、LAN forwarding、AP停止を含むClient Bridge実機PoCはNOT RUNのまま。
 
 ## 追加調査: Web API / 機種profile / apply条件
 
@@ -140,4 +140,52 @@ passwordをfile、環境変数、command引数へ保存していない。出力�
 残る変更前条件はsetterのsection mapping・wds_modeのdriver側意味、apply条件、変更後も維持する有線管理と実証可能な復元経路。
 5GHz rootap mappingにはwds_modeの許容値0/1/2があるが、数字から3addr/4addrの意味を推測しない。
 Apcfg.writeはcommit後need_applyを判定し、operation/mode/profileに応じてapply・wifi reload・switch_mode rtorへ分岐する。
-再起動だけで戻る計画にはできない。Client Bridge PoC・実機のSTA設定変更はNOT RUN。
+再起動だけで戻る計画にはできない。既知rootap routeの限定STA設定変更は後述のprobeで確認したが、Client Bridge PoCはNOT RUN。
+
+## 追加追跡: 普通のrootap writeとMAT driver
+
+controller/write_rootapのsuffix loopは_2g / _5gのfieldだけを新tableへ変換し、operationはApcfgへ渡さない。
+sysmode=hotspotの場合だけAP側の暗号fieldへcopyする。現在のrouter modeではこのcopy分岐を通らない。
+model/52（Apcfg.write）のoperation既定は空文字。commit後、mesh operationでなければpc931のapplyへ分岐する。
+onemesh2_support=noのpc934もapply。switch_mode rtorはonemesh_write / easymesh_writeのrouter/AP専用分岐。
+従って、**普通のrootap setterが必ずrtor mode switchを行うという解釈は広すぎる**。これは追跡したbytecodeの静的推論であり、実機でのsetter成功とは別。
+model/48のapplyは変更action/sectionに応じて/sbin/wifiを組み立て、VAP actionにはsleep 3を挟む。
+5GHz rootap mappingのcfgはSTA用13、actionはVAP用5。複数groupを渡すconstructorだけでAP全停止やmesh解除を主張しない。
+
+最新公開/lib/modules/5.4.281/mt_wifi.koはAArch64 ET_REL、15,400,056 bytes。
+SHA256 dbc2528195c22bd61bc0856cb3e63a401b27dc44ce7d632fc97af53bf466da5b。
+Capstone 5.0.9 / pyelftools 0.32で限定したsection/symbol/relocationだけを読む。vendor moduleをload/runしない。
+既知AArch64 RET命令のdecodeを先に確認し、ET_RELのcallをrelocationで照合した範囲に限定する。
+公開profileにはsupport_wifi7=yes、support_mlo_host=yes、ra4/rai4のMLO host interface名があり、mt_wifi.koの静的stringsには802.11be/MLO/EMLSR/EMLMRがある。これはBE5000のAP host/driver候補を示す静的証拠で、5GHz ApCliがMLO clientとして交渉・集約することや、実機のlink stateを証明しない。
+
+| 確認対象 | 静的に確認できた処理 | まだ確認できないこと |
+| --- | --- | --- |
+| MATEngineTxHandle | EtherType IPv4 / ARP / IPv6 / PPPoE / VLANを判定し、protocol tableのcallbackへ渡す実装 | JP実機でMATが有効になっているか、実際の転送 |
+| MATEngineRxHandle | 同種protocol dispatchと、callbackの返した6-byte MACのEthernet宛先へのcopy | 複数LAN端末・IPv6 ND/RA・multicastの対応範囲 |
+| MATEngineInit | protocol init callback群を走査し、成功時のenable field更新 | 実機での初期化成功・有効flag |
+| MATProtoIPHandle / ARPHandle / IPv6Handle | 32-byte STT_OBJECTのcallback table。短いstub functionではない | callback名だけでprotocol全体の正しさを判定しない |
+| Set_EthConvertMode_Proc | dongle / clone / hybridの文字列判定とmode bit設定 | 現在のmode、実機用iwpriv setterの可否 |
+
+driverにはEthConvertMode=dongleを含むtemplateもあるが、文字列だけからactive profileや実機状態を確定しない。
+wifixのconfig_wds_setting付近はApCliMeshRule=1のcommand文字列を参照する一方、同じ配布物のmt_wifi.ko本文にそのcommand名は見当たらない。
+互換性の疑問として記録する。command errorの処理、実機のSTA接続、後続ApCliSsid/Enableの成否をまだ測定していないため、これだけで接続不能とは断定しない。
+QCA用wifix.shのwds_mode=2→extapという意味をMTK binaryへ移さない。
+
+## 管理subnet変更と接続前準備
+
+ユーザーがBE5000を192.168.1.1/24へ変更し、有線sourceから到達・本体MAC一致を確認した。
+通常認証のLAN/DHCP/STA getterで、DHCP on、配布範囲1.100〜249、STA両band off、wds_mode=2、locktoap=off、psk/rsn/aesを確認。
+PC管理IPを一時的に1.52へ固定し、Web UIでDHCPをoffへ保存・再読込確認した。[準備と復元](wired-management.md)。
+親機と管理IP/DHCPが競合する状態でSTAを有効にしない。
+[限定STA設定試験の手順](sta-config-probe.md)を実装前に作成し、setter拒否・応答喪失・割込み・restore失敗をoffline testで確認した。
+association / forwarding / AP完全停止の合格とは区別する。
+
+## 限定STA setterの実機結果
+
+有線管理IPを分離し、BE5000 DHCPをoffへ保存した状態で、通常認証の既知routeに対して5GHzだけを一度writeした。WPA2/AES候補と、公開frontendが示すWPA2/WPA3混在の`psk_sae` / `sae_transition` / AES mappingをそれぞれ使い、4秒後のreadbackで6 fieldと2.4GHz offを確認した。
+
+各試行は最初に5GHzをoffへ戻し、開始時の6 fieldをwriteし直して4秒後に初期値・両band offを照合した。どちらも `configuration-probe-complete`、`disable_accepted=true`、`restore_accepted=true`、`rollback=verified`、logout completeだった。最新の混在候補の記録はローカルの[sta-probe report](../local-evidence/sta-probe-20261006T222209515794Z.json)にあり、個体SSID/PSK/tokenは保存していない。
+
+同じ試行のIPv6 link-local controlでは、管理Wi-Fi側のcontrol replyは得られたが、BE5000直結Ethernet側のreplyは有効期間中も得られなかった。Ethernet側にRA/IPv6 addressがないため、この結果だけでSTA association、ND変換、bridge forwardingのどれかを失敗と特定できない。reportの`association`は`not-measured`、`forwarding`は`IPv6-link-local-probe-only`のままである。
+
+したがって、MLO対応SSIDを設定候補にできること、既知setterの受理・rollbackを確認できることまでは進んだが、MLO client negotiation、複数LAN端末のIPv4/IPv6転送、MAC変換、AP停止後のSTA維持、再起動後の永続性は未測定である。

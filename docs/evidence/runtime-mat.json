@@ -1,0 +1,82 @@
+{
+  "scope": "latest public JP firmware, offline selected ELF reading only; no module execution",
+  "files": [
+    {
+      "path": "/usr/bin/wifix",
+      "bytes": 249040,
+      "sha256": "342ef2ffd55ec431796ac7bc6015c5893ce416bf0b2de9c8e670bd9ba82cdc06",
+      "elf_type": "ET_EXEC"
+    },
+    {
+      "path": "/lib/modules/5.4.281/mt_wifi.ko",
+      "bytes": 15400056,
+      "sha256": "dbc2528195c22bd61bc0856cb3e63a401b27dc44ce7d632fc97af53bf466da5b",
+      "elf_type": "ET_REL"
+    }
+  ],
+  "functions": [
+    {
+      "name": "MATEngineInit",
+      "text_offset": 1588936,
+      "bytes": 444,
+      "direct_calls": [
+        "dump_stack",
+        "mtwf_dbg_prt",
+        "printk"
+      ]
+    },
+    {
+      "name": "Set_V10ConverterMode_Proc",
+      "text_offset": 1441296,
+      "bytes": 436,
+      "direct_calls": [
+        "os_str_tol",
+        "printk",
+        "vow_mbss_init",
+        "wdev_do_linkdown",
+        "wdev_do_linkup"
+      ]
+    },
+    {
+      "name": "MATPktRxNeedConvert",
+      "text_offset": 1588688,
+      "bytes": 108,
+      "direct_calls": []
+    },
+    {
+      "name": "MATEngineRxHandle",
+      "text_offset": 1588384,
+      "bytes": 300,
+      "direct_calls": [
+        "memmove"
+      ]
+    },
+    {
+      "name": "MATEngineExit",
+      "text_offset": 1588800,
+      "bytes": 132,
+      "direct_calls": []
+    },
+    {
+      "name": "MATEngineTxHandle",
+      "text_offset": 1587712,
+      "bytes": 668,
+      "direct_calls": [
+        "GetAssociatedAPByWdev",
+        "mtwf_dbg_prt"
+      ]
+    },
+    {
+      "name": "Set_EthConvertMode_Proc",
+      "text_offset": 1507416,
+      "bytes": 248,
+      "direct_calls": [
+        "printk",
+        "rtstrcasecmp"
+      ]
+    }
+  ],
+  "callback_table_note": "MATProto*Handle are STT_OBJECT callback tables, not stub functions",
+  "live_mat_enabled": "NOT MEASURED",
+  "ordinary_sta_forwarding": "NOT MEASURED"
+}
