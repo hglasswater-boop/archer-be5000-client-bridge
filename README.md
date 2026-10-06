@@ -12,7 +12,8 @@ STA機能の候補はあり、恒久的な実現不能と断定した結論で�
 - 公開FWのRSA2048-PSS/SHA256を検証し、copyのAES128-CBC payloadを復号。全UBI CRCを検証してkernel / rootfsを読んだ。
 - 最新FWに5GHz bSTA **apclii0**、**br-lan**、vendor Wi-Fi driver、hostapd/wpa_supplicantのwpad、EasyMesh agent/controller、wifix / meshd / apsd / tpbrを確認。GPLにはAPCLI / MWDS / MAC_REPEATER機能がある。
 - 実機UIの動作モードはrouter/APのみ。公開STA/WDS設定入口と使用可能な認証済みshellは確立できなかった。apsd停止はtpbr detachを伴うため、単純なmesh停止はforwarding維持を保証しない。
-- 実機brick recovery、BE700側4addr互換性、AP完全停止とSTA維持、IPv6/SMB/multicast、12〜24時間安定性は未確認。
+- 実機brick recovery、複数LAN端末の転送、AP完全停止とSTA維持、IPv6/SMB/multicast、12〜24時間安定性は未確認。
+- 2026-10-07の優先方針: BE700を通常APとして通常STA + MAC変換/proxy経路をBE5000側で調べる。BE700 HW/FW・4addr調査はFull L2を選ぶ場合の追加項目。
 
 ## 成果物
 
@@ -38,7 +39,7 @@ firmware / GPL archive / 復号image / rootfs本文 / 個体情報はgit対象�
 | 項目 | 結果 |
 | --- | --- |
 | Verdict | NOT PRACTICAL（現時点の安全な実機投入） |
-| Recommended approach | 純正FW/driverを保つAPCLI runtime検証。先に認証済み管理経路とrollback/recoveryを確立 |
+| Recommended approach | BE700を通常APとして、純正FW/driverのAPCLI + MAC変換/proxyを優先。認証済み管理経路とrollback/recoveryを確立 |
 | Firmware modification required | 未判定。今回の調査ではNo、目標構成で必要かは未確認 |
 | Brick risk | 読み取り調査はLow、復旧未確立の改造flashはHigh |
 | Recovery method | 対象個体で成功した手段なし。dual-image / TFTP / UARTは候補証拠のみ |
@@ -47,6 +48,6 @@ firmware / GPL archive / 復号image / rootfs本文 / 個体情報はgit対象�
 | IPv6 | 候補bridgeではNOT RUN。upstream relaydだけでは要件を満たさない |
 | SMB/NAS suitability | NOT RUN。BE700側有線端末との通信/探索が必要 |
 | Expected stability | 未測定。EasyMeshとERR_CONNECTION_RESETの因果関係も未確定 |
-| Remaining unknowns | BE700 HW/FW・4addr、runtime設定経路、AP/STA独立性、forwarding方式、実機boot chain/復旧、長時間試験 |
+| Remaining unknowns | runtime設定経路、AP/STA独立性、複数LAN端末のforwarding方式、実機boot chain/復旧、長時間試験。BE700 HW/FW・4addrはFull L2選択時のみ |
 
 Issueは実機条件を追跡するためopenのまま。未実施の試験を完了扱いにしない。
