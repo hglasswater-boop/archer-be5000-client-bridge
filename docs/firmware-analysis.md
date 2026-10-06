@@ -47,3 +47,10 @@ GPL `uboot-7987/uboot/lib/nvrammanager/nm_fwup.c`はoffset0x130のRSA2048署名�
 `rsaVerify.c`は署名のbyte orderを反転し、PSS saltを復元する。署名検証成功後、salt長が32より大きい条件でAES-128-CBCのkey/IVにsalt先頭32 bytesを使い、元imageのoffset0x230以降の16 byte単位のpayloadを復号する。
 この手順を独立したオフライン解析ツールで再現し、署名が一致した場合だけ複製したpayloadを復号する。Node.js標準cryptoを使用し、元ZIP/BINを変更しない。署名生成・署名回避・flash writeは実装しない。
 結果は公開FWに対する暗号的な一致の証拠であり、実機bootloaderが同一コードである証拠とは区別する。
+
+## UBI / rootfs読み取りの先行条件
+
+復号した解析コピーの0x1258から128KiBのUBI PEBが連続する。EC/VID headerとstatic volume dataのCRCを検証し、同一image sequence・連続したlogical block番号のstatic volumeだけを復元する。
+欠損・重複・混在image・CRC異常は停止する。これはraw NAND dump一般向けのrecovery toolではない。
+SquashFSをホストへ展開せず、dissect.squashfsのread-only APIで一覧と必要な通常ファイルだけを読む。
+symlinkをホストで作らず、vendor実行ファイル・scriptは実行しない。選択本文の保存名はSHA256で生成する。
