@@ -49,6 +49,13 @@ class UbiTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             read_static_volumes(block()[:-1],0,4096)
 
+    def test_erased_reserve_is_allowed_only_when_entire_remainder_erased(self):
+        reserve = block()[:64]+b'\xff'*(4096-64)
+        self.assertEqual(read_static_volumes(block()+reserve,0,4096)[2],b'test')
+        dirty = bytearray(reserve); dirty[200] = 0
+        with self.assertRaises(ValueError):
+            read_static_volumes(block()+dirty,0,4096)
+
 
 if __name__ == '__main__':
     unittest.main()
