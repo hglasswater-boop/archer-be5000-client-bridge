@@ -7,6 +7,7 @@
 公式archiveを使う前にsynthetic fixtureでheader offset検出、partition候補の範囲検証、truncated data、重複magic、archive path traversal、巨大展開の制限をテストする。
 imageを変更しない、通信やflash writeを行わない、未知形式を既知と断定しない設計にする。
 GPL TARにはpath traversal・リンク無視・member/合計の読取り制限・stream途中失敗をsynthetic fixtureで確認する。
+Cloud decodeにはPSSの不正hash・marker・trailerの拒否とRSA public blob構造検証、NIST AES-CBC既知ベクトルを使用する。失敗時に復号しない。
 
 ## 比較構成
 

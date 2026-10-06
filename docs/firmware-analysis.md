@@ -40,3 +40,10 @@ gzip magic候補3件は偶然一致の可能性があり未検証。`sign`とい
 選択した通常ファイルだけを上限付きで読み、NULを含むデータは本文を保存しない。symlink/hardlink/deviceは辿らない。
 保存名は内容SHA256から生成するのでarchive内のpathをホストのpathとして利用しない。
 個別2MiB・選択合計64MiB・tar展開合計32GiBを初期制限とし、超過で停止。vendor scriptを実行しない。
+
+## Cloud decode実装の条件（先行資料）
+
+GPL `uboot-7987/uboot/lib/nvrammanager/nm_fwup.c`はoffset0x130のRSA2048署名を保存し、その領域を0で埋めてoffset20以降をRSA-PSS/SHA256で検証する。
+`rsaVerify.c`は署名のbyte orderを反転し、PSS saltを復元する。署名検証成功後、salt長が32より大きい条件でAES-128-CBCのkey/IVにsalt先頭32 bytesを使い、元imageのoffset0x230以降の16 byte単位のpayloadを復号する。
+この手順を独立したオフライン解析ツールで再現し、署名が一致した場合だけ複製したpayloadを復号する。Node.js標準cryptoを使用し、元ZIP/BINを変更しない。署名生成・署名回避・flash writeは実装しない。
+結果は公開FWに対する暗号的な一致の証拠であり、実機bootloaderが同一コードである証拠とは区別する。
