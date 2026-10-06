@@ -1,6 +1,6 @@
 # Existing support
 
-調査日2026-10-06。似た機種やSoC対応をBE5000用install imageの証拠にしない。
+調査日2026-10-06〜07。似た機種やSoC対応をBE5000用install imageの証拠にしない。
 
 | 対象 | 確認範囲と結果 |
 | --- | --- |

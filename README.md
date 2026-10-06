@@ -3,7 +3,7 @@
 Archer BE5000 **JP/1.0** を、EasyMeshなしの5GHz STA → 1GbE PC/NAS用Ethernet Converterにできるか調査する。
 [Issue #1](https://github.com/hglasswater-boop/archer-be5000-client-bridge/issues/1)を先に作成し、資料 → テスト → 最小実装 → 矛盾/不要コード確認の順で進めた。
 
-## 2026-10-06の結論
+## 2026-10-06〜07の結論
 
 **NOT PRACTICAL：現時点で安全なClient Bridge実機PoCを投入する条件が揃わない。**
 STA機能の候補はあり、恒久的な実現不能と断定した結論ではない。復旧未確立のまま改造FWを書き込むことはしない。

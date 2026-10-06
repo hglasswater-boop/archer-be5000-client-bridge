@@ -1,6 +1,6 @@
 # Hardware evidence
 
-確認日2026-10-06。本体ラベル写真は **Archer BE5000 JP/1.0**、有線接続した実機UIは **Archer BE5000 v1.0 / 1.2.0 Build 20260420 rel.13798(4A50)**。JP V1公開最新版と一致した。serial / MAC / WPS PIN / SSID / passwordと写真は公開しない。
+確認日2026-10-06〜07。本体ラベル写真は **Archer BE5000 JP/1.0**、有線接続した実機UIは **Archer BE5000 v1.0 / 1.2.0 Build 20260420 rel.13798(4A50)**。JP V1公開最新版と一致した。serial / MAC / WPS PIN / SSID / passwordと写真は公開しない。
 
 | 項目 | 確認結果 | 証拠の範囲 |
 | --- | --- | --- |
