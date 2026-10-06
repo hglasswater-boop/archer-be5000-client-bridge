@@ -1,0 +1,114 @@
+{
+  "size": 49156696,
+  "sha256": "2636aa5eb9fbb91c5840d9f16c25b7bf00e99640c1c626ff3c081957603dd0be",
+  "first_256_bytes_hex": "02ee1258432fea7414d77519ff072266727d81e266772d747970653a436c6f75640a000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+  "magic_candidates": [
+    {
+      "kind": "gzip",
+      "offset": 1113863,
+      "offset_hex": "0x10ff07",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 21230665,
+      "offset_hex": "0x143f449",
+      "status": "candidate"
+    },
+    {
+      "kind": "gzip",
+      "offset": 29740216,
+      "offset_hex": "0x1c5ccb8",
+      "status": "candidate"
+    }
+  ],
+  "header_strings": [
+    {
+      "offset": 20,
+      "text": "fw-type:Cloud"
+    },
+    {
+      "offset": 3438,
+      "text": "G*`d+-Tn]"
+    },
+    {
+      "offset": 4983,
+      "text": "G;yGzt#V"
+    },
+    {
+      "offset": 5813,
+      "text": "NQdNDakV"
+    },
+    {
+      "offset": 8922,
+      "text": "%v48)A:z"
+    },
+    {
+      "offset": 19753,
+      "text": "e4:;`S4z"
+    },
+    {
+      "offset": 20972,
+      "text": "8Y&z)WD\\"
+    },
+    {
+      "offset": 24405,
+      "text": ">!KcAN\"2f"
+    },
+    {
+      "offset": 28604,
+      "text": "jTaQ58)5R"
+    },
+    {
+      "offset": 29867,
+      "text": "u9$wuQy,]"
+    },
+    {
+      "offset": 38546,
+      "text": "5aW-l.3y"
+    },
+    {
+      "offset": 38775,
+      "text": "$`='OJ7f"
+    },
+    {
+      "offset": 40731,
+      "text": ";GN#B{m1-"
+    },
+    {
+      "offset": 43076,
+      "text": "&T7L9So(\\'+"
+    },
+    {
+      "offset": 44086,
+      "text": "TrmeNz<v"
+    },
+    {
+      "offset": 49730,
+      "text": "0bS\\/4rOU"
+    },
+    {
+      "offset": 51367,
+      "text": "xz/bI*dp"
+    },
+    {
+      "offset": 55517,
+      "text": "]hpBfLnB"
+    },
+    {
+      "offset": 60761,
+      "text": "\\vgm4BZN3"
+    },
+    {
+      "offset": 61481,
+      "text": "~wnw*5*(OV)"
+    },
+    {
+      "offset": 65298,
+      "text": "I:r\"SXw]*"
+    }
+  ],
+  "warning": "Magic hits are candidates, not verified filesystems, flash partitions or evidence of boot verification.",
+  "member": "be260v1-be5000v1-be4600v1-us-up-all-ver1-2-0-P1[20260420-rel13798]_2048_sign_2026-04-20_03.50.58.bin",
+  "archive_sha256": "667ddb11a57bed203dc2950d48831af8362dc706d36a4976c35e3c851a568196"
+}
