@@ -1,0 +1,267 @@
+{
+  "volume_sha256": "a29827ff5576898097c4b30d0a0877b9d7487c82da93f1e5504d43f21f1a126c",
+  "method": "Read-only FDT structure token traversal, selected properties only",
+  "fit": [
+    {
+      "path": "",
+      "property": "description",
+      "value": "ARM64 OpenWrt FIT (Flattened Image Tree)"
+    },
+    {
+      "path": "/images/kernel-1",
+      "property": "description",
+      "value": "ARM64 OpenWrt Linux-5.4.281"
+    },
+    {
+      "path": "/images/kernel-1/hash-1",
+      "property": "algo",
+      "value": "crc32"
+    },
+    {
+      "path": "/images/kernel-1/hash-2",
+      "property": "algo",
+      "value": "sha1"
+    },
+    {
+      "path": "/images/fdt-1",
+      "property": "description",
+      "value": "ARM64 OpenWrt mediatek_mt7987a-spim-nand-evb-usb3 device tree blob"
+    },
+    {
+      "path": "/images/fdt-1/hash-1",
+      "property": "algo",
+      "value": "crc32"
+    },
+    {
+      "path": "/images/fdt-1/hash-2",
+      "property": "algo",
+      "value": "sha1"
+    },
+    {
+      "path": "/images/fdt-be5000_us_v1",
+      "property": "description",
+      "value": "ARM64 OpenWrt mediatek_mt7987a-spim-nand-evb-usb3 be5000_us_v1 device tree blob"
+    },
+    {
+      "path": "/images/fdt-be5000_us_v1/hash-1",
+      "property": "algo",
+      "value": "crc32"
+    },
+    {
+      "path": "/images/fdt-be5000_us_v1/hash-2",
+      "property": "algo",
+      "value": "sha1"
+    },
+    {
+      "path": "/images/fdt-be260_jp_v1",
+      "property": "description",
+      "value": "ARM64 OpenWrt mediatek_mt7987a-spim-nand-evb-usb3 be260_jp_v1 device tree blob"
+    },
+    {
+      "path": "/images/fdt-be260_jp_v1/hash-1",
+      "property": "algo",
+      "value": "crc32"
+    },
+    {
+      "path": "/images/fdt-be260_jp_v1/hash-2",
+      "property": "algo",
+      "value": "sha1"
+    },
+    {
+      "path": "/images/fdt-be5000_kr_v1",
+      "property": "description",
+      "value": "ARM64 OpenWrt mediatek_mt7987a-spim-nand-evb-usb3 be5000_kr_v1 device tree blob"
+    },
+    {
+      "path": "/images/fdt-be5000_kr_v1/hash-1",
+      "property": "algo",
+      "value": "crc32"
+    },
+    {
+      "path": "/images/fdt-be5000_kr_v1/hash-2",
+      "property": "algo",
+      "value": "sha1"
+    },
+    {
+      "path": "/rootfs/hash-1",
+      "property": "algo",
+      "value": "crc32"
+    },
+    {
+      "path": "/rootfs/hash-2",
+      "property": "algo",
+      "value": "sha1"
+    },
+    {
+      "path": "/configurations",
+      "property": "default",
+      "value": "config-1"
+    },
+    {
+      "path": "/configurations/config-1",
+      "property": "description",
+      "value": "OpenWrt"
+    },
+    {
+      "path": "/configurations/config-1",
+      "property": "kernel",
+      "value": "kernel-1"
+    },
+    {
+      "path": "/configurations/config-1",
+      "property": "fdt",
+      "value": "fdt-1"
+    },
+    {
+      "path": "/configurations/config-be5000_us_v1",
+      "property": "description",
+      "value": "OpenWrt Multi DTB for be5000_us_v1"
+    },
+    {
+      "path": "/configurations/config-be5000_us_v1",
+      "property": "kernel",
+      "value": "kernel-1"
+    },
+    {
+      "path": "/configurations/config-be5000_us_v1",
+      "property": "fdt",
+      "value": "fdt-be5000_us_v1"
+    },
+    {
+      "path": "/configurations/config-be260_jp_v1",
+      "property": "description",
+      "value": "OpenWrt Multi DTB for be260_jp_v1"
+    },
+    {
+      "path": "/configurations/config-be260_jp_v1",
+      "property": "kernel",
+      "value": "kernel-1"
+    },
+    {
+      "path": "/configurations/config-be260_jp_v1",
+      "property": "fdt",
+      "value": "fdt-be260_jp_v1"
+    },
+    {
+      "path": "/configurations/config-be5000_kr_v1",
+      "property": "description",
+      "value": "OpenWrt Multi DTB for be5000_kr_v1"
+    },
+    {
+      "path": "/configurations/config-be5000_kr_v1",
+      "property": "kernel",
+      "value": "kernel-1"
+    },
+    {
+      "path": "/configurations/config-be5000_kr_v1",
+      "property": "fdt",
+      "value": "fdt-be5000_kr_v1"
+    }
+  ],
+  "embedded_dtbs": [
+    {
+      "fit_path": "/images/fdt-1",
+      "properties": [
+        {
+          "path": "",
+          "name": "compatible",
+          "value": [
+            "mediatek,mt7987a-spim-snand-evb-usb3",
+            "mediatek,mt7987a",
+            "mediatek,mt7987"
+          ]
+        },
+        {
+          "path": "",
+          "name": "model",
+          "value": [
+            "MediaTek MT7987A SPIM-NAND EVB USB3.0"
+          ]
+        },
+        {
+          "path": "/memory",
+          "name": "reg",
+          "value": "00000000400000000000000010000000"
+        }
+      ]
+    },
+    {
+      "fit_path": "/images/fdt-be5000_us_v1",
+      "properties": [
+        {
+          "path": "",
+          "name": "compatible",
+          "value": [
+            "mediatek,mt7987a-spim-snand-evb-usb3",
+            "mediatek,mt7987a",
+            "mediatek,mt7987"
+          ]
+        },
+        {
+          "path": "",
+          "name": "model",
+          "value": [
+            "MediaTek MT7987A SPIM-NAND EVB USB3.0"
+          ]
+        },
+        {
+          "path": "/memory",
+          "name": "reg",
+          "value": "00000000400000000000000010000000"
+        }
+      ]
+    },
+    {
+      "fit_path": "/images/fdt-be260_jp_v1",
+      "properties": [
+        {
+          "path": "",
+          "name": "compatible",
+          "value": [
+            "mediatek,mt7987a-spim-snand",
+            "mediatek,mt7987a",
+            "mediatek,mt7987"
+          ]
+        },
+        {
+          "path": "",
+          "name": "model",
+          "value": [
+            "MediaTek MT7987A SPIM-NAND RFB"
+          ]
+        },
+        {
+          "path": "/memory",
+          "name": "reg",
+          "value": "00000000400000000000000010000000"
+        }
+      ]
+    },
+    {
+      "fit_path": "/images/fdt-be5000_kr_v1",
+      "properties": [
+        {
+          "path": "",
+          "name": "compatible",
+          "value": [
+            "mediatek,mt7987a-spim-snand",
+            "mediatek,mt7987a",
+            "mediatek,mt7987"
+          ]
+        },
+        {
+          "path": "",
+          "name": "model",
+          "value": [
+            "MediaTek MT7987A SPIM-NAND RFB"
+          ]
+        },
+        {
+          "path": "/memory",
+          "name": "reg",
+          "value": "00000000400000000000000010000000"
+        }
+      ]
+    }
+  ]
+}

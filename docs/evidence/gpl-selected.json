@@ -1,0 +1,117 @@
+{
+  "archive_sha256": "82c5cdeddb98dfcef43559eaf5fc24166395cd382827f644cb539cf3c3366fad",
+  "members": 225226,
+  "declared_payload_bytes": 4251079179,
+  "selected": [
+    {
+      "name": "./Readme.txt",
+      "size": 688,
+      "sha256": "7631713778d9f699af71fa9ca1869bc11516ebed5854f8b03efcb6dc7006baac"
+    },
+    {
+      "name": "./Iplatform/build/product_configs/be260v1/rootfs.mk",
+      "size": 6228,
+      "sha256": "f7b1c34213a0f79a3d458a0919ce54154002fb8e194b7ba11615ee959be3ceb9"
+    },
+    {
+      "name": "./Iplatform/build/product_configs/be260v1/partition_be5000_us_v1.conf",
+      "size": 3069,
+      "sha256": "f320add5393e3c9242f60210bd95dd922151abe2e48816d7088fdffadf086dc8"
+    },
+    {
+      "name": "./Iplatform/build/product_configs/be260v1/root.cfg",
+      "size": 545,
+      "sha256": "82ecb92e7e13f13c6e80c7eee04c926f90faae1c433c6e510e15481bf377b1cc"
+    },
+    {
+      "name": "./Iplatform/build/product_configs/be260v1/kernel.config",
+      "size": 129755,
+      "sha256": "88bd7f3eb0d64efa562bc08e6d217c3b26c64a2afc538207fcae647011df2b1c"
+    },
+    {
+      "name": "./Iplatform/build/product_configs/be260v1/mt7987-netsys-mt7531.dtsi",
+      "size": 974,
+      "sha256": "bbadcf28fb24d5152412488b21f5f7e641f6c676085e9345ad600fe2607ea967"
+    },
+    {
+      "name": "./Iplatform/build/product_configs/be260v1/mt7987a-spim-nand-evb-usb3_be260_jp_v1.dts",
+      "size": 1730,
+      "sha256": "c07ef343a4e2e87f057173969afd341fb3a1df515a55fd12c9a0f925dd894843"
+    },
+    {
+      "name": "./Iplatform/build/product_configs/be260v1/firstuboot.config",
+      "size": 44654,
+      "sha256": "0627b10d7ce1fd1412def61cf0e46fd4d661d0b0bd72a6d9969b8a1bd66999db"
+    },
+    {
+      "name": "./Iplatform/build/product_configs/be260v1/mt7987a.dtsi",
+      "size": 1438,
+      "sha256": "7d2f76237981ac091150671c578371312cc5a0ab93b69d0ce230f993f968f110"
+    },
+    {
+      "name": "./Iplatform/build/product_configs/be260v1/mt7987a-spim-nand-evb-usb3_be5000_us_v1.dts",
+      "size": 1777,
+      "sha256": "0d266a3e79f4f698dc5d68cc0cc3ad5cd82edf2e99a364559cfed6c31699bbbd"
+    },
+    {
+      "name": "./Iplatform/build/product_configs/be260v1/partition.conf",
+      "size": 3042,
+      "sha256": "e2a46d08cce6cf32e8ec87a17bd95faed183d4553e99b7e31f7aa74a55f35bca"
+    },
+    {
+      "name": "./Iplatform/build/product_configs/be260v1/seconduboot.config",
+      "size": 44472,
+      "sha256": "d2a8962a145d9df3e0915a0b3e6b4db63bb468b2faddc36744579a4419e077fa"
+    },
+    {
+      "name": "./Iplatform/build/product_configs/be260v1/atf.config",
+      "size": 2252,
+      "sha256": "468b7be223d7089fccffc3efa14359180ef6d4f2d798a40ade869611f5eddb9e"
+    },
+    {
+      "name": "./Iplatform/build/product_configs/be260v1/root_be5000_us_v1.cfg",
+      "size": 558,
+      "sha256": "798f3167b154b88ca061edc4be19a6d0aa584452fe453e50d72483ac551c923c"
+    },
+    {
+      "name": "./Iplatform/build/product_configs/be260v1/image.mk",
+      "size": 6068,
+      "sha256": "7b771322101ddfc07ea36b940f48072ce6ffa553f2967011f02d2070ff4a2912"
+    },
+    {
+      "name": "./Iplatform/build/product_configs/be260v1/sdk.config",
+      "size": 293119,
+      "sha256": "bf8f8b0475590bd0eb6bfc4a80cefa6cdc0e9a62a530019320980034dde64cc8"
+    },
+    {
+      "name": "./Iplatform/build/product_configs/be260v1/profile.xml",
+      "size": 20482,
+      "sha256": "8a5f170094e7626d53ca452705cc1fef9053da4210d28b280bf9f6f22ddd1f85"
+    },
+    {
+      "name": "./Iplatform/build/product_configs/be260v1/product.mk",
+      "size": 6965,
+      "sha256": "e0ab092037b4c4195d516d6a11653be33536981252fb7c7d4a9bf24d3ed2c6bb"
+    },
+    {
+      "name": "./Iplatform/build/product_configs/be260v1/iplatform.config",
+      "size": 87116,
+      "sha256": "129e37e42fa1c60ca65f5d2dd3fefe7683b70231c1596443707367d5aa7a78b5"
+    },
+    {
+      "name": "./mtk798x/openwrt-21.02/uboot-7987/uboot/lib/nvrammanager/nm_fwup.c",
+      "size": 15901,
+      "sha256": "c82430468775e35f508d04dae7a47d0b88133a811f032a25ef01d4558b73575d"
+    },
+    {
+      "name": "./mtk798x/openwrt-21.02/uboot-7987/uboot/lib/nvrammanager/rsaVerify.c",
+      "size": 10341,
+      "sha256": "139c1e2f4f0326cf5e7eea860f68cda1ed3e027556eebe8218b544591d3a02d0"
+    },
+    {
+      "name": "./mtk798x/openwrt-21.02/uboot-7987/uboot/net/mtk_httpd.c",
+      "size": 18538,
+      "sha256": "be3cbca3a434ac956a1682ed6f987afacdf254968af5741308013b7329aa5b1d"
+    }
+  ]
+}

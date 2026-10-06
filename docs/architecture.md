@@ -6,7 +6,9 @@
 目標: BE700の5GHz AP → BE5000 STA/client → wired LAN。BE700側LANと同一ネットワーク、NATなし、BE5000 DHCP serverなし、クライアント向けAPなし、EasyMeshなし。
 SMB、IPv6、multicast、長時間TCPの安定性を優先する。
 
-日本向け（ユーザー申告）。BE5000 Hardware Ver.不明、FWは最新との申告のみ。BE700のrevision、FW、4addr対応、LAN prefixは未確認。
+BE5000は本体ラベルJP/1.0、実機UIもv1.0、FWは1.2.0 Build 20260420 rel.13798(4A50)で照合済み。
+BE700のrevision、FW、4addr対応は未確認。PCのWi-FiとBE5000直結LANに192.168.0.0/24があり、それぞれ別MACのgateway192.168.0.1が見える。
+これは今回の調査中の構成であり、過去のERR_CONNECTION_RESETの原因と断定しない。試験時は経路を記録して切り分ける。
 ERR_CONNECTION_RESETとEasyMeshの因果関係は未確認。resetを消せると約束しない。
 
 ## 調査の判定条件

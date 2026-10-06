@@ -1,0 +1,25 @@
+{
+  "start": 4696,
+  "peb_size": 131072,
+  "ec_vid_static_data_crc_verified": true,
+  "volumes": [
+    {
+      "id": 0,
+      "size": 1105760,
+      "sha256": "bafdfd06eddb7a5b029d5339baec196f566f9f40914fc9398135dde3573a1294",
+      "first16_hex": "2705195674da8c3469e5971c0010df20"
+    },
+    {
+      "id": 1,
+      "size": 3848807,
+      "sha256": "a29827ff5576898097c4b30d0a0877b9d7487c82da93f1e5504d43f21f1a126c",
+      "first16_hex": "d00dfeed003aba6700000038003ab700"
+    },
+    {
+      "id": 2,
+      "size": 41558016,
+      "sha256": "cc818413c77ccc6a1c6de3d1f70a30595e09533c4e60153d4a3320d8758851a1",
+      "first16_hex": "687371737c1200007fa2e56900000400"
+    }
+  ]
+}

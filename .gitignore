@@ -2,3 +2,4 @@
 /local-evidence/
 __pycache__/
 *.pyc
+/.codex-remote-attachments/

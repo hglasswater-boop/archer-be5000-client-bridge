@@ -1,28 +1,24 @@
 # Boot / recovery / rollback
 
-## 状態
+BE5000 JP/1.0で確立済みbrick recoveryはない。改造FW書込みの停止条件が成立している。
+[公式FAQ1482](https://www.tp-link.com/jp/support/faq/1482/)は一般的な復旧例で、BE5000固有の成功を証明しない。factory resetは設定初期化であり、破損FW復旧やdowngradeとは別。
 
-BE5000対象個体で確立済みのbrick recoveryはない。改造FW書込みは禁止。
-[TP-Link公式FAQ 1482](https://www.tp-link.com/jp/support/faq/1482/)は一般的な復旧例を示すが、BE5000のrevision固有の復旧成功を証明しない。
-factory resetは設定初期化であり、破損したbootloader/rootfsの復旧やFW downgradeではない。
-
-| 手段 | 状態 | 成功条件 |
+| 手段 | 見つかった証拠 | まだ必要な確認 |
 | --- | --- | --- |
-| TFTP | 未確認 | 対象bootloader、要求ファイル名/IP、適切なimage、成功実績 |
-| recovery Web UI | 未確認 | 対象revisionの入口、署名/版制限、純正FW復元実績 |
-| serial / bootloader shell | 未確認 | UART位置/電圧、consoleアクセス、読取りbackup、復元手順 |
-| dual image / fallback | 未確認 | 実機partition、切替条件、fallback実績 |
-| SPI/programmer等 | 未確認 | flash種類/電圧、full backup、calibration保持、復元実績 |
+| TFTP | GPL U-Boot CONFIG_CMD_TFTPBOOT有効 | 個体の起動入口、要求名/IP、適切なimage、純正復元成功。通常tftpbootコマンドと自動recoveryを混同しない |
+| recovery Web UI | GPLにgeneric mtk_httpd source | 対象revisionでの入口とcallsite、image制限、純正復元実績 |
+| serial / bootloader shell | DTS ttyS0 115200、inittab login | 電圧/pinout、shell認証、full backup、復元成功 |
+| dual image / fallback | 最新partitionにubi0 / ubi1、GPL flash_type=nand_double_image | 実機active slot、切替条件、boot env、fallback成功。2領域があるだけでは復旧保証にならない |
+| programmer | SPI NAND / NMBM設定 | NAND部品/電圧、ECC/OOB/bad-block扱い、full backup、calibration保持、復元実績。SPI NOR用手順を転用しない |
 
-## 先行確認
+隔離LAN・予備機・安定電源でメーカー資料または検証可能な同revision手順を確立する。UART接続前に電圧とpinoutを測定し、VCCは接続しない。未知のボタン/TFTP filename/IPを他機種から転用しない。
+公開up-all / 復号copy / static volumeはraw NAND全体のbackupではない。変更imageの署名受理も未確認。
 
-ラベルとFW文字列、合法的に取得できるboot log、同revisionのメーカー確認を収集する。
-UARTを接続する前に電圧・pinoutを測定し、VCCを接続しない。安易なTFTP名やボタン手順を他機種から転用しない。
-現用家庭内ネットワークでrecovery試験をしない。予備機・隔離LAN・安定電源で純正FW復元を確認する。
+## Rollbackの手順と成立条件
 
-## rollback
+1. Runtime候補を実施する前に、現行同FW設定backup、daemon/bridge/interface/firewall状態を保存する。認証済み有線管理経路と再起動で純正状態へ戻ることを先に確認する。
+2. 検証済みの一時変更だけを隔離LANで実施し、問題時は保存状態へ復元する。復元timer等を使う場合もその経路を先に試験する。現時点では具体driverコマンドを作成していない。
+3. Startup永続化はruntime合格後のみ。変更を削除して再起動、同版設定を復元できることを確認する。RAMFS変更は永続overlayと同じではない。
+4. Firmwareは公式1.1.0以降にdowngrade不可の記載あり。旧版への復帰を前提にしない。同版純正FW復元・slot fallbackも実証まで未確立扱い。
 
-runtime変更: 変更前の設定とdaemon状態を保存し、検証済みの有線管理経路から復元する。再起動で復元できることも事前確認する。
-永続設定: 同FW版の設定backupを保存し、復元条件を確認する。
-FW: 1.1.0以降に公式downgrade不可の記載あり。旧版への復帰をrollbackとして計画しない。
-bootloader/calibration/factory変更は本PoC範囲外。
+bootloader / env / calibration / factory変更はPoC範囲外。この資料は未検証のbrick復旧手順を完成済みとして提供していない。

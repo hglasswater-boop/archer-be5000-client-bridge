@@ -1,56 +1,72 @@
 # Firmware analysis
 
-日付: 2026-10-06。資料作成を解析ツール実装より先に行う。
+確認日2026-10-06。対象はラベル/UIで照合済みJP/1.0。現在FW **1.2.0 Build 20260420 rel.13798(4A50)**。
 
-## 取得候補
+## 取得物
 
-- [JP V1公式ページ](https://www.tp-link.com/jp/support/download/archer-be5000/v1/)
-- [US V1.60公式ページとGPL](https://www.tp-link.com/us/support/download/archer-be5000/)
+[JP V1公式ページ](https://www.tp-link.com/jp/support/download/archer-be5000/v1/)の最新版1.2.0 Build20260420、公開日2026-06-12を取得。
+[公式ZIP](https://static.tp-link.com/upload/firmware/2026/202606/20260612/Archer%20BE5000_V1_260420.zip) SHA256: 667ddb11a57bed203dc2950d48831af8362dc706d36a4976c35e3c851a568196。
+内部BIN 49,156,696 bytes、SHA256: 2636aa5eb9fbb91c5840d9f16c25b7bf00e99640c1c626ff3c081957603dd0be。
+BIN名はbe260v1-be5000v1-be4600v1-us-up-all-ver1-2-0-P1[20260420-rel13798]_2048_sign_2026-04-20_03.50.58.bin。
+名前のus表記だけで不適合とせず、復号support-listの **BE5000 / 1.0.0 / special_id=4A500000 (JP)** を照合した。
 
-JP V1の公開最新版は1.2.0 Build 20260420、公開日2026-06-12。実機revision・FW文字列との一致は未確認。
-公式1.1.0の注意事項にダウングレード不可の記載。これは実装されたanti-rollbackの場所や方式を証明しない。
-US公式ページのGPL_ArcherBE5000.tar.gzは参考ソース候補。JP実機との一致や1.2.0の完全な再現性は未確認。
+[US公式ページ](https://www.tp-link.com/us/support/download/archer-be5000/)が提供する[GPL archive](https://static.tp-link.com/upload/gpl-code/2026/202605/20260512/GPL_ArcherBE5000.tar.gz)も取得。
+2,327,878,345 bytes、SHA256: 82c5cdeddb98dfcef43559eaf5fc24166395cd382827f644cb539cf3c3366fad。
+全225,226 TAR member、宣言payload計4,251,079,179 bytesをstreamで一覧化。対象sourceだけを上限付きで読み、vendor codeは実行していない。
+GPL build名be260v1にBE5000 US/JP/KR適応とmulti-DTBを含む。掲載地域/revisionやREADME名だけでJP最新buildと同一とはしない。
 
-## 解析手順
+## Container / 署名 / 暗号
 
-取得元・最終URL・サイズ・SHA256を記録し、ZIP/TAR一覧・header・埋め込みmagic・可読文字列をオフラインで調べる。
-vendor code、build script、firmware内実行ファイルは実行しない。archiveを一括展開しない。
-container offsetとflash offsetを混同しない。partition tableの候補は独立した構造証拠と照合する。
-暗号化、署名、Secure Boot、rootfs検証は別項目。高エントロピーや読めないrootfsだけで暗号化・Secure Bootと断定しない。
+先頭4 bytesのbig-endian値はimage長と一致。offset20にfw-type:Cloud、RSA version byte0x112=2、署名0x130..0x230。
+GPL uboot-7987/uboot/lib/nvrammanager/nm_fwup.cとrsaVerify.cの手順を独立toolで再現。署名領域をzeroにしたoffset20以降を、GPL PUBLICKEYBLOBのRSA2048-PSS/SHA256で検証する。署名格納はlittle endian。
+**最新配布BINの署名検証に成功**。検証済みPSS saltからAES128-CBC key/IVを取得し、0x230以降のblock aligned payloadをcopy上で復号。vendor plaintext markerも一致。
+復号copy SHA256: d0f5b1dd5ccab3ba8fda57b162d6edb5a3678f2f8ae8606d441f688a60a94c6a。
+copyの変更後payloadに対して署名は無効。**絶対にflashしない**。復号成功は変更imageの署名生成や受理を意味しない。
+rawでfilesystemが見えなかったが、復号後にUBI/FIT/SquashFSを確認した。rawのgzip magic3候補は実streamではなかった。
 
-## 確認待ち
+| 項目 | 確認結果 / 未確認範囲 |
+| --- | --- |
+| FW署名 | 最新配布物のRSA2048-PSS/SHA256を実検証済み |
+| FW暗号化 | 最新配布物のAES128-CBC payloadを実復号済み |
+| Web UI署名検証 | firmware.luaはLua5.1 bytecode。fmupへの参照とrsa2048_enableあり。署名判定までの完全なcall chain/error pathは未確認。改造imageを投入して試験していない |
+| Bootloader検証 | GPL handle_fw_cloud → rsaVerify、nm_upgradeFirmwareのreject pathを確認。現用bootloaderの同一性・起動時kernel検証は未確認 |
+| Secure Boot | 未確認。GPL無効設定だけでfuse offとしない |
+| rollback protection | 公式1.1.0 release notesにdowngrade不可。実装場所・同版復元可否未確認 |
+| rootfs verification | UBI CRCは全検証済み。CRCは暗号的認証ではない。FITにhash設定があるが強制検証範囲やdm-verity等未確認 |
+| writable overlay | GPL kernel CONFIG_OVERLAY_FS未設定。最新preinitは/etc、/lib/wifi、/lib/firmware、/usr/lib/luaをRAMFSへ複製する処理を持つ。変更の永続性・実mount状態未確認。通常OpenWrt overlayを仮定しない |
 
-container / partition / filesystem / kernel / userspace / init / network scripts / wireless / bridge / VLAN /
-EasyMesh daemon / hostapd / wpa_supplicant / proprietary daemon / writable overlayはいずれも未確認。
-Web UI署名検証、bootloader検証、rollback protection、encryption、rootfs verificationも未確認。
-GPLとbinaryの差分は対象buildの対応確認後に評価する。
+## 最新rootfs / init / network
 
-## 初回オフライン検査
+EC/VID/static payload CRCとlogical block連続性を検証して3 UBI volumeを復元。
+SquashFS4.0 / XZ (compression ID4)、inodes4732、directory entries4731。dissect.squashfs1.12のread-only APIで一覧と対象fileを読んだ。hostへ一括展開せず、symlinkを作らず、本文はhash名でローカル保存。
 
-JP公式ZIPを取得。内部BINは49,156,696 bytes、SHA256は`2636aa5eb9fbb91c5840d9f16c25b7bf00e99640c1c626ff3c081957603dd0be`。
-内部ファイル名は`be260v1-be5000v1-be4600v1-us-up-all-ver1-2-0-P1[20260420-rel13798]_2048_sign_2026-04-20_03.50.58.bin`。
-JP配布ZIP内の名称にusが含まれる事実を記録し、他地域配布物を代用しない。適合地域は配布ページ・support-list・対象個体の照合で確認する。
-先頭4 bytesのbig-endian値はファイル長に一致、offset20に`fw-type:Cloud`。rootfs/FIT/ELF/UBI magicは未検出。
-gzip magic候補3件は偶然一致の可能性があり未検証。`sign`という名前だけで署名が強制検証されるとは判断しない。
-[inventory](evidence/jp-v1-260420-inventory.json)が再現可能な証拠。
+- Kernel: ARM64 FITのdescriptionとmodule directoryはLinux5.4.281。JPのconfig-be260_jp_v1とUS/KR DTBを含む。
+- Userspace: BusyBox型rcS / rc.common / UCI / ubus / netifdのvendor OpenWrt派生。openwrt_releaseの12.09-rc1表記は古いまま。最新kernelやupstream対応の証拠にしない。
+- Init: inittab → rcS、ttyS0 login。wifix S15、network S25、hostapd/wpa_supplicant S26、tpbr S40、apsd S99。
+- Wireless: mt_wifi / mt_wifi_cmn / mtk_hwifi modules、hostapd、wpa_supplicant、iw、iwpriv、mwctlを含む。実interface active状態・iw4addr対応は未確認。
+- Mesh: easymesh-agent、easymesh-controller、meshd、apsd、wifix、ieee1905、libmesh_db_api、tpbr.ko、tpbrctlを確認。GPL SDK選択のmapd/wapp/fwddがその名前で最新rootfsに存在するとは限らない。
+- LAN/VLAN: network_arch.shはswitch UCIからport/VLAN mappingを取得。既定networkのeth0 bridgeや旧platform comment / placeholder MACから実機設定を決めない。
+- Writable data: userconfig/tp_data mount、UBIFS hooks、RAMFS copy hooksを含む。実機で全hookが成功した証拠や永続startup追加経路は未確認。
 
-## GPL inventory実装予定（先行資料）
+## Backhaul → wired LAN
 
-2,327,878,345 bytesの公式GPL TAR.GZをstreamで読む。全archiveを展開せず、member名とサイズをJSONLで記録する。
-選択した通常ファイルだけを上限付きで読み、NULを含むデータは本文を保存しない。symlink/hardlink/deviceは辿らない。
-保存名は内容SHA256から生成するのでarchive内のpathをホストのpathとして利用しない。
-個別2MiB・選択合計64MiB・tar展開合計32GiBを初期制限とし、超過で停止。vendor scriptを実行しない。
+最新JP easymesh_cfg_be260v1_jp.json / meshd_cfg_be260v1_jp.jsonは **apclii0 = 5GHz bSTA**。apsdのHC設定にも5GHz pathとして登録。APはrai0、backhaul AP候補rai2でSTAと別VAP。wifix_profile.iniのbridge名はbr-lan。
+apsd initはmesh_enable=offでreturn。開始時tpbrctl attach br-lan、停止時detach。tpbr initもmesh offでskipする。
+**EasyMesh停止とforwardingの独立性は未確立**。wifixとproprietary mesh daemonが制御するため、最終frameが4addr / MAC repeater / tunnelのどれかは断定できない。
 
-## Cloud decode実装の条件（先行資料）
+GPL SDKはAPCLI_SUPPORT / APCLI_SUPPLICANT_SUPPORT / WDS / MWDS / MAC_REPEATER / PROXYARPが有効。STA_MODE未設定でもAPCLIが有効なのでSTAなしとは言えない。一般的なiw4addrが動くとも言えない。
+最新mt7992.5040.b0/b1.datにはApCliEnableとMACRepeaterEnの項目がある。template既定値と稼働時設定を区別する。
 
-GPL `uboot-7987/uboot/lib/nvrammanager/nm_fwup.c`はoffset0x130のRSA2048署名を保存し、その領域を0で埋めてoffset20以降をRSA-PSS/SHA256で検証する。
-`rsaVerify.c`は署名のbyte orderを反転し、PSS saltを復元する。署名検証成功後、salt長が32より大きい条件でAES-128-CBCのkey/IVにsalt先頭32 bytesを使い、元imageのoffset0x230以降の16 byte単位のpayloadを復号する。
-この手順を独立したオフライン解析ツールで再現し、署名が一致した場合だけ複製したpayloadを復号する。Node.js標準cryptoを使用し、元ZIP/BINを変更しない。署名生成・署名回避・flash writeは実装しない。
-結果は公開FWに対する暗号的な一致の証拠であり、実機bootloaderが同一コードである証拠とは区別する。
+## GPL / binary差分
 
-## UBI / rootfs読み取りの先行条件
+GPL image.mkのSOFTWARE_VERSION既定値V1.0.3P1に対し、実配布は1.2.0P1。rootfs iplatform.configのhashもGPL版と異なる。
+Kernel5.4.281、MT7987、MT7992系SDK、physical partition extentとJP/US/KR適応は整合する。
+しかしGPL source treeで製品のmesh / wifix / apsd daemonの完全な対応sourceは確認できず、最新binaryの完全再現buildとは言えない。firmware.lua / wireless.luaはbytecodeでありstringsのAPI名だけで処理を確定しない。
 
-復号した解析コピーの0x1258から128KiBのUBI PEBが連続する。EC/VID headerとstatic volume dataのCRCを検証し、同一image sequence・連続したlogical block番号のstatic volumeだけを復元する。
-欠損・重複・混在image・CRC異常は停止する。これはraw NAND dump一般向けのrecovery toolではない。
-SquashFSをホストへ展開せず、dissect.squashfsのread-only APIで一覧と必要な通常ファイルだけを読む。
-symlinkをホストで作らず、vendor実行ファイル・scriptは実行しない。選択本文の保存名はSHA256で生成する。
+## 実機UI / 管理経路
+
+PCから直結して現在版を照合。選択可能な動作モードはrouter / APの2つ。ワイヤレス設定、5GHz詳細、追加設定とWDS検索(0結果)でSTA/WDSの公開入口を確認できなかった。
+shared frontendにはClient/Repeater componentやWDS storeがあるが、実機で選択可能な機能とは同義でない。
+22/23 TCPへの各2秒の接続確認はtimeout、80/443は応答。SSH未実装の証明ではない。rootfsにdropbearがあり、initはknock_functionsで既定アクセスを制限。認証済みshellは確立していない。
+
+[再現手順](reproduce.md)、[raw](evidence/jp-v1-260420-inventory.json)、[decoded](evidence/jp-v1-260420-decoded-inventory.json)、[UBI](evidence/ubi-volumes.json)、[GPL](evidence/gpl-selected.json)、[rootfs](evidence/rootfs-selected.json)。vendor archive / decoded BIN / rootfs本文 / 個体情報はgit対象外。実機FW未変更。

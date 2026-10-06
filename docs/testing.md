@@ -1,13 +1,18 @@
 # Test plan (before implementation)
 
-日付2026-10-06。実機テストは未実施。下記の合格はまだ得ていない。
+日付2026-10-06。実機の型番/FW/UI/管理経路は読み取り確認済み。候補bridgeの接続・安定性試験は未実施で、下記の合格はまだ得ていない。
 
 ## オフライン解析テスト
 
-公式archiveを使う前にsynthetic fixtureでheader offset検出、partition候補の範囲検証、truncated data、重複magic、archive path traversal、巨大展開の制限をテストする。
+公式archiveを使う前にsynthetic fixtureでheader offset検出、SquashFS header候補の範囲/version検証、truncated data、archive path traversal、巨大展開の制限をテストする。
 imageを変更しない、通信やflash writeを行わない、未知形式を既知と断定しない設計にする。
 GPL TARにはpath traversal・リンク無視・member/合計の読取り制限・stream途中失敗をsynthetic fixtureで確認する。
 Cloud decodeにはPSSの不正hash・marker・trailerの拒否とRSA public blob構造検証、NIST AES-CBC既知ベクトルを使用する。失敗時に復号しない。
+UBIにはEC/VID/payload CRC、logical block順序・欠損・重複、image sequence混在、truncated extent、erased reserveをsynthetic fixtureで検証する。
+
+最終実行: `python -m unittest discover -s tests -v`、23 tests PASS、skipなし。
+実配布BINの署名/復号、全UBI CRC、SquashFS metadata/選択fileの読み取りも成功した。
+単体テストでRSA key生成・製品の起動動作・driverを検証したわけではない。
 
 ## 比較構成
 

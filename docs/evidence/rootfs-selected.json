@@ -1,0 +1,289 @@
+{
+  "parser": "dissect.squashfs 1.12",
+  "format": "4.0",
+  "compression_id": 4,
+  "bytes_used": 41555948,
+  "inodes": 4732,
+  "source_volume_sha256": "cc818413c77ccc6a1c6de3d1f70a30595e09533c4e60153d4a3320d8758851a1",
+  "directory_entries": 4731,
+  "files": [
+    {
+      "path": "/etc/apsd_be260v1_jp_hc.json",
+      "kind": "file",
+      "size": 2430,
+      "sha256": "cab408cea8649bc2004cf3363a6b3b31e8a6c6678091f8674d131c018af56b32",
+      "first4_hex": "7b0a0922"
+    },
+    {
+      "path": "/etc/config/network",
+      "kind": "file",
+      "size": 561,
+      "sha256": "e49d6ae1c031222ed56310b2c138e2c07a7d0ec7ca17170a1bde314c037495a3",
+      "first4_hex": "2320436f"
+    },
+    {
+      "path": "/etc/easymesh_cfg_be260v1_jp.json",
+      "kind": "file",
+      "size": 5098,
+      "sha256": "552e1943a702e347705a95218f74736e56247ea9111f3ba23b3cf7de1cc5092a",
+      "first4_hex": "7b0a0922"
+    },
+    {
+      "path": "/etc/init.d/apsd",
+      "kind": "file",
+      "size": 2566,
+      "sha256": "a5f6bb22bf1202f3b5b9e9989f6e8b690a028a1bac31911a21e532513baef3c5",
+      "first4_hex": "23212f62"
+    },
+    {
+      "path": "/etc/init.d/dropbear",
+      "kind": "file",
+      "size": 6372,
+      "sha256": "277e164dc9ae1eab782c1b967c9ac84525a3f86a05e5ac6af6b2f9af7c4856c7",
+      "first4_hex": "23212f62"
+    },
+    {
+      "path": "/etc/init.d/easymesh_re",
+      "kind": "file",
+      "size": 1290,
+      "sha256": "83d1362926cc473325de8ca56179732b812e90836a547df2334affcfb02813fc",
+      "first4_hex": "23212f62"
+    },
+    {
+      "path": "/etc/init.d/meshd",
+      "kind": "file",
+      "size": 438,
+      "sha256": "38cfa598bcb575ae4d8b66f2f993c3fcad553def7986ad324eb279b0a2119315",
+      "first4_hex": "23212f62"
+    },
+    {
+      "path": "/etc/init.d/mtk_hostapd",
+      "kind": "file",
+      "size": 318,
+      "sha256": "c8115457f6ba3610f7ad62c2c80510442aca8c0ed21309a914a3809ffd60f0f1",
+      "first4_hex": "23212f62"
+    },
+    {
+      "path": "/etc/init.d/mtk_wpa_supplicant",
+      "kind": "file",
+      "size": 364,
+      "sha256": "44a7b7004cc43ee330771490c99e30053b373fb7c127b8b555a4dc9824e95011",
+      "first4_hex": "23212f62"
+    },
+    {
+      "path": "/etc/init.d/rcS",
+      "kind": "file",
+      "size": 1427,
+      "sha256": "66fb29939a81497ce3bc37ef2a54cd723c8e8af65da3c38a3f20e506378762b5",
+      "first4_hex": "23212f62"
+    },
+    {
+      "path": "/etc/init.d/tpbr",
+      "kind": "file",
+      "size": 1156,
+      "sha256": "6e46f4f72ef52a2bf7dba7396f3629178f36b086ecc0bf2d4647ec816641fbb4",
+      "first4_hex": "23212f62"
+    },
+    {
+      "path": "/etc/init.d/wifix",
+      "kind": "file",
+      "size": 480,
+      "sha256": "f52fdffbf3bc2ca299ec9530eb461d1fa59a2806979c20398a44968a85a4df05",
+      "first4_hex": "23212f62"
+    },
+    {
+      "path": "/etc/inittab",
+      "kind": "file",
+      "size": 130,
+      "sha256": "9e56543c57f8fa2a94cfbcbb4c9125353dacddadb3dfa2ca9b1d248bbfdee09c",
+      "first4_hex": "3a3a7379"
+    },
+    {
+      "path": "/etc/iplatform.config",
+      "kind": "file",
+      "size": 29180,
+      "sha256": "41eb34cd881b9fe98c563f7e23d6aff8e430988b86f71498a905883f2dd63f7b",
+      "first4_hex": "36746f34"
+    },
+    {
+      "path": "/etc/meshd_cfg_be260v1_jp.json",
+      "kind": "file",
+      "size": 820,
+      "sha256": "a953727275fabc89c16f7fa3cd7dbb5d7951e2c3cb6c7ff162ba6bbf7315fff3",
+      "first4_hex": "7b0d0a09"
+    },
+    {
+      "path": "/etc/openwrt_release",
+      "kind": "file",
+      "size": 224,
+      "sha256": "7cab2584d32b22d7ab1e3f4917834efa0616f4b5dec9581878802db07f169195",
+      "first4_hex": "44495354"
+    },
+    {
+      "path": "/etc/partition_config/partition-table",
+      "kind": "file",
+      "size": 3112,
+      "sha256": "6c03f37cdf8d0f2aa14ce87e8c507e2ecc21b9c6c165dcfe269d51ed96fe8c34",
+      "first4_hex": "746f7461"
+    },
+    {
+      "path": "/etc/wireless/mediatek/mt7992.5040.b0.dat",
+      "kind": "file",
+      "size": 7104,
+      "sha256": "c3b7be018326460ad155780648fa07cf10bf6edc0cb357092e8b5ffe9bcc4f00",
+      "first4_hex": "23546865"
+    },
+    {
+      "path": "/etc/wireless/mediatek/mt7992.5040.b1.dat",
+      "kind": "file",
+      "size": 7187,
+      "sha256": "555eff24eaa97f48bd7cfdbe5efedd3d6487aa335e133709bfff7973a728da1a",
+      "first4_hex": "23546865"
+    },
+    {
+      "path": "/lib/modules/5.4.281/mt_wifi.ko",
+      "kind": "file",
+      "size": 15400056,
+      "sha256": "dbc2528195c22bd61bc0856cb3e63a401b27dc44ce7d632fc97af53bf466da5b",
+      "first4_hex": "7f454c46"
+    },
+    {
+      "path": "/lib/modules/5.4.281/mtk_hwifi.ko",
+      "kind": "file",
+      "size": 179984,
+      "sha256": "b7cd84517c62ed14613118fb8d5a647c029028a5ed9a67672764c12ec85952b3",
+      "first4_hex": "7f454c46"
+    },
+    {
+      "path": "/lib/modules/iplatform/tpbr.ko",
+      "kind": "file",
+      "size": 108928,
+      "sha256": "1767c7c8291e3f59fdc6856adda2619799485497317edbd71caf7889d23134c0",
+      "first4_hex": "7f454c46"
+    },
+    {
+      "path": "/lib/network/network_arch.sh",
+      "kind": "file",
+      "size": 2457,
+      "sha256": "ba79459b1936ed7736b75e7d2fc08eb3e1db36f4786392ca3c2e5e68a8f7874d",
+      "first4_hex": "2320436f"
+    },
+    {
+      "path": "/lib/preinit/40_mount_ubifs",
+      "kind": "file",
+      "size": 408,
+      "sha256": "fdebb946142678812146776c13218a8791f3de7f20c0e638d1173798a10af9eb",
+      "first4_hex": "23212f62"
+    },
+    {
+      "path": "/lib/preinit/71_init_etc_ramfs",
+      "kind": "file",
+      "size": 395,
+      "sha256": "c371643b29acd44dd43d7fa03a64c111135582320c32e1def0a2dadb9fe74dc5",
+      "first4_hex": "23212f62"
+    },
+    {
+      "path": "/lib/preinit/99_11_mount_tp_data",
+      "kind": "file",
+      "size": 266,
+      "sha256": "fc2f5247cec3617405190a8a2e007b99250d69371b36bb0f121e5adf16883c3c",
+      "first4_hex": "23212f62"
+    },
+    {
+      "path": "/lib/wifi/config_model.json",
+      "kind": "file",
+      "size": 13972,
+      "sha256": "b1d974d78e106a5faf5f1e6eddf7b9c1060101042e058045f84ab17e4675796c",
+      "first4_hex": "7b0d0a20"
+    },
+    {
+      "path": "/lib/wifi/wifix_profile.ini",
+      "kind": "file",
+      "size": 5631,
+      "sha256": "1e3f0ea9725eef4b9e38c8dfdb06f07a1544468afacde12417ad1088d98b47d3",
+      "first4_hex": "3b0a3b20"
+    },
+    {
+      "path": "/usr/bin/apsd",
+      "kind": "file",
+      "size": 142672,
+      "sha256": "cc125368e8340c42df6dca8bccae3c8ee35fdd2c50a5c79b16b6e4eec4a39823",
+      "first4_hex": "7f454c46"
+    },
+    {
+      "path": "/usr/bin/easymesh-agent",
+      "kind": "file",
+      "size": 105680,
+      "sha256": "8b697f5279ff5c8699e4759e99dcea38427d3ea0d7f952729403be76f6a0ded0",
+      "first4_hex": "7f454c46"
+    },
+    {
+      "path": "/usr/bin/easymesh-controller",
+      "kind": "file",
+      "size": 60320,
+      "sha256": "98ce77446e816b32b8e171862d63d046082f2eba0e86752244901da265b316ed",
+      "first4_hex": "7f454c46"
+    },
+    {
+      "path": "/usr/bin/ieee1905",
+      "kind": "file",
+      "size": 14544,
+      "sha256": "749f8f96c6b872293514fd77ebe2ab90f28659d64aed51866accbc03d7a2127d",
+      "first4_hex": "7f454c46"
+    },
+    {
+      "path": "/usr/bin/meshd",
+      "kind": "file",
+      "size": 220520,
+      "sha256": "125f605392900e429cb7c83c2ac75450807786ba9824fab44fb5a6ea6284afd1",
+      "first4_hex": "7f454c46"
+    },
+    {
+      "path": "/usr/bin/wifix",
+      "kind": "file",
+      "size": 249040,
+      "sha256": "342ef2ffd55ec431796ac7bc6015c5893ce416bf0b2de9c8e670bd9ba82cdc06",
+      "first4_hex": "7f454c46"
+    },
+    {
+      "path": "/usr/lib/lua/luci/controller/admin/firmware.lua",
+      "kind": "file",
+      "size": 96648,
+      "sha256": "e38bdd51c924d36c4c993d76f18de4e2d6e15490c5dcd05104aa614f3d310610",
+      "first4_hex": "1b4c7561"
+    },
+    {
+      "path": "/usr/lib/lua/luci/model/wireless.lua",
+      "kind": "file",
+      "size": 94243,
+      "sha256": "bcf69a212634ea32fca8ca4344e4f8fbccee2ede0f53d131bcb5d4fa40edf743",
+      "first4_hex": "1b4c7561"
+    },
+    {
+      "path": "/usr/sbin/hostapd",
+      "kind": "symlink",
+      "size": 4,
+      "target": "wpad"
+    },
+    {
+      "path": "/usr/sbin/tpbrctl",
+      "kind": "file",
+      "size": 18560,
+      "sha256": "5314f6179d34185f9ddceac6263f73f5c5f9215e03fa64e58d317cef9b2ece19",
+      "first4_hex": "7f454c46"
+    },
+    {
+      "path": "/usr/sbin/wpa_supplicant",
+      "kind": "symlink",
+      "size": 4,
+      "target": "wpad"
+    },
+    {
+      "path": "/www/webpages/js/wds-DdTi0Y-w.js",
+      "kind": "file",
+      "size": 634,
+      "sha256": "b34209c520239fec5714dbfae1d703540692ed61baf11d55a8b5d9520e42f66c",
+      "first4_hex": "696d706f"
+    }
+  ]
+}
