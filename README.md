@@ -11,7 +11,7 @@ STA機能の候補はあり、恒久的な実現不能と断定した結論で�
 - 本体ラベルと直結Web UIでJP/1.0、**1.2.0 Build 20260420 rel.13798(4A50)** を照合。JP最新版と一致。
 - 公開FWのRSA2048-PSS/SHA256を検証し、copyのAES128-CBC payloadを復号。全UBI CRCを検証してkernel / rootfsを読んだ。
 - 最新FWに5GHz bSTA **apclii0**、**br-lan**、vendor Wi-Fi driver、hostapd/wpa_supplicantのwpad、EasyMesh agent/controller、wifix / meshd / apsd / tpbrを確認。GPLにはAPCLI / MWDS / MAC_REPEATER機能がある。
-- 実機UIの動作モードはrouter/APのみ。公開STA/WDS設定入口と使用可能な認証済みshellは確立できなかった。apsd停止はtpbr detachを伴うため、単純なmesh停止はforwarding維持を保証しない。
+- 実機UIの動作モードはrouter/APのみ。通常loginでSTA設定のbackend getterに到達し、両bandのSTA=offを確認。setterの副作用・復元と使用可能なshellは未確認。実機の公開featureはWDS=false。apsd停止はtpbr detachを伴うため、単純なmesh停止はforwarding維持を保証しない。
 - 実機brick recovery、複数LAN端末の転送、AP完全停止とSTA維持、IPv6/SMB/multicast、12〜24時間安定性は未確認。
 - 2026-10-07の優先方針: BE700を通常APとして通常STA + MAC変換/proxy経路をBE5000側で調べる。BE700 HW/FW・4addr調査はFull L2を選ぶ場合の追加項目。
 
@@ -30,9 +30,10 @@ STA機能の候補はあり、恒久的な実現不能と断定した結論で�
 | [Deployment](docs/deployment.md) | 条件が満たされた後の投入順序 |
 | [Reproduction](docs/reproduce.md) | オフライン解析の再現コマンド、境界 |
 | [Runtime investigation](docs/runtime-investigation.md) | 設定backup取得、実機ログ、STA設定経路とwifixの追加解析 |
+| [Read STA state](docs/read-sta-state.md) | 通常認証による限定getterの仕様・実行方法。対象実機のlogin・read・logoutが成功 |
 
-実装したのは**オフライン解析PoC**（inspect_firmware / inspect_gpl / decode_cloud / read_ubi）。Client Bridge設定scriptや書込みimageは作成していない。
-`python -m unittest discover -s tests -v`: **23 PASS、skipなし**。実配布物の署名/復号/UBI/SquashFS読み取りも成功。
+実装したのは**オフライン解析PoC**（inspect_firmware / inspect_gpl / decode_cloud / read_ubi）と、通常認証で既知STA getterを読む限定client（read_sta_state）。Client Bridge設定scriptや書込みimageは作成していない。
+`python -m unittest discover -s tests -v`: **38 PASS、skipなし**。実配布物の署名/復号/UBI/SquashFS読み取りと、限定clientの実機公開feature preflight・通常login・STA read・logoutも成功。
 firmware / GPL archive / 復号image / rootfs本文 / 個体情報はgit対象外。
 
 ## 判定項目
@@ -49,6 +50,6 @@ firmware / GPL archive / 復号image / rootfs本文 / 個体情報はgit対象�
 | IPv6 | 候補bridgeではNOT RUN。upstream relaydだけでは要件を満たさない |
 | SMB/NAS suitability | NOT RUN。BE700側有線端末との通信/探索が必要 |
 | Expected stability | 未測定。EasyMeshとERR_CONNECTION_RESETの因果関係も未確定 |
-| Remaining unknowns | runtime設定経路、AP/STA独立性、複数LAN端末のforwarding方式、実機boot chain/復旧、長時間試験。BE700 HW/FW・4addrはFull L2選択時のみ |
+| Remaining unknowns | STA setterの副作用/復元、wds_modeのdriver側意味、AP/STA独立性、複数LAN端末のforwarding方式、実機boot chain/復旧、長時間試験。BE700 HW/FW・4addrはFull L2選択時のみ |
 
 Issueは実機条件を追跡するためopenのまま。未実施の試験を完了扱いにしない。

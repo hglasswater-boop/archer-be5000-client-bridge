@@ -1,0 +1,186 @@
+{
+  "source": "latest JP public firmware 1.2.0 Build 20260420, verified volume-2",
+  "hash_scope": "sha256 hashes original rootfs file bytes; decoded_sha256 hashes decompressed JS",
+  "frontend": [
+    {
+      "path": "/www/webpages/js/ConnectNetworkRepo-B2OyiB60.js.gz",
+      "size": 681,
+      "sha256": "431759f471e30325b2b03497d06b56086716ccae573396191e3864c521da3a3f",
+      "decoded_bytes": 1454,
+      "decoded_sha256": "f30239edaa86e10fd111f1a2fc904c421e25eb209b8da6f07d789686caed8f5d"
+    },
+    {
+      "path": "/www/webpages/js/update-store-C81JxDtH.js.gz",
+      "size": 282734,
+      "sha256": "afdc35b47c36d3b89d12bea7008d0394ad77446fb11b7f4b91b3122c677a9a17",
+      "decoded_bytes": 1078082,
+      "decoded_sha256": "826019502312915c64817cc04b14529b16b5714e8765ff319179dd3ffc02d162"
+    }
+  ],
+  "lua": [
+    {
+      "path": "/usr/lib/lua/luci/dispatcher.lua",
+      "size": 20384,
+      "sha256": "1ce72553b3dd63fb3a87e2e5831a36b7f8455850038be542bd443d1302646d52",
+      "functions": 50,
+      "consumed_bytes": 20384
+    },
+    {
+      "path": "/usr/lib/lua/luci/model/controller.lua",
+      "size": 4788,
+      "sha256": "9319c6dcbb869adc8e6ffcb31eba25870fbd2114cf6f94b1d7bdc4081159d806",
+      "functions": 15,
+      "consumed_bytes": 4788
+    },
+    {
+      "path": "/usr/lib/lua/luci/model/uci.lua",
+      "size": 5301,
+      "sha256": "9a5a77bf4971214d4247a8c5b2da14166ea6935d6603d09d324e28a380f3ae2d",
+      "functions": 26,
+      "consumed_bytes": 5301
+    },
+    {
+      "path": "/usr/lib/lua/luci/sys/config.lua",
+      "size": 69369,
+      "sha256": "1d93871176efa8995e22fae27832c2d8f1ddbf4ab6756d1360f32eeac994e2d9",
+      "functions": 93,
+      "consumed_bytes": 69369
+    },
+    {
+      "path": "/usr/lib/lua/luci/controller/admin/system.lua",
+      "size": 26017,
+      "sha256": "541ecdd3477fc802cfe22d276370e1181bc0e41457e88a90aeff4c72e9af4a09",
+      "functions": 36,
+      "consumed_bytes": 26017
+    },
+    {
+      "path": "/usr/lib/lua/luci/controller/login.lua",
+      "size": 35372,
+      "sha256": "ffc5a1d55056dc7db49c605c9aa3bf8cceef610168b41beae30b58e2fc7bb42c",
+      "functions": 47,
+      "consumed_bytes": 35372
+    },
+    {
+      "path": "/usr/lib/lua/luci/controller/admin/index.lua",
+      "size": 530,
+      "sha256": "56a34a846d9674408c3332c148fc7e8c6da63075270c13b2a96fe43dfc319d85",
+      "functions": 3,
+      "consumed_bytes": 530
+    }
+  ],
+  "profile": {
+    "path": "/etc/partition_config/profile",
+    "ciphertext_bytes": 5808,
+    "ciphertext_sha256": "bdd5a46bde8c3f3c196b07916b8f247669af9376e0899c5167616792ee12197f",
+    "decoded_bytes": 22767,
+    "decoded_sha256": "4340d0c46583e756c49fae8b48f8e4b12f0a7e7c036904c44609fc3480769081",
+    "selected_fields": {
+      "operation_mode": [
+        "router,ap"
+      ],
+      "gdpr_hmac_sign": [
+        "yes"
+      ],
+      "wireless_sta_config_2g": [
+        "apcli0"
+      ],
+      "wireless_sta_config_5g": [
+        "apclii0"
+      ],
+      "wds_show": [
+        "yes"
+      ],
+      "wds_support_dualmode": [
+        "no"
+      ]
+    },
+    "parsing_scope": "literal selected tag text only; numeric-leading vendor tags are not well-formed XML"
+  },
+  "live_public_read": {
+    "collected_local_date": "2026-10-07",
+    "supportOperationMode": [
+      "router",
+      "ap"
+    ],
+    "supportDwds": false,
+    "supportWdsDualmode": false,
+    "supportNDProxy": true,
+    "supportMulticastForwarding": false,
+    "supportJPFeatures": true,
+    "certification": [
+      "SG CLS L1 STAGE2"
+    ],
+    "unauthenticated_sta_response": {
+      "data": ""
+    }
+  },
+  "live_authenticated_read": {
+    "collected_local_date": "2026-10-07",
+    "outcome": "read-complete",
+    "logout": "complete",
+    "sysmode": {
+      "fields": [
+        "mode",
+        "support"
+      ],
+      "values": {
+        "support": "yes",
+        "mode": "router"
+      }
+    },
+    "sta": {
+      "fields": [
+        "enable_2g",
+        "enable_5g",
+        "encryption_2g",
+        "encryption_5g",
+        "locktoap_2g",
+        "locktoap_5g",
+        "psk_cipher_2g",
+        "psk_cipher_5g",
+        "psk_key_2g",
+        "psk_key_5g",
+        "psk_version_2g",
+        "psk_version_5g",
+        "ssid_2g",
+        "ssid_5g",
+        "wds_mode_2g",
+        "wds_mode_5g",
+        "wep_format1_2g",
+        "wep_format1_5g",
+        "wep_format2_2g",
+        "wep_format2_5g",
+        "wep_format3_2g",
+        "wep_format3_5g",
+        "wep_format4_2g",
+        "wep_format4_5g",
+        "wep_key1_2g",
+        "wep_key1_5g",
+        "wep_key2_2g",
+        "wep_key2_5g",
+        "wep_key3_2g",
+        "wep_key3_5g",
+        "wep_key4_2g",
+        "wep_key4_5g",
+        "wep_mode_2g",
+        "wep_mode_5g",
+        "wep_select_2g",
+        "wep_select_5g",
+        "wep_type1_2g",
+        "wep_type1_5g",
+        "wep_type2_2g",
+        "wep_type2_5g",
+        "wep_type3_2g",
+        "wep_type3_5g",
+        "wep_type4_2g",
+        "wep_type4_5g"
+      ],
+      "values": {
+        "enable_2g": "off",
+        "encryption_5g": "psk",
+        "enable_5g": "off",
+        "encryption_2g": "psk"
+      }
+    }
+  }
+}

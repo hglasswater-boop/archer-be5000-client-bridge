@@ -86,3 +86,58 @@ modelのwriteにはmesh関連operation / sysmode / profile条件によるwifi re
 
 現段階では未確認setterへの要求、firewall解除、無認証login、flash変更は実施していない。
 バックアップ取得は完了したが、Client Bridge実機PoCはNOT RUNのまま。
+
+## 追加調査: Web API / 機種profile / apply条件
+
+次に公開rootfsのfrontend圧縮JSとLua dispatchを選択読み取りする。JSを実行せず、gzip単体4MiB・総量32MiBの上限で読む。
+ConnectNetworkRepoは/admin/wireless?form=wireless_connect_to_networkのread/writeを使う。機種対応は画面部品の存在とは別に確認する。
+最新rootfsの/etc/partition_config/profileは本文がplaintextではない。GPLのbe260v1/common.mkにencryptCfgがあり、zlib圧縮後AES256-CBCで生成する。
+公開image内のprofileのみを対象に、既知AES256-CBC vectorを先に照合してcopyを読み取る。個体設定backupをこの処理に渡さない。
+復号・展開が成功しても実機で生成されたprofileと同一とは扱わない。
+
+実機の最初のAPI確認は、frontendの公開login用sysmode readに限定する。
+POST /cgi-bin/luci/;stok=/login?form=sysmode、body operation=read、PC有線IPへbind、timeout3秒、response上限64KiB。
+管理session/token/passwordを取り出さず、write・login・password回復・knockは送らない。エラーならURLの推測総当たりをせず、処理定義へ戻る。
+
+### 公開profileと実機の公開getter
+
+公開profile copyの復号・zlib展開に成功した。XMLは22,767 bytes。
+base profileのoperation_modeはrouter,ap、gdpr_hmac_sign=yes、wireless_sta_config_5g=apclii0、wireless_sta_config_2g=apcli0。
+wds_show=yesだが、これは実機のWDS対応を証明しない。country等のprofile mergeがあり、最新の実機feature flagを優先する。
+原file・frontend・追加Luaのhashは[evidence/runtime-web.json](evidence/runtime-web.json)。
+AES検証には[NIST CBC example](https://csrc.nist.gov/CSRC/media/Projects/Cryptographic-Standards-and-Guidelines/documents/examples/AES_ModesA_All.pdf)の既知vectorを使用した。
+
+sourceをPC Ethernetへbindし、192.168.0.1のMACが既に照合した本体labelと一致することを再確認した。
+実機へ既知frontendと一致する公開readだけを送った結果:
+
+| 要求 | 実際の結果 |
+| --- | --- |
+| /login?form=sysmode | HTTP200、success=true、support=yes、mode=router |
+| /device_config?form=config | HTTP200、success=true。supportOperationMode=[router,ap]、supportDwds=false、supportWdsDualmode=false、supportJPFeatures=true |
+| 同上 | supportNDProxy=true、supportMulticastForwarding=false。STA転送時のIPv6成功・multicast全遮断を意味しない |
+| 同上 | certification=[SG CLS L1 STAGE2]。JP実機でもこの共通protocol flagが使われる |
+| /login?form=keys、/login?form=auth | 公開RSA鍵・sequenceのresponse構造を確認。認証成功ではない |
+| /admin/wireless?form=wireless_connect_to_network（未認証） | HTTP200、{"data":""}。このresponseからroute不存在やSTA設定値を判定しない |
+
+### 認証と変更経路の境界
+
+最新frontendの通常local loginはpasswordのRSA PKCS#1 v1.5と、signatureのRSA OAEP/SHA1を別に使用する。
+観測したcertificationではlogin hashがSHA256、認証後readはciphertext hashとHMAC-SHA256になる。
+Lua dispatcherはcookie、stok、client IP等を照合する。browserの認証情報抽出や認証の回避は行わない。
+
+[限定clientの仕様と実行方法](read-sta-state.md)を先に資料化し、offline test後にtools/read_sta_stateを実装した。
+公開featureのpreflight-onlyが実機で成功した後、ユーザー指定の既存passwordを非表示の対話入力へ渡し、通常login・両getter・logoutも成功した。
+passwordをfile、環境変数、command引数へ保存していない。出力はallowlistで値を制限し、PSK・SSID・BSSID・token・cookieを保存しない。
+認証済み結果はmode=router、enable_2g=off、enable_5g=off、encryption_2g/5g=psk。
+このenableは**root AP接続用STA**の設定であり、クライアント向けAPの停止を意味しない。
+非対話実行がpasswordを要求せず停止することも確認した。setterは持たず、失敗時の再試行・confirmによるsession強制解除は行わない。
+
+追加の静的callsiteではsys.configのmerge_wds_config_for_wifixが、通常AP側のwdsをoff、STA/mesh側をonへ設定してcommit_without_write_flashする。
+同じmoduleのmerge_rtor_wireless_configにはuser-config partitionのerase/writeがある。
+**一部のRAM更新処理の存在から、mode switch全体を再起動で戻る一時操作と扱わない。** これらの変更処理は実行していない。
+
+認証済みgetterが成立したため、「runtime情報を読む入口がない」という障壁は解消した。
+残る変更前条件はsetterのsection mapping・wds_modeのdriver側意味、apply条件、変更後も維持する有線管理と実証可能な復元経路。
+5GHz rootap mappingにはwds_modeの許容値0/1/2があるが、数字から3addr/4addrの意味を推測しない。
+Apcfg.writeはcommit後need_applyを判定し、operation/mode/profileに応じてapply・wifi reload・switch_mode rtorへ分岐する。
+再起動だけで戻る計画にはできない。Client Bridge PoC・実機のSTA設定変更はNOT RUN。

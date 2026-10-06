@@ -1,6 +1,6 @@
 # Deployment gate
 
-現時点で実機投入可能なClient Bridge PoCはない。安全なruntime設定経路、複数LAN端末のMAC変換/proxy、AP完全停止時のSTA維持、brick recoveryが未確立。
+現時点で実機投入可能なClient Bridge PoCはない。通常認証によるSTA getterは成立したが、setterの安全な適用・復元、複数LAN端末のMAC変換/proxy、AP完全停止時のSTA維持、brick recoveryが未確立。
 BE700は通常APとして扱う。4addr互換性は通常STA PoCの先行条件から外し、Full L2方式を選ぶ場合のみ確認する。
 現在までの実機操作はUIの読み取り、機種/FW照合、限定したTCP接続確認。新規管理password作成はユーザー操作。未保存quick setupは適用せず終了。AP / EasyMesh / DHCP / NAT / FWの変更を行っていない。
 
