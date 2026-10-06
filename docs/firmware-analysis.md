@@ -20,7 +20,23 @@ container offsetとflash offsetを混同しない。partition tableの候補は�
 
 ## 確認待ち
 
-container / header / partition / filesystem / kernel / userspace / init / network scripts / wireless / bridge / VLAN /
+container / partition / filesystem / kernel / userspace / init / network scripts / wireless / bridge / VLAN /
 EasyMesh daemon / hostapd / wpa_supplicant / proprietary daemon / writable overlayはいずれも未確認。
 Web UI署名検証、bootloader検証、rollback protection、encryption、rootfs verificationも未確認。
 GPLとbinaryの差分は対象buildの対応確認後に評価する。
+
+## 初回オフライン検査
+
+JP公式ZIPを取得。内部BINは49,156,696 bytes、SHA256は`2636aa5eb9fbb91c5840d9f16c25b7bf00e99640c1c626ff3c081957603dd0be`。
+内部ファイル名は`be260v1-be5000v1-be4600v1-us-up-all-ver1-2-0-P1[20260420-rel13798]_2048_sign_2026-04-20_03.50.58.bin`。
+JP配布ZIP内の名称にusが含まれる事実を記録し、他地域配布物を代用しない。適合地域は配布ページ・support-list・対象個体の照合で確認する。
+先頭4 bytesのbig-endian値はファイル長に一致、offset20に`fw-type:Cloud`。rootfs/FIT/ELF/UBI magicは未検出。
+gzip magic候補3件は偶然一致の可能性があり未検証。`sign`という名前だけで署名が強制検証されるとは判断しない。
+[inventory](evidence/jp-v1-260420-inventory.json)が再現可能な証拠。
+
+## GPL inventory実装予定（先行資料）
+
+2,327,878,345 bytesの公式GPL TAR.GZをstreamで読む。全archiveを展開せず、member名とサイズをJSONLで記録する。
+選択した通常ファイルだけを上限付きで読み、NULを含むデータは本文を保存しない。symlink/hardlink/deviceは辿らない。
+保存名は内容SHA256から生成するのでarchive内のpathをホストのpathとして利用しない。
+個別2MiB・選択合計64MiB・tar展開合計32GiBを初期制限とし、超過で停止。vendor scriptを実行しない。
