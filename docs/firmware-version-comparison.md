@@ -142,3 +142,24 @@ The static evidence does **not** support either of these simple explanations:
 Current 1.2.0 retains the STA/APCLI control path and adds authentication/encryption support. The public JP bSTA mapping and wifix init script are unchanged from 1.0.2.
 
 The remaining version-sensitive hypothesis is narrower: internal control flow, runtime state, or EasyMesh/reconnect gating inside changed binaries may differ even though the commands and configurations remain. A function-level comparison is required before attributing the live association failure to a firmware regression. Static presence also does not prove that 1.0.2 ever supported standalone non-EasyMesh association.
+
+
+## Function-level analysis plan
+
+The next pass compares executable control flow rather than string presence.
+
+Targets in `wifix`:
+- STA mode conversion / `init_vap`;
+- `wpa_supplicant_setup_vif` and `wpa_supplicant_enable_vif`;
+- `config_wds_setting`;
+- VAP update / radio reload path.
+
+Targets in `meshd`:
+- platform STA connect callback;
+- band-map reconnect path;
+- disconnect/reconnect helper;
+- scan-before-connect / BSSID-selection path.
+
+For every release, record ELF architecture/build metadata, available function symbols, function start/size where symbols exist, and normalized AArch64 disassembly. Compare normalized instruction bodies across adjacent releases. Absolute addresses alone are not treated as behavior changes.
+
+If target names are stripped, fall back to string-reference neighborhoods and call-site comparison; do not invent function identity from nearby strings alone.
