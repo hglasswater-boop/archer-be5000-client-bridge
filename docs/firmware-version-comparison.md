@@ -299,3 +299,12 @@ The next practical firmware question is no longer “which old version still has
 All four `wifix` binaries set `ApCliMeshRule=1` immediately before `ApCliSsid` and `ApCliEnable=1`. Because this is identical from 1.0.2 through 1.2.0 it is not a firmware-version regression, but its driver semantics may distinguish ordinary APCLI from a Mesh-specific data path.
 
 Next step: scan the published GPL archive in streaming/read-only mode for the exact token `ApCliMeshRule` and nearby definitions/handlers. Do not extract the full archive and do not infer semantics from the command name alone.
+
+
+### GPL exact-token result
+
+A bounded full-stream search of the published GPL archive found **zero** regular-text members containing the exact token `ApCliMeshRule`.
+
+This means the product binary's `iwpriv ... ApCliMeshRule=1` command cannot currently be mapped to a published GPL handler by name. Possible explanations include a product-only driver patch or a source branch not represented by the published GPL tree; no one explanation is assumed.
+
+Continue from published driver tokens that are independently present in the firmware/GPL feature set: `ApCliEnable` and `MACRepeaterEn`. Their handlers/configuration should establish whether a non-EasyMesh APCLI forwarding mode exists independently of `tpbr`.
