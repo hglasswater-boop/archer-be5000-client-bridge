@@ -60,7 +60,299 @@ jobs:
           test "$nm_count" -eq 1
           python -m tools.inspect_gpl artifacts/GPL_ArcherBE5000.tar.gz \
             --output artifacts/gpl-profile-build \
-            --select '/Iplatform/build/product_configs/be260v1/common\.mk
+            --select '/Iplatform/build/product_configs/be260v1/common[.]mk
+          set -euo pipefail
+          python -c "import json; from tools.inspect_gpl import scan_content; r=scan_content('artifacts/GPL_ArcherBE5000.tar.gz', b'ApCliMeshRule'); open('artifacts/gpl-apcli-mesh-rule.json','w').write(json.dumps(r,indent=2))"
+          python -c "import json; from tools.inspect_gpl import scan_content; r=scan_content('artifacts/GPL_ArcherBE5000.tar.gz', b'ApCliEnable'); open('artifacts/gpl-apcli-enable.json','w').write(json.dumps(r,indent=2))"
+          cat artifacts/gpl-apcli-mesh-rule.json
+          cat artifacts/gpl-apcli-enable.json
+
+      - name: Verify, decode and reconstruct rootfs volumes
+        shell: bash
+        run: |
+          set -euo pipefail
+          NM_SOURCE="$(find artifacts/gpl-selected -maxdepth 1 -type f -name '*.txt' -print -quit)"
+          : > artifacts/rootfs-list.txt
+          for version in 1.0.2 1.0.3 1.1.0 1.2.0; do
+            python -m tools.decode_cloud "artifacts/downloads/$version.zip" \
+              --nm-source "$NM_SOURCE" \
+              --output "artifacts/decoded-$version.bin" \
+              --report "artifacts/decoded-$version.json"
+            ubi_start="$(python -c "import json; r=json.load(open('artifacts/decoded-$version.json')); h=[x['offset'] for x in r['magic_candidates'] if x['kind']=='ubi']; assert h; print(hex(min(h)))")"
+            python -m tools.read_ubi "artifacts/decoded-$version.bin" \
+              --start "$ubi_start" --peb-size 0x20000 \
+              --output "artifacts/volumes-$version"
+            rootfs="$(python -c "from pathlib import Path; ps=sorted(Path('artifacts/volumes-$version').glob('volume-*.bin')); m=[p for p in ps if p.open('rb').read(4)==b'hsqs']; assert len(m)==1, len(m); print(m[0])")"
+            printf '%s=%s\n' "$version" "$rootfs" >> artifacts/rootfs-list.txt
+          done
+
+      - name: Compare STA/APCLI files across releases
+        shell: bash
+        run: |
+          set -euo pipefail
+          args=()
+          while IFS= read -r entry; do
+            args+=(--rootfs "$entry")
+          done < artifacts/rootfs-list.txt
+          python -m tools.compare_firmware_versions "${args[@]}" \
+            --output artifacts/firmware-version-comparison.json
+          cat artifacts/firmware-version-comparison.json
+
+      - name: Extract focused configuration and STA-related string diffs
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/focused
+          while IFS='=' read -r version rootfs; do
+            out="artifacts/focused/$version"
+            mkdir -p "$out"
+            python -c "from dissect.squashfs import SquashFS; from pathlib import Path; import sys; src=open(sys.argv[1],'rb'); fs=SquashFS(src); out=Path(sys.argv[2]); items={'wifix_profile.ini':'/lib/wifi/wifix_profile.ini','meshd_cfg.json':'/etc/meshd_cfg.json','meshd_cfg_be260v1_jp.json':'/etc/meshd_cfg_be260v1_jp.json','init-meshd':'/etc/init.d/meshd','init-apsd':'/etc/init.d/apsd','init-tpbr':'/etc/init.d/tpbr','wifix':'/usr/bin/wifix','meshd':'/usr/bin/meshd','mt_wifi.ko':'/lib/modules/5.4.281/mt_wifi.ko'}; [(out/name).write_bytes(fs.get(path).open().read()) for name,path in items.items()]" "$rootfs" "$out"
+            strings -a "$out/wifix" | grep -Ei 'apcli|wpa_cli|wpa_supplicant|reconnect|disconnect|macrepeater|tp_mesh|rootap|bsta|wds' | sort -u > "$out/wifix-sta-strings.txt" || true
+            strings -a "$out/meshd" | grep -Ei 'apcli|wpa_cli|wpa_supplicant|reconnect|disconnect|macrepeater|tp_mesh|rootap|bsta|wds' | sort -u > "$out/meshd-sta-strings.txt" || true
+            strings -a "$out/mt_wifi.ko" | grep -Ei 'apcli|mac.?repeater|repeater|mwds|wds|proxy.?arp' | sort -u > "$out/mt-wifi-apcli-strings.txt" || true
+          done < artifacts/rootfs-list.txt
+          {
+            diff -u artifacts/focused/1.0.2/wifix_profile.ini artifacts/focused/1.0.3/wifix_profile.ini || true
+            diff -u artifacts/focused/1.0.3/wifix_profile.ini artifacts/focused/1.1.0/wifix_profile.ini || true
+            diff -u artifacts/focused/1.1.0/wifix_profile.ini artifacts/focused/1.2.0/wifix_profile.ini || true
+          } > artifacts/focused/wifix-profile.diff
+          {
+            diff -u artifacts/focused/1.0.2/meshd_cfg.json artifacts/focused/1.0.3/meshd_cfg.json || true
+            diff -u artifacts/focused/1.0.3/meshd_cfg.json artifacts/focused/1.1.0/meshd_cfg.json || true
+            diff -u artifacts/focused/1.1.0/meshd_cfg.json artifacts/focused/1.2.0/meshd_cfg.json || true
+          } > artifacts/focused/meshd-cfg.diff
+          for bin in wifix meshd; do
+            {
+              for pair in '1.0.2 1.0.3' '1.0.3 1.1.0' '1.1.0 1.2.0'; do
+                set -- $pair
+                echo "=== $1 -> $2 ==="
+                diff -u "artifacts/focused/$1/$bin-sta-strings.txt" "artifacts/focused/$2/$bin-sta-strings.txt" || true
+              done
+            } > "artifacts/focused/$bin-sta-strings.diff"
+          done
+          {
+            for pair in '1.0.2 1.0.3' '1.0.3 1.1.0' '1.1.0 1.2.0'; do
+              set -- $pair
+              echo "=== $1 -> $2 ==="
+              diff -u "artifacts/focused/$1/mt-wifi-apcli-strings.txt" "artifacts/focused/$2/mt-wifi-apcli-strings.txt" || true
+            done
+          } > artifacts/focused/mt-wifi-apcli-strings.diff
+
+          for script in init-meshd init-apsd init-tpbr; do
+            {
+              for pair in '1.0.2 1.0.3' '1.0.3 1.1.0' '1.1.0 1.2.0'; do
+                set -- $pair
+                echo "=== $1 -> $2 ==="
+                diff -u "artifacts/focused/$1/$script" "artifacts/focused/$2/$script" || true
+              done
+            } > "artifacts/focused/$script.diff"
+          done
+
+      - name: Export stripped-binary disassembly for string-xref analysis
+        shell: bash
+        run: |
+          set -euo pipefail
+          for version in 1.0.2 1.0.3 1.1.0 1.2.0; do
+            dir="artifacts/focused/$version"
+            for bin in wifix meshd; do
+              aarch64-linux-gnu-readelf -lW "$dir/$bin" > "$dir/$bin-program-headers.txt"
+              aarch64-linux-gnu-readelf -SW "$dir/$bin" > "$dir/$bin-section-headers.txt"
+              aarch64-linux-gnu-objdump -d --no-show-raw-insn "$dir/$bin" > "$dir/$bin-disassembly.txt"
+              strings -a -t x "$dir/$bin" > "$dir/$bin-strings-offsets.txt"
+            done
+          done
+
+      - name: Compare AArch64 XREF contexts for STA enable and reconnect
+        shell: bash
+        run: |
+          set -euo pipefail
+          for version in 1.0.2 1.2.0; do
+            python -m tools.aarch64_string_xrefs "artifacts/focused/$version/wifix" \
+              --marker 'iwpriv %s set ApCliEnable=1' \
+              --marker '/usr/sbin/wpa_cli -p /var/run/wpa_supplicant -i %s disconnect' \
+              --marker 'config_wds_setting' \
+              --output "artifacts/focused/$version/wifix-xrefs.json"
+            python -m tools.aarch64_string_xrefs "artifacts/focused/$version/meshd" \
+              --marker 'wpa_cli -p /var/run/wpa_supplicant -i %s reconnect' \
+              --marker '[meshd]<%s, %d>Reconnect band_map[0x%02X]' \
+              --marker '[meshd]<%s, %d>select_band_bmap=0x%02X, connect_band_bmap=0x%02X, need to reconnect' \
+              --output "artifacts/focused/$version/meshd-xrefs.json"
+          done
+
+      - name: Upload comparison reports only
+        uses: actions/upload-artifact@v4
+        with:
+          name: firmware-sta-comparison
+          path: |
+            artifacts/firmware-version-comparison.json
+            artifacts/decoded-*.json
+            artifacts/gpl-apcli-mesh-rule.json
+            artifacts/gpl-apcli-enable.json
+            artifacts/gpl-profile-build/*.txt
+            artifacts/gpl-profile-build/summary.json
+            artifacts/volumes-*/summary.json
+            artifacts/focused/*.diff
+            artifacts/focused/*/*-sta-strings.txt
+            artifacts/focused/*/*-xrefs.json
+            artifacts/focused/*/mt-wifi-apcli-strings.txt
+            artifacts/focused/*/init-meshd
+            artifacts/focused/*/init-apsd
+            artifacts/focused/*/init-tpbr
+            artifacts/focused/*/*-elf-header.txt
+            artifacts/focused/*/*-program-headers.txt
+            artifacts/focused/*/*-section-headers.txt
+            artifacts/focused/*/*-disassembly.txt
+            artifacts/focused/*/*-strings-offsets.txt
+          if-no-files-found: error
+
+
+      - name: Locate APCLI driver controls in GPL sources
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -c "import json; from tools.inspect_gpl import scan_content; r=scan_content('artifacts/GPL_ArcherBE5000.tar.gz', b'ApCliMeshRule'); open('artifacts/gpl-apcli-mesh-rule.json','w').write(json.dumps(r,indent=2))"
+          python -c "import json; from tools.inspect_gpl import scan_content; r=scan_content('artifacts/GPL_ArcherBE5000.tar.gz', b'ApCliEnable'); open('artifacts/gpl-apcli-enable.json','w').write(json.dumps(r,indent=2))"
+          cat artifacts/gpl-apcli-mesh-rule.json
+          cat artifacts/gpl-apcli-enable.json
+
+      - name: Verify, decode and reconstruct rootfs volumes
+        shell: bash
+        run: |
+          set -euo pipefail
+          NM_SOURCE="$(find artifacts/gpl-selected -maxdepth 1 -type f -name '*.txt' -print -quit)"
+          : > artifacts/rootfs-list.txt
+          for version in 1.0.2 1.0.3 1.1.0 1.2.0; do
+            python -m tools.decode_cloud "artifacts/downloads/$version.zip" \
+              --nm-source "$NM_SOURCE" \
+              --output "artifacts/decoded-$version.bin" \
+              --report "artifacts/decoded-$version.json"
+            ubi_start="$(python -c "import json; r=json.load(open('artifacts/decoded-$version.json')); h=[x['offset'] for x in r['magic_candidates'] if x['kind']=='ubi']; assert h; print(hex(min(h)))")"
+            python -m tools.read_ubi "artifacts/decoded-$version.bin" \
+              --start "$ubi_start" --peb-size 0x20000 \
+              --output "artifacts/volumes-$version"
+            rootfs="$(python -c "from pathlib import Path; ps=sorted(Path('artifacts/volumes-$version').glob('volume-*.bin')); m=[p for p in ps if p.open('rb').read(4)==b'hsqs']; assert len(m)==1, len(m); print(m[0])")"
+            printf '%s=%s\n' "$version" "$rootfs" >> artifacts/rootfs-list.txt
+          done
+
+      - name: Compare STA/APCLI files across releases
+        shell: bash
+        run: |
+          set -euo pipefail
+          args=()
+          while IFS= read -r entry; do
+            args+=(--rootfs "$entry")
+          done < artifacts/rootfs-list.txt
+          python -m tools.compare_firmware_versions "${args[@]}" \
+            --output artifacts/firmware-version-comparison.json
+          cat artifacts/firmware-version-comparison.json
+
+      - name: Extract focused configuration and STA-related string diffs
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/focused
+          while IFS='=' read -r version rootfs; do
+            out="artifacts/focused/$version"
+            mkdir -p "$out"
+            python -c "from dissect.squashfs import SquashFS; from pathlib import Path; import sys; src=open(sys.argv[1],'rb'); fs=SquashFS(src); out=Path(sys.argv[2]); items={'wifix_profile.ini':'/lib/wifi/wifix_profile.ini','meshd_cfg.json':'/etc/meshd_cfg.json','meshd_cfg_be260v1_jp.json':'/etc/meshd_cfg_be260v1_jp.json','init-meshd':'/etc/init.d/meshd','init-apsd':'/etc/init.d/apsd','init-tpbr':'/etc/init.d/tpbr','wifix':'/usr/bin/wifix','meshd':'/usr/bin/meshd','mt_wifi.ko':'/lib/modules/5.4.281/mt_wifi.ko'}; [(out/name).write_bytes(fs.get(path).open().read()) for name,path in items.items()]" "$rootfs" "$out"
+            strings -a "$out/wifix" | grep -Ei 'apcli|wpa_cli|wpa_supplicant|reconnect|disconnect|macrepeater|tp_mesh|rootap|bsta|wds' | sort -u > "$out/wifix-sta-strings.txt" || true
+            strings -a "$out/meshd" | grep -Ei 'apcli|wpa_cli|wpa_supplicant|reconnect|disconnect|macrepeater|tp_mesh|rootap|bsta|wds' | sort -u > "$out/meshd-sta-strings.txt" || true
+            strings -a "$out/mt_wifi.ko" | grep -Ei 'apcli|mac.?repeater|repeater|mwds|wds|proxy.?arp' | sort -u > "$out/mt-wifi-apcli-strings.txt" || true
+          done < artifacts/rootfs-list.txt
+          {
+            diff -u artifacts/focused/1.0.2/wifix_profile.ini artifacts/focused/1.0.3/wifix_profile.ini || true
+            diff -u artifacts/focused/1.0.3/wifix_profile.ini artifacts/focused/1.1.0/wifix_profile.ini || true
+            diff -u artifacts/focused/1.1.0/wifix_profile.ini artifacts/focused/1.2.0/wifix_profile.ini || true
+          } > artifacts/focused/wifix-profile.diff
+          {
+            diff -u artifacts/focused/1.0.2/meshd_cfg.json artifacts/focused/1.0.3/meshd_cfg.json || true
+            diff -u artifacts/focused/1.0.3/meshd_cfg.json artifacts/focused/1.1.0/meshd_cfg.json || true
+            diff -u artifacts/focused/1.1.0/meshd_cfg.json artifacts/focused/1.2.0/meshd_cfg.json || true
+          } > artifacts/focused/meshd-cfg.diff
+          for bin in wifix meshd; do
+            {
+              for pair in '1.0.2 1.0.3' '1.0.3 1.1.0' '1.1.0 1.2.0'; do
+                set -- $pair
+                echo "=== $1 -> $2 ==="
+                diff -u "artifacts/focused/$1/$bin-sta-strings.txt" "artifacts/focused/$2/$bin-sta-strings.txt" || true
+              done
+            } > "artifacts/focused/$bin-sta-strings.diff"
+          done
+          {
+            for pair in '1.0.2 1.0.3' '1.0.3 1.1.0' '1.1.0 1.2.0'; do
+              set -- $pair
+              echo "=== $1 -> $2 ==="
+              diff -u "artifacts/focused/$1/mt-wifi-apcli-strings.txt" "artifacts/focused/$2/mt-wifi-apcli-strings.txt" || true
+            done
+          } > artifacts/focused/mt-wifi-apcli-strings.diff
+
+          for script in init-meshd init-apsd init-tpbr; do
+            {
+              for pair in '1.0.2 1.0.3' '1.0.3 1.1.0' '1.1.0 1.2.0'; do
+                set -- $pair
+                echo "=== $1 -> $2 ==="
+                diff -u "artifacts/focused/$1/$script" "artifacts/focused/$2/$script" || true
+              done
+            } > "artifacts/focused/$script.diff"
+          done
+
+      - name: Export stripped-binary disassembly for string-xref analysis
+        shell: bash
+        run: |
+          set -euo pipefail
+          for version in 1.0.2 1.0.3 1.1.0 1.2.0; do
+            dir="artifacts/focused/$version"
+            for bin in wifix meshd; do
+              aarch64-linux-gnu-readelf -lW "$dir/$bin" > "$dir/$bin-program-headers.txt"
+              aarch64-linux-gnu-readelf -SW "$dir/$bin" > "$dir/$bin-section-headers.txt"
+              aarch64-linux-gnu-objdump -d --no-show-raw-insn "$dir/$bin" > "$dir/$bin-disassembly.txt"
+              strings -a -t x "$dir/$bin" > "$dir/$bin-strings-offsets.txt"
+            done
+          done
+
+      - name: Compare AArch64 XREF contexts for STA enable and reconnect
+        shell: bash
+        run: |
+          set -euo pipefail
+          for version in 1.0.2 1.2.0; do
+            python -m tools.aarch64_string_xrefs "artifacts/focused/$version/wifix" \
+              --marker 'iwpriv %s set ApCliEnable=1' \
+              --marker '/usr/sbin/wpa_cli -p /var/run/wpa_supplicant -i %s disconnect' \
+              --marker 'config_wds_setting' \
+              --output "artifacts/focused/$version/wifix-xrefs.json"
+            python -m tools.aarch64_string_xrefs "artifacts/focused/$version/meshd" \
+              --marker 'wpa_cli -p /var/run/wpa_supplicant -i %s reconnect' \
+              --marker '[meshd]<%s, %d>Reconnect band_map[0x%02X]' \
+              --marker '[meshd]<%s, %d>select_band_bmap=0x%02X, connect_band_bmap=0x%02X, need to reconnect' \
+              --output "artifacts/focused/$version/meshd-xrefs.json"
+          done
+
+      - name: Upload comparison reports only
+        uses: actions/upload-artifact@v4
+        with:
+          name: firmware-sta-comparison
+          path: |
+            artifacts/firmware-version-comparison.json
+            artifacts/decoded-*.json
+            artifacts/gpl-apcli-mesh-rule.json
+            artifacts/gpl-apcli-enable.json
+            artifacts/volumes-*/summary.json
+            artifacts/focused/*.diff
+            artifacts/focused/*/*-sta-strings.txt
+            artifacts/focused/*/*-xrefs.json
+            artifacts/focused/*/mt-wifi-apcli-strings.txt
+            artifacts/focused/*/init-meshd
+            artifacts/focused/*/init-apsd
+            artifacts/focused/*/init-tpbr
+            artifacts/focused/*/*-elf-header.txt
+            artifacts/focused/*/*-program-headers.txt
+            artifacts/focused/*/*-section-headers.txt
+            artifacts/focused/*/*-disassembly.txt
+            artifacts/focused/*/*-strings-offsets.txt
+          if-no-files-found: error
+
+
+      - name: Locate APCLI driver controls in GPL sources
         shell: bash
         run: |
           set -euo pipefail
