@@ -10,6 +10,8 @@ STA機能の候補はあり、恒久的な実現不能と断定した結論で�
 
 **現在の実機状態:** ユーザーの指示で、2026-10-07の設定readback成功後は5GHz STAを有効のまま維持している。現在の比較候補は空白なしの通常SSID / WPA2。管理IP192.168.1.1、DHCP off。診断はreadのみ、比較設定への変更は明示flagで行い、毎回の無効化・復元を省く。tmp_readは信号0・BSSID/channelなし、純正ログ48件（全type/全level）にAPCLI関連語なし。通常SSID / WPA2へ変更して約3分後もEthernet DHCPはOFFERなし。接続状態と転送成功は未確立。
 
+追加比較でBSSID固定解除fieldを明示したwriteはHTTP応答拒否となり、失敗処理で一時STA offになった。受理実績のある6 fieldへ戻して再適用し、05:33ZにSTA onのreadbackと有効維持を確認済み。Ethernet DHCPは引き続きOFFERなし。保存BSSIDがgetterから隠れる条件と、driver起動に至るwifix update経路を[解析記録](docs/sta-link-observation.md)へ追記した。
+
 - 本体ラベルと直結Web UIでJP/1.0、**1.2.0 Build 20260420 rel.13798(4A50)** を照合。JP最新版と一致。
 - 公開FWのRSA2048-PSS/SHA256を検証し、copyのAES128-CBC payloadを復号。全UBI CRCを検証してkernel / rootfsを読んだ。
 - 最新FWに5GHz bSTA **apclii0**、**br-lan**、vendor Wi-Fi driver、hostapd/wpa_supplicantのwpad、EasyMesh agent/controller、wifix / meshd / apsd / tpbrを確認。GPLにはAPCLI / MWDS / MAC_REPEATER機能がある。
