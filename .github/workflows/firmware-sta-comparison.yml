@@ -1,8 +1,6 @@
 name: Firmware STA comparison
 
 on:
-  push:
-    branches: [issue-2-firmware-sta-compare]
   pull_request:
     branches: [main]
   workflow_dispatch:
@@ -85,6 +83,38 @@ jobs:
             --output artifacts/firmware-version-comparison.json
           cat artifacts/firmware-version-comparison.json
 
+      - name: Extract focused configuration and STA-related string diffs
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/focused
+          while IFS='=' read -r version rootfs; do
+            out="artifacts/focused/$version"
+            mkdir -p "$out"
+            python -c "from dissect.squashfs import SquashFS; from pathlib import Path; import sys; src=open(sys.argv[1],'rb'); fs=SquashFS(src); out=Path(sys.argv[2]); items={'wifix_profile.ini':'/lib/wifi/wifix_profile.ini','meshd_cfg.json':'/etc/meshd_cfg.json','meshd_cfg_be260v1_jp.json':'/etc/meshd_cfg_be260v1_jp.json','wifix':'/usr/bin/wifix','meshd':'/usr/bin/meshd'}; [(out/name).write_bytes(fs.get(path).open().read()) for name,path in items.items()]" "$rootfs" "$out"
+            strings -a "$out/wifix" | grep -Ei 'apcli|wpa_cli|wpa_supplicant|reconnect|disconnect|macrepeater|tp_mesh|rootap|bsta|wds' | sort -u > "$out/wifix-sta-strings.txt" || true
+            strings -a "$out/meshd" | grep -Ei 'apcli|wpa_cli|wpa_supplicant|reconnect|disconnect|macrepeater|tp_mesh|rootap|bsta|wds' | sort -u > "$out/meshd-sta-strings.txt" || true
+          done < artifacts/rootfs-list.txt
+          {
+            diff -u artifacts/focused/1.0.2/wifix_profile.ini artifacts/focused/1.0.3/wifix_profile.ini || true
+            diff -u artifacts/focused/1.0.3/wifix_profile.ini artifacts/focused/1.1.0/wifix_profile.ini || true
+            diff -u artifacts/focused/1.1.0/wifix_profile.ini artifacts/focused/1.2.0/wifix_profile.ini || true
+          } > artifacts/focused/wifix-profile.diff
+          {
+            diff -u artifacts/focused/1.0.2/meshd_cfg.json artifacts/focused/1.0.3/meshd_cfg.json || true
+            diff -u artifacts/focused/1.0.3/meshd_cfg.json artifacts/focused/1.1.0/meshd_cfg.json || true
+            diff -u artifacts/focused/1.1.0/meshd_cfg.json artifacts/focused/1.2.0/meshd_cfg.json || true
+          } > artifacts/focused/meshd-cfg.diff
+          for bin in wifix meshd; do
+            {
+              for pair in '1.0.2 1.0.3' '1.0.3 1.1.0' '1.1.0 1.2.0'; do
+                set -- $pair
+                echo "=== $1 -> $2 ==="
+                diff -u "artifacts/focused/$1/$bin-sta-strings.txt" "artifacts/focused/$2/$bin-sta-strings.txt" || true
+              done
+            } > "artifacts/focused/$bin-sta-strings.diff"
+          done
+
       - name: Upload comparison reports only
         uses: actions/upload-artifact@v4
         with:
@@ -93,4 +123,6 @@ jobs:
             artifacts/firmware-version-comparison.json
             artifacts/decoded-*.json
             artifacts/volumes-*/summary.json
+            artifacts/focused/*.diff
+            artifacts/focused/*/*-sta-strings.txt
           if-no-files-found: error
