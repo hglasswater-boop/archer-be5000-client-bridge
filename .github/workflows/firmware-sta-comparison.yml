@@ -150,6 +150,20 @@ jobs:
             done
           done
 
+      - name: Export stripped-binary disassembly for string-xref analysis
+        shell: bash
+        run: |
+          set -euo pipefail
+          for version in 1.0.2 1.0.3 1.1.0 1.2.0; do
+            dir="artifacts/focused/$version"
+            for bin in wifix meshd; do
+              aarch64-linux-gnu-readelf -lW "$dir/$bin" > "$dir/$bin-program-headers.txt"
+              aarch64-linux-gnu-readelf -SW "$dir/$bin" > "$dir/$bin-section-headers.txt"
+              aarch64-linux-gnu-objdump -d --no-show-raw-insn "$dir/$bin" > "$dir/$bin-disassembly.txt"
+              strings -a -t x "$dir/$bin" > "$dir/$bin-strings-offsets.txt"
+            done
+          done
+
       - name: Upload comparison reports only
         uses: actions/upload-artifact@v4
         with:
@@ -163,5 +177,9 @@ jobs:
             artifacts/focused/*/*-elf-header.txt
             artifacts/focused/*/*-symbols-sta.txt
             artifacts/focused/*/*-target-functions.txt
+            artifacts/focused/*/*-program-headers.txt
+            artifacts/focused/*/*-section-headers.txt
+            artifacts/focused/*/*-disassembly.txt
+            artifacts/focused/*/*-strings-offsets.txt
             artifacts/focused/*-functions-*.diff
           if-no-files-found: error
