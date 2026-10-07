@@ -1,5 +1,9 @@
 # STA tmp_read observation
 
+## 5GHzスキャンによる接続先検出（追加調査）
+
+既知の `/admin/wireless?form=survey_5g` はcontroller/wireless_survey_5gからApcfg.scanlist(false,true,false,false)へ進む。iwinfoのscanlistを利用し、STA/APの設定保存は行わないが、radio上のスキャンを実施する。`--probe-survey`で一回実行し、保存済みSTA SSIDと一致する行だけをRAMで選ぶ。reportは総件数・一致数と限定したchannel/signal/security値のみ。SSID/BSSID/PSKと未知値は保存しない。スキャンrouteのみtimeoutを30秒とし、失敗は固定理由で記録、STA維持とlogoutを行う。
+
 公開FW controllerのwireless_connect_to_networkはoperation=tmp_readをtmp_read_rootapへdispatchする（pc1049〜1053）。write/tmp_write/tmp_write_onoffは別callbackであり、今回追加する観測はtmp_readだけを使用する。
 
 tmp_read_rootapは既存STA設定をreadし、profileのwireless_sta_2g/5g（なければ空文字）を用いてApcfg.get_root_ap_statusを呼ぶ。model/39はiwinfoから対象interfaceのBSSID、channel、signal、assoclist等を読む。callbackはさらにonline-testを呼び、その終了値をinternet_statusへ変換する。従って設定を書き込むoperationではないが、ルーター内のオンライン確認処理も伴う。

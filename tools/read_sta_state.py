@@ -23,8 +23,10 @@ READS = frozenset(['/admin/system?form=sysmode',
 STATUS_ROUTE = '/admin/wireless?form=wireless_connect_status'
 STATUS_READS = frozenset([STATUS_ROUTE])
 DIAGNOSTIC_READS = frozenset(['/admin/syslog?form=log', '/admin/syslog?form=filter',
-                             '/admin/easymesh?form=easymesh_enable'])
+                             '/admin/easymesh?form=easymesh_enable', '/admin/wireless?form=survey_5g',
+                             '/admin/wireless?form=wireless_5g', '/admin/wireless?form=wireless_2g'])
 NETWORK_READS = frozenset(['/admin/network?form=lan_ipv4', '/admin/dhcps?form=setting'])
+LOCAL_SSH_ROUTE = '/admin/administration?form=login'
 LOGIN = '/login?form=login'
 LOGOUT = '/admin/system?form=logout'
 LIMIT = 65536
@@ -147,7 +149,7 @@ class Transport:
         self.source_ip, self.target_ip, self.cookie = str(address), target_ip, ''
 
     def post(self, route, payload, token=''):
-        if route not in PUBLIC | READS | STATUS_READS | NETWORK_READS | DIAGNOSTIC_READS | {LOGIN, LOGOUT}:
+        if route not in PUBLIC | READS | STATUS_READS | NETWORK_READS | DIAGNOSTIC_READS | {LOGIN, LOGOUT, LOCAL_SSH_ROUTE}:
             raise Failure('request route is not allowlisted')
         if not isinstance(payload, bytes) or len(payload) > 16384:
             raise Failure('request payload invalid')
@@ -168,7 +170,8 @@ class Transport:
                 raise Failure('login must not reuse a token')
             if route != LOGIN and (not re.fullmatch(r'[0-9a-f]{16,128}', token) or not self.cookie):
                 raise Failure('authenticated session required')
-        connection = http.client.HTTPConnection(self.target_ip, 80, timeout=5,
+        connection = http.client.HTTPConnection(self.target_ip, 80,
+                                                timeout=30 if route == '/admin/wireless?form=survey_5g' else 5,
                                                 source_address=(self.source_ip, 0))
         try:
             headers = {'Content-Type': 'application/x-www-form-urlencoded', 'Cache-Control': 'no-cache'}

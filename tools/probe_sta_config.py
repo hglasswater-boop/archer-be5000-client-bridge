@@ -22,6 +22,7 @@ SECURITY_PLANS = {
     # itself prove that the driver negotiated MLO.
     'wpa2': ('psk', 'rsn', 'aes'),
     'wpa3-transition': ('psk_sae', 'sae_transition', 'aes'),
+    'wpa3': ('psk_sae', 'sae_only', 'aes'),
 }
 STATUS_FIELDS = ('connect_status', 'connected_5g', 'status_5g')
 SAFE_STATUS_VALUES = frozenset(('connected', 'connecting', 'disconnected', 'disabled', 'enabled', 'on', 'off'))
@@ -251,7 +252,7 @@ def main(argv=None):
     parser.add_argument('--keep-enabled', action='store_true', help='keep verified STA settings enabled after observation; restore only on failed configuration readback')
     parser.add_argument('--replace-active', action='store_true', help='replace an active known STA profile; requires --keep-enabled')
     parser.add_argument('--security', choices=tuple(SECURITY_PLANS), default='wpa2',
-                        help='frontend security mapping; wpa3-transition is WPA2/WPA3 mixed')
+                        help='known security mapping; wpa3 is SAE only, wpa3-transition is mixed')
     args = parser.parse_args(argv)
     if not args.apply:
         finish = 'keep verified STA enabled' if args.keep_enabled else 'disable and restore'

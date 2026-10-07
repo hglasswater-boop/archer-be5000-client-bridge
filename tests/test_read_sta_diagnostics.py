@@ -1,13 +1,31 @@
 import json
 import unittest
 from unittest.mock import patch
-from tools.read_sta_diagnostics import SYSLOG, MESH, collect, summarize_log, mesh_observation
+from tools.read_sta_diagnostics import SYSLOG, MESH, collect, summarize_log, mesh_observation, summarize_survey, radio_observation
 from tools.probe_sta_config import request
 from tools.read_sta_state import Failure, LOGOUT
 from tests.test_probe_sta_config import Device, PlainProtocol
 
 
 class DiagnosticTests(unittest.TestCase):
+    def test_radio_read_omits_credentials_and_unknown_values(self):
+        result = radio_observation({'wireless_5g_enable': 'on', 'radio_5g_channel': '36',
+                                    'wireless_5g_ssid': 'private', 'radio_5g_mode': 'private'})
+        self.assertEqual(result['radio_5g_channel'], 36)
+        self.assertNotIn('private', json.dumps(result))
+    def test_survey_matches_saved_target_without_identifiers(self):
+        self.assertEqual(summarize_survey({}, 'private')['rows'], 0)
+        rows = [{'ssid': 'private', 'bssid': '00:11:22:33:44:55', 'channel': 36,
+                 'signal': 70, 'encryption': 'psk_sae', 'psk_version': 'sae_transition'},
+                {'ssid': 'other', 'channel': 44}]
+        result = summarize_survey(rows, 'private')
+        self.assertEqual(result['target_matches'], 1)
+        self.assertEqual(result['targets'][0]['channel'], 36)
+        self.assertNotIn('private', json.dumps(result))
+        self.assertNotIn('00:11', json.dumps(result))
+        with self.assertRaises(Failure):
+            summarize_survey({'secret': 'private'}, 'private')
+
     def test_mesh_getter_sanitizes_and_cannot_be_used_as_setter(self):
         self.assertEqual(mesh_observation({'enable': 'on', 'secret': 'private'}), {'enable': 'on'})
         self.assertEqual(mesh_observation({'enable': 'private'}), {'enable': 'unavailable'})

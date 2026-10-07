@@ -12,7 +12,7 @@
 - 保存済みSSID/PSKはRAM内に原値を保持して戻す。空値または限定ASCIIの復元可能な値だけを許し、mask・未知形式・有効な既存STAは上書きせず停止する。
 
 管理IP/DHCPはWeb UIの通常設定で変更した。PC固定IPの手順は[wired-management](wired-management.md)。
-親機はWPA2/WPA3混在の通常APとして扱い、security mappingを選んだ5GHz接続候補を使う。親機の暗号設定は変更しない。`wpa2`は`psk/rsn/aes`、`wpa3-transition`はfrontendが示す`psk_sae/sae_transition/aes`である。後者の受理はMLO client negotiationを意味しない。
+security mappingを選んだ5GHz接続候補を使う。`wpa2`は`psk/rsn/aes`、`wpa3-transition`はfrontendが示す`psk_sae/sae_transition/aes`、`wpa3`は公開rootap mappingが許す`psk_sae/sae_only/aes`である。設定の受理はMLO client negotiationを意味しない。実際のPC接続はWPA3/H2Eだったため、純正STAの問題を分離する通常5GHz/WPA2試験SSIDの準備をユーザーへ依頼した。
 
 ## 要求とrollback
 

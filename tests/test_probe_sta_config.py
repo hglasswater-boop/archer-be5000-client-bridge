@@ -67,6 +67,11 @@ class Device:
 
 
 class ProbeTests(unittest.TestCase):
+    def test_wpa3_only_uses_known_sae_mapping(self):
+        plan = connection_plan('MLO candidate', 'WiFiTestSecret', 'wpa3')
+        self.assertEqual(plan['encryption_5g'], 'psk_sae')
+        self.assertEqual(plan['psk_version_5g'], 'sae_only')
+        self.assertEqual(plan['psk_cipher_5g'], 'aes')
     def run_probe(self, device, **kwargs):
         with patch('tools.probe_sta_config.login_session', return_value=(PlainProtocol(), 'own-token')):
             return probe(device, None, lambda: 'AdminTestSecret',

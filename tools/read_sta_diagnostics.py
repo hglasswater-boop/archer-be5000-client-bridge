@@ -10,6 +10,8 @@ from .read_sta_state import Crypto, Failure, LOGOUT, ROOT, Transport, login_sess
 
 SYSLOG = '/admin/syslog?form=log'
 MESH = '/admin/easymesh?form=easymesh_enable'
+SURVEY = '/admin/wireless?form=survey_5g'
+RADIO = '/admin/wireless?form=wireless_5g'
 PATTERNS = {
     'apcli': r'apcli|rootap|wifix',
     'supplicant': r'wpa_supplicant|wpa_cli',
@@ -46,13 +48,63 @@ def mesh_observation(data):
     return {'enable': value if value in ('on', 'off') else 'unavailable'}
 
 
-def collect(transport, crypto, password_provider, *, probe_mesh=False):
+def summarize_survey(data, target):
+    # Lua's empty array is encoded as an empty object by this firmware.
+    if data == {}:
+        data = []
+    if not isinstance(data, list) or len(data) > 4096:
+        raise Failure('survey must be a bounded row list')
+    matches = [r for r in data if isinstance(r, dict) and r.get('ssid') == target and target]
+    targets = []
+    for row in matches:
+        value = {}
+        for name, bound in (('channel', 233), ('signal', 100)):
+            v = row.get(name)
+            if isinstance(v, str) and re.fullmatch(r'[0-9]{1,3}', v):
+                v = int(v)
+            if type(v) is int and 0 <= v <= bound:
+                value[name] = v
+        for name, allowed in [('encryption', ('none', 'wep', 'psk', 'psk_sae')),
+                              ('psk_version', ('auto', 'wpa', 'rsn', 'sae_transition', 'sae_only')),
+                              ('psk_cipher', ('auto', 'aes', 'ccmp', 'tkip'))]:
+            if row.get(name) in allowed:
+                value[name] = row[name]
+        targets.append(value)
+    return {'rows': len(data), 'target_matches': len(matches), 'targets': targets}
+
+
+def radio_observation(data):
+    if not isinstance(data, dict):
+        raise Failure('radio setting must be an object')
+    result = {}
+    for key in ('wireless_5g_enable', 'wireless_5g_disabled_all', 'radio_5g_enable'):
+        if data.get(key) in ('on', 'off'):
+            result[key] = data[key]
+    for key in ('radio_5g_channel', 'wireless_5g_channel'):
+        value = data.get(key)
+        if isinstance(value, str) and re.fullmatch(r'[0-9]{1,3}', value):
+            value = int(value)
+        if type(value) is int and 0 <= value <= 233:
+            result[key] = value
+        elif value == 'auto':
+            result[key] = 'auto'
+    return result
+
+
+def collect(transport, crypto, password_provider, *, probe_mesh=False, probe_survey=False, probe_radio=False):
     report = {'outcome': 'stopped', 'logout': 'not-needed'}
     protocol, token = None, ''
     try:
         protocol, token = login_session(transport, crypto, password_provider)
         config = request(transport, protocol, token, STA)
         report['sta_5g_enabled'] = config.get('enable_5g') == 'on'
+        if probe_radio:
+            report['radio_5g'] = radio_observation(request(transport, protocol, token, RADIO,
+                                                          fields={'form': 'wireless_5g'}))
+        if probe_survey:
+            payload = protocol.encrypt('operation=read')
+            rows = success(protocol.decrypt(transport.post(SURVEY, payload, token)), 'survey')
+            report['survey_5g'] = summarize_survey(rows, config.get('ssid_5g'))
         if probe_mesh:
             report['mesh_setting'] = mesh_observation(request(transport, protocol, token, MESH))
         report['link'] = link_observation(request(transport, protocol, token, STA, 'tmp_read'))
@@ -82,13 +134,15 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--source-ip', required=True, choices=('192.168.1.52',))
     parser.add_argument('--probe-mesh', action='store_true', help='read known EasyMesh enable getter; no settings changes')
+    parser.add_argument('--probe-survey', action='store_true', help='scan 5GHz and summarize saved-target matches')
+    parser.add_argument('--probe-radio', action='store_true', help='read limited 5GHz AP/radio configuration')
     args = parser.parse_args()
     node = shutil.which('node')
     if not node or not sys.stdin.isatty() or not sys.stderr.isatty():
         print('Stopped: Node.js and interactive terminal are required', file=sys.stderr)
         return 1
     report = collect(Transport(args.source_ip, '192.168.1.1'), Crypto(node), prompt_password,
-                     probe_mesh=args.probe_mesh)
+                     probe_mesh=args.probe_mesh, probe_survey=args.probe_survey, probe_radio=args.probe_radio)
     stamp = datetime.datetime.now(datetime.timezone.utc)
     report['captured_at'] = stamp.isoformat()
     path = ROOT / 'local-evidence' / ('sta-diagnostics-' + stamp.strftime('%Y%m%dT%H%M%S%fZ') + '.json')

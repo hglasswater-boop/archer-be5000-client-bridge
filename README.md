@@ -8,7 +8,11 @@ Archer BE5000 **JP/1.0** を、EasyMeshなしの5GHz STA → 1GbE PC/NAS用Ether
 **日常利用できるClient Bridgeは未成立。限定STA設定試験とIPv4 DHCP観測まで実施済み。**
 STA機能の候補はあり、恒久的な実現不能と断定した結論ではない。復旧未確立のまま改造FWを書き込むことはしない。
 
-**現在の実機状態:** ユーザーの指示で、2026-10-07の設定readback成功後は5GHz STAを有効のまま維持している。現在の比較候補は空白なしの通常SSID / WPA2。管理IP192.168.1.1、DHCP off。診断はreadのみ、比較設定への変更は明示flagで行い、毎回の無効化・復元を省く。tmp_readは信号0・BSSID/channelなし、純正ログ48件（全type/全level）にAPCLI関連語なし。通常SSID / WPA2へ変更して約3分後もEthernet DHCPはOFFERなし。接続状態と転送成功は未確立。
+**現在の実機状態:** 2026-10-07 06:08ZのreadbackでMesh off、通常2.4GHz/5GHz AP off、radio全体のdisabled_all=off、5GHz STA on、管理IP192.168.1.1、DHCP offを確認。06:21Zに試験用の通常SSID / WPA2へ適用・readback成功。設定成功後の無効化・復元は省く。Ethernet DHCPはOFFERなしで、接続状態と転送成功は未確立。guest/MLO/backhaulの全BSS停止、NAT停止は未確認。[実機切り分け](docs/converter-runtime.md)。
+
+PCで見えたMLO接続はWPA3-Personal(H2E)、5GHz channel 124と6GHz channel 69。比較用の通常SSIDが見つからなかったため、空白なしの通常5GHz/WPA2試験SSIDを依頼した。準備中に試験SSIDのWPA2表示を確認し設定したが、その後のBSSID指定試験では対象が見つからず、設定write前に停止。親機側の準備完了を待つ。BE5000の5GHz surveyは成功応答だが0件。AP/radio getterはbodyにformを含めてreadすることで値を取得できた。
+
+通常管理認証のadministration/login/app_user_agreeで有線PCだけのSSH許可を要求し、20001/TCPのdropbear待受けと既存管理パスワードによる認証を確認した。ただしexec、PTY、shell要求は拒否されたため、実機コマンド実行やshell取得は成立していない。
 
 追加比較でBSSID固定解除fieldを明示したwriteはHTTP応答拒否となり、失敗処理で一時STA offになった。受理実績のある6 fieldへ戻して再適用し、05:33ZにSTA onのreadbackと有効維持を確認済み。Ethernet DHCPは引き続きOFFERなし。保存BSSIDがgetterから隠れる条件と、driver起動に至るwifix update経路を[解析記録](docs/sta-link-observation.md)へ追記した。
 
