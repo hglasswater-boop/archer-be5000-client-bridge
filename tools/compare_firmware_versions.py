@@ -33,6 +33,9 @@ SELECTED_PATHS = (
     '/etc/apsd_be260v1_jp_hc.json',
     '/etc/easymesh_cfg_be260v1_jp.json',
     '/usr/sbin/wpad',
+    '/lib/wifi/config_model.json',
+    '/usr/lib/lua/luci/controller/admin/wireless.lua',
+    '/usr/lib/lua/luci/model/wireless.lua',
 )
 MAX_SELECTED_FILE = 32 * 1024 * 1024
 
