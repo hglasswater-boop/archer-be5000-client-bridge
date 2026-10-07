@@ -53,3 +53,5 @@ init_vapの0x425f54〜0x425f68はstruct+0x40が1のときconfig_wds_settingを�
 続いて追加fieldを除いた受理実績のある6 fieldで一回再適用し、05:33Zにconfiguration_verified=true、sta_kept_enabled=true、rollback=not-requested、logout completeを確認した。現在の実機は通常SSID/WPA2で5GHz STA on、2.4GHz off。Wi-Fi controlのDHCP OFFERは受信したが、Ethernetは再適用前・有効中ともOFFERなし。local-evidence/sta-probe-20261007T053356904493Z.json。試験的なallowlist拡張は削除し、toolは従来の6 fieldのままとした。既存74 testsは全件成功。
 
 公開/sbin/wifi（SHA256 5a1e9375f3510db70b9557f14a2d077a5106c5527385d64668c0080cecdc1ca4）のvap処理は、wifixが存在すればubus call wifix updateへvnameを渡す。modelのapplyからdriverへ渡る境界はこのupdate経路とinit_vapのmode条件である。これらのコマンドは実機では直接実行していない。次の解析対象はstruct+0x40へのmode設定とupdate側のSTA section選択である。
+
+続く静的解析でstruct+0x40はUCI mode由来、sta=1と特定した。公開default-configにもapclii0/mode=sta/device=wifi1がある。通常STAのupdateはradio reloadへ進み、FEATURE_HOSTAPD=yの経路ではsupplicant登録後にdisconnectを明示する。その後のdriver enableとMesh側reconnectとの関係は実機未確認。[STA起動の解析](wifix-sta-startup.md)にアドレス・分岐条件・公開file hashを記録した。この段階では実機要求を追加していない。

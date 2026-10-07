@@ -12,6 +12,8 @@ STA機能の候補はあり、恒久的な実現不能と断定した結論で�
 
 追加比較でBSSID固定解除fieldを明示したwriteはHTTP応答拒否となり、失敗処理で一時STA offになった。受理実績のある6 fieldへ戻して再適用し、05:33ZにSTA onのreadbackと有効維持を確認済み。Ethernet DHCPは引き続きOFFERなし。保存BSSIDがgetterから隠れる条件と、driver起動に至るwifix update経路を[解析記録](docs/sta-link-observation.md)へ追記した。
 
+起動処理の静的解析では、STA mode変換とradio再読み込みの経路を特定。公開設定で有効なsupplicant経路はinterface登録後にdisconnectを送り、後でdriver enableへ進む。Mesh側にも別のreconnect処理があり、通常STAの接続開始を調べる具体的な候補になった。実機での到達・原因確定は未確認。[起動経路の根拠](docs/wifix-sta-startup.md)。
+
 - 本体ラベルと直結Web UIでJP/1.0、**1.2.0 Build 20260420 rel.13798(4A50)** を照合。JP最新版と一致。
 - 公開FWのRSA2048-PSS/SHA256を検証し、copyのAES128-CBC payloadを復号。全UBI CRCを検証してkernel / rootfsを読んだ。
 - 最新FWに5GHz bSTA **apclii0**、**br-lan**、vendor Wi-Fi driver、hostapd/wpa_supplicantのwpad、EasyMesh agent/controller、wifix / meshd / apsd / tpbrを確認。GPLにはAPCLI / MWDS / MAC_REPEATER機能がある。
