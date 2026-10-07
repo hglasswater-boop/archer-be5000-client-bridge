@@ -1,0 +1,34 @@
+name: Profile build definition inspection
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    if: github.head_ref == 'issue-2-firmware-sta-compare'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Run tests first
+        run: python -m unittest tests.test_inspect_gpl -q
+      - name: Select public be260v1 profile build definition
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts
+          curl -fL --retry 3 --retry-all-errors -o artifacts/GPL_ArcherBE5000.tar.gz 'https://static.tp-link.com/upload/gpl-code/2026/202605/20260512/GPL_ArcherBE5000.tar.gz'
+          python -m tools.inspect_gpl artifacts/GPL_ArcherBE5000.tar.gz --output artifacts/profile-build --select 'Iplatform/build/product_configs/be260v1/common'
+          find artifacts/profile-build -maxdepth 1 -type f -print
+          cat artifacts/profile-build/*.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: profile-build-definition
+          path: artifacts/profile-build/
+          if-no-files-found: error
