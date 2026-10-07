@@ -285,3 +285,28 @@ class ProbeTests(unittest.TestCase):
         self.assertEqual(result['rollback'], 'verified')
         self.assertEqual(device.state, INITIAL)
         self.assertNotIn('sta_kept_enabled', result)
+
+    def test_active_replacement_requires_retained_mode_and_known_security(self):
+        device = Device()
+        device.state.update(enable_5g='on', ssid_5g='Example MLO', psk_key_5g='OriginalSecret', encryption_5g='psk_sae', psk_version_5g='sae_transition')
+        result = self.run_probe(device, replace_active=True)
+        self.assertFalse(result['write_attempted'])
+        result = self.run_probe(device, replace_active=True, keep_enabled=True)
+        self.assertTrue(result['sta_kept_enabled'])
+        self.assertEqual(len(device.writes), 1)
+        self.assertEqual(device.state['encryption_5g'], 'psk')
+        device.state['psk_version_5g'] = 'unknown'
+        with self.assertRaises(Failure):
+            original_state(device.state, allow_active=True)
+
+    def test_active_replacement_failed_write_restores_original_active_profile(self):
+        device = Device(lose_write_response=True)
+        device.state.update(enable_5g='on', ssid_5g='Example MLO', psk_key_5g='OriginalSecret',
+                            encryption_5g='psk_sae', psk_version_5g='sae_transition')
+        original = device.state.copy()
+        result = self.run_probe(device, replace_active=True, keep_enabled=True)
+        self.assertEqual(result['outcome'], 'stopped')
+        self.assertEqual(result['rollback'], 'verified')
+        self.assertEqual(device.state, original)
+        self.assertEqual(result['logout'], 'complete')
+        self.assertNotIn('OriginalSecret', json.dumps(result))

@@ -29,3 +29,17 @@ PCのIP、route、lease、ルーターのAP/modeは変更しない。IPv4/IPv6�
 `python -m tools.read_sta_diagnostics --source-ip 192.168.1.52` は通常認証でSTA設定read、tmp_read、`/admin/syslog?form=filter`のread、`/admin/syslog?form=log`のoperation=load、logoutだけを行う。filterは全type/全levelかというboolだけを記録。STAを再適用・無効化しない。HTTP上限64KiB/timeout5秒は従来clientと同じで、超過や未知構造は停止する。
 
 ログ本文はRAM内で分類し、公開reportにはrow数とapcli/supplicant/association/authentication/disconnection/failureの語に合致した件数のみ保存する。SSID/PSK/MAC/IPや自由文は保存しない。件数は現在のfilterとログ期間に依存するため、0件でもdriverエラー不存在とは断定しない。association語は接続成功・失敗を区別しない。必要に応じて確認済みの特定エラーを固定ラベルで分類する。
+
+## 空白なしSSID / WPA2の比較
+
+wifix（SHA256 342ef2ffd55ec431796ac7bc6015c5893ce416bf0b2de9c8e670bd9ba82cdc06）のconfig_wds_settingは0x419d64〜0x41aa7c。0x41a9e8〜0x41aa04でstruct+0x49のSSIDを引用符なしの`iwpriv %s set ApCliSsid=%s`へ渡す。0x403580のhelperはvsprintf（0x403650）→system（0x403658）を呼び、system戻り値を破棄して0を返す。config_wds_settingも最後に0を返す。ApCliMeshRule後の失敗判定分岐はなく、Ssid/Enable設定へ進む。
+
+SSIDに空白がある場合のshell分割が具体的な原因候補になった。structへ格納する前のescape処理と実機で同経路を通ることは未確認なので、原因確定ではない。空白なしの既知の通常SSIDとWPA2を使い比較する。MLOとsecurityの双方を変更するため、成功しても空白だけが原因とは断定しない。
+
+`--replace-active --keep-enabled --security wpa2 --probe-ipv4`で現在のSTA onから既知6 fieldを一回更新する。active baselineは2.4GHz off、wds_mode=2、locktoap=offと、既知security mappingだけを許す。開始時値はRAMで保持し、設定readback失敗時だけその値へ復旧。成功後はSTAを維持し、PCのIP/route/DHCP設定は変更しない。
+
+model/110のset_root_ssidは長さ等を検証し、非空SSIDは入力文字列を返す。ここでは引用符追加を確認していない。参考として[Wireless Toolsのiwpriv.c](https://github.com/HewlettPackard/wireless-tools/blob/master/wireless_tools/iwpriv.c)はCHAR argumentをargs[i]の一つから読む。ただしBE5000同梱iwprivの一致とwifixのstruct格納前の変換は未確認。
+
+比較実機結果は設定write/readback成功、STA有効維持、logout complete。直後と約3分後のEthernet DHCP観測はOFFERなし（Wi-Fi controlは受信）。その後のtmp_readも信号0、BSSID/channelなし、純正ログは全filter/48 rows/関連語なし。空白だけを原因として解決したとは言えない。記録はlocal-evidence/sta-probe-20261007T051817119352Z.json、sta-ipv4-retained-20261007T052142237854Z.json、sta-diagnostics-20261007T052205383654Z.json。
+
+init_vapの0x425f54〜0x425f68はstruct+0x40が1のときconfig_wds_settingを呼ぶ。実機struct値の取得と同経路の到達は未確認。混在暗号名WPA2PSKMIXWPA3PSKは公開driver本文に2箇所あり、名前がdriverに存在しないという説明は採用しない。一方ApCliMeshRuleは同本文に見当たらず、適用時のcommand errorは未測定。

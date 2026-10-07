@@ -63,22 +63,31 @@ def connection_plan(ssid, psk, security='wpa2'):
     return dict(zip(FIELDS, ('on', ssid, encryption, psk_version, psk_cipher, psk)))
 
 
-def original_state(state):
+def original_state(state, allow_active=False):
     expected = {'enable_2g': 'off', 'enable_5g': 'off',
                 'encryption_5g': 'psk', 'psk_version_5g': 'rsn', 'psk_cipher_5g': 'aes',
                 'wds_mode_5g': '2', 'locktoap_5g': 'off'}
     if not isinstance(state, dict):
         raise Failure('STA baseline must be a configuration object')
+    if allow_active:
+        expected['enable_5g'] = 'on'
+        if tuple(state.get(k) for k in ('encryption_5g', 'psk_version_5g', 'psk_cipher_5g')) not in SECURITY_PLANS.values():
+            raise Failure('active STA security profile is outside the known mappings')
+        for key in ('encryption_5g', 'psk_version_5g', 'psk_cipher_5g'):
+            expected[key] = state[key]
     mismatched = [k for k, v in expected.items() if state.get(k) != v]
     if mismatched:
         raise Failure('STA baseline mismatch in fields: ' + ', '.join(mismatched))
     # Rootap psk_key has no cvt in the mapping; get_option reads UCI directly.
     # Retain RAM copies only and reject masked or unsafe rollback values.
     ssid, psk = state.get('ssid_5g'), state.get('psk_key_5g')
-    if not isinstance(ssid, str) or not (ssid == '' or re.fullmatch(r'[A-Za-z0-9_.@+-]{1,32}', ssid)):
+    saved_format = r'[A-Za-z0-9_.@+ -]{1,32}' if allow_active else r'[A-Za-z0-9_.@+-]{1,32}'
+    if not isinstance(ssid, str) or not (ssid == '' or re.fullmatch(saved_format, ssid)):
         raise Failure('saved STA SSID cannot be restored by this limited probe')
     if not isinstance(psk, str) or not (psk == '' or re.fullmatch(r'[A-Za-z0-9_.@+-]{8,63}', psk)):
         raise Failure('saved STA password cannot be restored by this limited probe')
+    if allow_active and (not ssid or not psk):
+        raise Failure('active STA must have restorable saved credentials')
     return {k: state[k] for k in FIELDS}
 
 
@@ -118,7 +127,7 @@ def link_observation(state):
 
 def probe(transport, crypto, admin_provider, network_provider, *, sleep=time.sleep,
           observe=lambda: time.sleep(45), stage=lambda text: None, ipv6=None,
-          security='wpa2', ipv4=None, probe_link=False, keep_enabled=False):
+          security='wpa2', ipv4=None, probe_link=False, keep_enabled=False, replace_active=False):
     report = {'outcome': 'stopped', 'write_attempted': False, 'rollback': 'not-needed',
               'logout': 'not-needed', 'association': 'not-measured', 'forwarding': 'not-measured'}
     protocol, token, original = None, '', None
@@ -136,7 +145,9 @@ def probe(transport, crypto, admin_provider, network_provider, *, sleep=time.sle
             raise Failure('isolated management IP is required')
         if read('/admin/dhcps?form=setting').get('enable') != 'off':
             raise Failure('router DHCP must be off before enabling STA')
-        original = original_state(read(STA))
+        if replace_active and not keep_enabled:
+            raise Failure('active replacement requires retained-state mode')
+        original = original_state(read(STA), allow_active=replace_active)
         link_read = lambda: link_observation(request(transport, protocol, token, STA, 'tmp_read'))
         if probe_link:
             report['link_before'] = link_read()
@@ -238,6 +249,7 @@ def main(argv=None):
     parser.add_argument('--probe-ipv4', action='store_true', help='one interface-verified DHCP DISCOVER/OFFER observation per phase, no lease')
     parser.add_argument('--probe-link', action='store_true', help='bounded known tmp_read observations; no identifiers saved')
     parser.add_argument('--keep-enabled', action='store_true', help='keep verified STA settings enabled after observation; restore only on failed configuration readback')
+    parser.add_argument('--replace-active', action='store_true', help='replace an active known STA profile; requires --keep-enabled')
     parser.add_argument('--security', choices=tuple(SECURITY_PLANS), default='wpa2',
                         help='frontend security mapping; wpa3-transition is WPA2/WPA3 mixed')
     args = parser.parse_args(argv)
@@ -261,7 +273,8 @@ def main(argv=None):
             ipv6 = IPv6Probe(*endpoints())
         report = probe(transport, Crypto(args.node), prompt_password, prompt_network,
                        stage=lambda message: print('Stage: ' + message, flush=True), ipv6=ipv6,
-                       security=args.security, ipv4=ipv4, probe_link=args.probe_link, keep_enabled=args.keep_enabled)
+                       security=args.security, ipv4=ipv4, probe_link=args.probe_link,
+                       keep_enabled=args.keep_enabled, replace_active=args.replace_active)
         stamp = datetime.datetime.now(datetime.timezone.utc)
         report.update(captured_at=stamp.isoformat(), target=transport.target_ip, source_ip=transport.source_ip)
         path = ROOT / 'local-evidence' / ('sta-probe-' + stamp.strftime('%Y%m%dT%H%M%S%fZ') + '.json')

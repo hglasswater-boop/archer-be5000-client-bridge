@@ -219,3 +219,11 @@ IPv6測定を省いた追加probeは設定readback、無効化、開始時値へ
 純正syslog controllerの既知log/loadとfilter/readを通常認証で要求できた。2026-10-07T05:11Zの診断はSTA onを確認、filterは全type/全level、ログ48 rowsを読み取り、APCLI/supplicant/association/authentication/disconnection/failureの分類語に合致する件数は全て0。生ログを保存せず、分類件数のみ記録した。local-evidence/sta-diagnostics-20261007T051147502265Z.json。これはkernel/driver debug logが存在しないことの証明ではない。
 
 STAを触らず、数分経過後に同じDHCP観測を再実施した。Wi-Fi controlはinterface照合済みOFFER受信、EthernetはOFFERなし、別interfaceからの同一transaction応答なし。lease/IP/routeは変更していない。短い初回待ち時間だけを原因にできないが、source IP条件は引き続き異なる。今後は毎回の設定復元を省き、driverへの適用条件と読める診断経路の追跡を優先する。
+
+## driver適用の追跡と通常SSIDの比較
+
+公開wifixのconfig_wds_settingを限定disassemblyで追った。SSIDは引用符なしのApCliSsid commandへ渡され、内部helperはvsprintf→systemを実行した後、system戻り値を破棄して0を返す。config_wds_settingも0を返す。この経路では、command失敗があっても戻り値だけでは検出できない。backend設定readbackはdriverへの適用成功を証明しない。init_vapはstruct+0x40が1のときだけこの処理を呼ぶ。実機での到達と途中エラーは未確認。[offsetと境界](sta-link-observation.md)。
+
+空白ありSSIDのshell分割を原因候補とし、以前ユーザーが指定した空白なし通常SSID / WPA2へ一回更新した。現在の混在STA onを前提にした明示replace-activeを使い、6 field readback成功後はSTAを維持した。開始時設定の復元を毎回行わない方針を保持。現在の実機は**通常SSID / WPA2、5GHz STA on**であり、過去の混在候補と異なる。
+
+変更直後と約3分後のDHCP観測はWi-Fi controlでOFFERあり、Ethernetはなし。tmp_readは信号0/BSSID・channelなし、純正syslogは全type/全level/48 rows/分類語0のままだった。SSIDの空白だけで現象を説明できない。暗号方式も同時に変えたため変数を一つにした比較ではない。実機reportは[観測資料](sta-link-observation.md)に列挙。混在暗号名はdriver内にも存在し、単純な未対応名という説明は弱い。association成功の証拠は引き続き得られていない。
