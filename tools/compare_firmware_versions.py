@@ -18,6 +18,9 @@ SELECTED_PATHS = (
     '/usr/bin/meshd',
     '/lib/wifi/wifix_profile.ini',
     '/etc/init.d/wifix',
+    '/etc/init.d/meshd',
+    '/etc/init.d/apsd',
+    '/etc/init.d/tpbr',
     '/etc/meshd_cfg.json',
     '/etc/meshd_cfg_be260v1_jp.json',
 )
