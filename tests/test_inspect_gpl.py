@@ -5,7 +5,7 @@ import tarfile
 import tempfile
 import unittest
 
-from tools.inspect_gpl import scan_archive
+from tools.inspect_gpl import scan_archive, scan_content
 
 
 class GPLTests(unittest.TestCase):
@@ -54,6 +54,28 @@ class GPLTests(unittest.TestCase):
             self.archive(root / 'a.tgz', [('a', b'x' * 50, 'file')])
             with self.assertRaises(ValueError):
                 scan_archive(root / 'a.tgz', root / 'out', re.compile('nomatch'), archive_limit=32)
+
+
+    def test_content_scan_returns_only_regular_text_matches(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            self.archive(root / 'a.tgz', [
+                ('driver.c', b'prefix ApCliMeshRule suffix', 'file'),
+                ('other.c', b'no target here', 'file'),
+                ('binary.bin', b'ApCliMeshRule\0binary', 'file'),
+                ('link.c', b'', 'link'),
+            ])
+            result = scan_content(root / 'a.tgz', b'ApCliMeshRule', member_limit=64, match_limit=8)
+            self.assertEqual(len(result), 1)
+            self.assertEqual(result[0]['name'], 'driver.c')
+            self.assertIn('ApCliMeshRule', result[0]['context'])
+
+    def test_content_scan_respects_match_limit(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            self.archive(root / 'a.tgz', [('a.c', b'needle', 'file'), ('b.c', b'needle', 'file')])
+            with self.assertRaises(ValueError):
+                scan_content(root / 'a.tgz', b'needle', member_limit=64, match_limit=1)
 
 
 if __name__ == '__main__':
