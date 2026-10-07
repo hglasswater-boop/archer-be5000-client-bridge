@@ -1,6 +1,8 @@
 name: Firmware STA comparison
 
 on:
+  push:
+    branches: [issue-2-firmware-sta-compare]
   pull_request:
     branches: [main]
   workflow_dispatch:
