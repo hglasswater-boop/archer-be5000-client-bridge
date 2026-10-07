@@ -388,3 +388,37 @@ The published `be260v1/common.mk` defines the format as zlib-compressed plaintex
 - default `apcli0/apclii0` STA sections and Mesh flags.
 
 Only these feature-relevant fields are retained in the comparison report. No device backup or per-device credentials are inputs.
+
+
+## Decrypted product profile/default-config result
+
+The public build definition in `be260v1/common.mk` confirms that partition profile/default-config data is zlib-compressed and then encrypted with the published AES-256-CBC build key/IV. A test-backed read-only decoder was applied to the verified SquashFS copies for all four JP releases.
+
+The STA-relevant product-profile values are unchanged across 1.0.2, 1.0.3, 1.1.0 and 1.2.0:
+
+| Field | All four JP releases |
+| --- | --- |
+| `operation_mode` | `router,ap` |
+| `wireless_sta_config_2g` | `apcli0` |
+| `wireless_sta_config_5g` | `apclii0` |
+| `wireless_mesh_sta_5g` | `apclii0` |
+| `wds_show` | `yes` |
+| `wds_support_dualmode` | `no` |
+
+The embedded default configuration also retains the same APCLI STA sections in every release:
+
+- `apcli0`: device `wifi0`, mode `sta`, WDS `on`, `onemesh_ie=off`, default enable `on`;
+- `apclii0`: device `wifi1`, mode `sta`, WDS `on`, `onemesh_ie=off`, default enable `on`.
+
+These are firmware defaults/templates, not proof of the live unit's current UCI state or successful association.
+
+### Consequence
+
+The old-firmware hypothesis is now narrowed further:
+
+- there was no public Client/Repeater operation mode in 1.0.2 that was later removed;
+- the APCLI STA mapping was already internal in 1.0.2 and remains internal in 1.2.0;
+- the default STA sections themselves were not disabled or deleted in later firmware;
+- the observable version-sensitive change remains the 1.1-era `meshd` candidate-selection/control-plane redesign, while the STA enable tail, supplicant disconnect sequence, reconnect dispatcher, daemon Mesh-off gating, and product profile semantics remain substantially stable.
+
+This makes a simple downgrade an unlikely fix. The current investigation should target runtime activation/forwarding semantics rather than searching for a legacy public STA mode.
