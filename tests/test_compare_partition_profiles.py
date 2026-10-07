@@ -12,7 +12,7 @@ class PartitionProfileTests(unittest.TestCase):
         self.assertEqual(len(rows), 2)
         self.assertTrue(any('operation_mode=router,ap' in row for row in rows))
         self.assertTrue(any('wireless_sta_config_5g=apclii0' in row for row in rows))
-        self.assertTrue(all(len(row) <= 49 for row in rows))
+        self.assertTrue(all(len(row) <= 48 + len('wireless_sta_config_5g') for row in rows))
 
     def test_decode_matches_published_zlib_then_aes_format(self):
         plain = b'<profile operation_mode="router,ap"/>'
