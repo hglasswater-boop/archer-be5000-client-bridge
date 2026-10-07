@@ -16,6 +16,8 @@ class FirmwareVersionComparisonTests(unittest.TestCase):
         self.assertEqual(summary['markers']['disconnect'], 1)
         for marker in MARKERS:
             self.assertIn(marker, summary['markers'])
+        self.assertIn('ApCliMeshRule', MARKERS)
+        self.assertIn('MACRepeaterEn', MARKERS)
 
     def test_compare_preserves_supplied_version_order(self):
         result = compare_versions({
@@ -49,6 +51,9 @@ class FirmwareVersionComparisonTests(unittest.TestCase):
     def test_daemon_gating_scripts_are_in_version_comparison(self):
         for path in ('/etc/init.d/meshd', '/etc/init.d/apsd', '/etc/init.d/tpbr'):
             self.assertIn(path, SELECTED_PATHS)
+
+    def test_production_wifi_driver_is_in_version_comparison(self):
+        self.assertIn('/lib/modules/5.4.281/mt_wifi.ko', SELECTED_PATHS)
 
 
 if __name__ == '__main__':
