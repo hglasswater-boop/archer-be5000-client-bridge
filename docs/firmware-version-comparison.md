@@ -375,3 +375,16 @@ Decision boundary:
 - identical local control flow around the target weakens a firmware-regression hypothesis at that boundary;
 - changed predecessor branches/calls around a target identifies a concrete candidate for deeper reverse engineering;
 - absence of an XREF in one version is evidence of code-path removal only after confirming the target string itself and executable section mapping.
+
+
+## Product profile semantic comparison plan
+
+Raw hashes show that `/etc/partition_config/profile` and `default-config` changed across releases, but these files are encrypted and hash changes alone do not establish feature gating.
+
+The published `be260v1/common.mk` defines the format as zlib-compressed plaintext encrypted with AES-256-CBC using the published build key/IV. Compare the decrypted public files for:
+- supported operation modes;
+- `wireless_sta_config_2g/5g` and related STA profile keys;
+- WDS/repeater/client/hotspot feature flags;
+- default `apcli0/apclii0` STA sections and Mesh flags.
+
+Only these feature-relevant fields are retained in the comparison report. No device backup or per-device credentials are inputs.
