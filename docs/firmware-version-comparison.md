@@ -242,3 +242,17 @@ The old-vs-current hypothesis is **partly supported, but not as feature removal*
 - A real behavioral boundary appears at **1.1.0** in `meshd` scan/candidate selection and reconnect gating.
 
 This makes a 1.1-era control-plane change the strongest firmware-regression candidate currently identified for the observed standalone STA failure. Static analysis alone does not prove that 1.0.2/1.0.3 successfully associated to an ordinary non-EasyMesh AP, nor that the 1.1 change is the cause on the live unit. It does justify testing the legacy candidate-selection semantics against the current runtime before considering any downgrade.
+
+
+## 1.1+ ordinary-AP path verification
+
+A closer read of the 1.2.0 `meshd_match_select_bss` and `meshd_scan_match_monitor` control flow narrows the 1.1 regression hypothesis further.
+
+- The scan matcher still compares the configured SSID and creates a neighbor candidate when TP-IE support is **absent**. The `tpie_support == 0` branch allocates a candidate record instead of discarding the BSS.
+- In `meshd_scan_match_monitor`, `best_nbr->tpie_support == 0` has an explicit non-TP-IE branch.
+- If the selected non-TP-IE candidate's band is not already present in `connect_band_bmap`, that branch calls the same band-map reconnect dispatcher used elsewhere.
+- Current 1.2.0 field mapping is confirmed from its diagnostic output code: support_band_bmap=global+0x880, connect_band_bmap=+0x884, select_band_bmap=+0x888, scan_band_bmap=+0x88c.
+
+Therefore the 1.1+ redesign does **not** simply require TP-Link/EasyMesh TP-IE and does not statically forbid an ordinary AP. The redesign remains behaviorally different, but TP-IE filtering alone cannot explain the live failure.
+
+The next version comparison must include daemon startup/gating scripts. Since reconnect policy lives in `meshd`, compare `/etc/init.d/meshd`, `/etc/init.d/apsd`, and `/etc/init.d/tpbr` across releases to determine whether EasyMesh-off behavior changed.
