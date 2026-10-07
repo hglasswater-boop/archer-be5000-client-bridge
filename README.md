@@ -8,7 +8,7 @@ Archer BE5000 **JP/1.0** を、EasyMeshなしのSTA（現在はユーザー指�
 **日常利用できるClient Bridgeは未成立。限定STA設定試験とIPv4 DHCP観測まで実施済み。**
 STA機能の候補はあり、恒久的な実現不能と断定した結論ではない。復旧未確立のまま改造FWを書き込むことはしない。
 
-**最後に確認した実機設定:** 2026-10-07 06:30Zに2.4GHz STA on、5GHz STA off、通常2.4GHz接続先/WPA2（psk/rsn/aes）のwrite/readbackが成功。06:08ZにはMesh off、通常両band AP off、disabled_all=off、管理IP192.168.1.1、DHCP offを確認した。終了時の無効化・復元は省く。Ethernet DHCP OFFERなし（Wi-Fi対照はOFFERあり）で、associationと転送成功は未確認。guest/MLO/backhaulの全BSS停止、NAT停止も未確認。06:34ZのBSSID固定はnetwork失敗で停止。06:37ZにPC有線の固定IP消失を確認し、ユーザーによる再設定後の06:38Zに公開管理API到達が復旧した。06:43Zの認証済み診断でSTA2g on/5g off、Mesh off、通常両band AP off、disabled_all offを再確認。指定Wi-Fiキーは既存値と一致し、06:50Zの再適用/readbackも成功。BSSID固定は3 fieldと保存profile込みの両要求で失敗応答、locktoapはoff。06:53Zには2g channel 5への設定・STA再適用・readback成功、Ethernet OFFERなし。06:54Zの2g surveyは成功0件、別connect_status APIはHTTP拒否でassociation未確定。[実機切り分け](docs/converter-runtime.md)。
+**最後に確認した実機設定:** 2026-10-07 11:17Z（20:17 JST）の比較終了時にSTA2g on/5g off、WPA2/AES、Mesh off、通常両band AP off、disabled_all off、保存STA profileの維持を確認。親機EasyMesh off後のPC scanで対象channelが4へ変わり、BE5000も4へ合わせて保持した。AP一時onではPC scanで保存AP名が見え、2g LED点灯もユーザーが確認。channel一致、STA off/on、BE5000 Mesh一時onの比較でも親機一覧には接続が現れないとの観測で、Ethernet OFFERなし（Wi-Fi対照あり）。associationとLAN転送は未確認。guest/MLO/backhaulの全BSS停止、NAT停止も未確認。[実機切り分け](docs/converter-runtime.md)。
 
 PCで見えたMLO接続はWPA3-Personal(H2E)、5GHz channel 124と6GHz channel 69。比較用の通常SSIDが見つからなかったため、空白なしの通常5GHz/WPA2試験SSIDを依頼した。準備中に試験SSIDのWPA2表示を確認し設定したが、その後のBSSID指定試験では対象が見つからず、設定write前に停止。その後、ユーザー指定の通常2.4GHz/WPA2/channel 5を対象へ変更した。BE5000の5GHz surveyは成功応答だが0件。AP/radio getterはbodyにformを含めてreadすることで値を取得できた。
 
@@ -41,6 +41,7 @@ PCで見えたMLO接続はWPA3-Personal(H2E)、5GHz channel 124と6GHz channel 6
 | [Testing](docs/testing.md) | baseline、IPv4/SMB/探索、TCP reset、12〜24時間 |
 | [Deployment](docs/deployment.md) | 条件が満たされた後の投入順序 |
 | [Reproduction](docs/reproduce.md) | オフライン解析の再現コマンド、境界 |
+| [STA customization candidates](docs/sta-customization-plan.md) | 実機状態取得、reconnect、Mesh flagのRAM比較、署名/復旧の未確立事項 |
 | [Runtime investigation](docs/runtime-investigation.md) | 設定backup取得、実機ログ、STA設定経路とwifixの追加解析 |
 | [Read STA state](docs/read-sta-state.md) | 通常認証による限定getterの仕様・実行方法。対象実機のlogin・read・logoutが成功 |
 | [STA config probe](docs/sta-config-probe.md) | 5GHz限定setter、security mapping、rollback、IPv4試験の範囲 |
@@ -49,7 +50,7 @@ PCで見えたMLO接続はWPA3-Personal(H2E)、5GHz channel 124と6GHz channel 6
 | [Wired management](docs/wired-management.md) | 管理IP分離、PC固定IP、DHCP復元手順 |
 
 実装したのは**オフライン解析PoC**（inspect_firmware / inspect_gpl / decode_cloud / read_ubi）、通常認証で既知STA getterを読む限定client（read_sta_state）、既知の5GHz setterを一回だけ適用してrollbackする限定probe（probe_sta_config）である。Client Bridgeの永続化scriptや書込みimageは作成していない。
-`python -m unittest discover -s tests -q`: **96 PASS、skipなし**。実配布物の署名/復号/UBI/SquashFS読み取り、限定clientの実機公開feature preflight・通常login・STA read・logout、およびsetter probeの失敗時rollback境界、DHCP応答/interface照合、tmp_read観測の個体値除外、有効状態の維持、ログ分類と読み取り失敗時logoutを検証した。
+`python -m unittest discover -s tests -q`: **103 PASS、skipなし**。実配布物の署名/復号/UBI/SquashFS読み取り、限定clientの実機公開feature preflight・通常login・STA read・logout、およびsetter probeの失敗時rollback境界、DHCP応答/interface照合、tmp_read観測の個体値除外、有効状態の維持、ログ分類と読み取り失敗時logoutを検証した。
 firmware / GPL archive / 復号image / rootfs本文 / 個体情報はgit対象外。
 
 ## 判定項目

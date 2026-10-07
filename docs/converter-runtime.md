@@ -1,5 +1,17 @@
 # Ethernet Converter実機切り分け
 
+## 20:03〜20:17 JSTの再開後比較
+
+ユーザーが親機EasyMeshをoffにした後、PC scanで接続先2g channelが5から4に変わっていた。11:08Z、既知radio setterでchannel4へ合わせ、保存STA設定一致を確認。Ethernet OFFERなし、Wi-Fi対照あり。
+
+2g AP一時onの比較は、最初channel5、次に親機と一致するchannel4で実施。channel4の試験ではPC scanに保存AP名と親機がともに現れ、ユーザーもWi-Fi LED点灯とAP名の出現を確認した。親機無線端末一覧には現れないとの観測で、Ethernet OFFERもなし。さらにSTA off/onをreadbackで確認した試験でも同じ結果。BE5000だけMeshを一時onにし、STA off/onをした比較でも親機には現れず、Ethernet OFFERなし。
+
+各比較後にAP offをreadback。最後の11:17Z比較はMesh off、通常両band AP off、disabled_all off、STA2g on/5g off、保存設定維持を確認しlogout完了。channel2gは4を保持する。比較toolは`tools/probe_ap_sta_2g.py`、`--restart-sta`と`--probe-mesh-start`は通常設定での一時比較を追加する。原則として親機設定は変更せず、試験終了時はMesh/AP off、STA onを検証する。
+
+公式JP QIGでは電源の下から2.4GHz、5GHzのWi-Fi LEDで、機能動作時の点灯と説明される。LED点灯を親機へのassociation完了と扱わない。[公式ガイド](https://static.tp-link.com/upload/manual/2025/202507/20250718/7100000076%20Archer%20BE260-5000-3600%20Pro(JP)_QIG_V1.pdf)。
+
+AP側の動作は観測できたがSTA接続は未成立のため、次は実機supplicant状態と起動/reconnect処理の観測を優先する。[カスタム化候補と投入前の確認](sta-customization-plan.md)。
+
 ## ユーザー指定の2.4GHz比較
 
 06:50Zにユーザーが再指定したWi-Fiキーをhidden入力で比較し、保存済み2gキーと既に一致していたことを確認。既知7 fieldで再適用・readback成功、Ethernet OFFERなし（Wi-Fi対照あり）。管理用passwordとは別に扱い、値はコード/ファイル/reportへ保存しない。
