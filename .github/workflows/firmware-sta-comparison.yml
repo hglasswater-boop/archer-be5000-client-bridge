@@ -152,6 +152,9 @@ jobs:
             artifacts/volumes-*/summary.json
             artifacts/focused/*.diff
             artifacts/focused/*/*-sta-strings.txt
+            artifacts/focused/*/init-meshd
+            artifacts/focused/*/init-apsd
+            artifacts/focused/*/init-tpbr
             artifacts/focused/*/*-elf-header.txt
             artifacts/focused/*/*-program-headers.txt
             artifacts/focused/*/*-section-headers.txt
