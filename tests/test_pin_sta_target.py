@@ -1,10 +1,26 @@
 import unittest
 from tools.pin_sta_target import select_target, pin_target
 from tools.read_sta_state import Failure
+from tools.connect_sta_2g import plan_2g
 from tests.test_probe_sta_config import PlainProtocol
 
 
 class PinTargetTests(unittest.TestCase):
+    def test_saved_profile_rejects_extra_fields_before_network(self):
+        class Device:
+            def post(self, route, payload, token):
+                self.payload = payload
+                return {'success': True, 'data': {}}
+        d = Device()
+        saved = plan_2g('TARGET', 'TestKeyOnly')
+        pin_target(d, PlainProtocol(), 'token', '02:11:22:33:44:66', '2g', saved)
+        self.assertIn(b'locktoap_2g=on', d.payload)
+        self.assertIn(b'psk_version_2g=rsn', d.payload)
+        self.assertIn(b'enable_5g=off', d.payload)
+        with self.assertRaises(Failure):
+            pin_target(d, PlainProtocol(), 'token', '02:11:22:33:44:66', '2g',
+                       {**saved, 'wds_mode_2g': '1'})
+
     def test_two_ghz_uses_primary_band_not_colocated_ap(self):
         text = '''SSID 1 : TARGET
     BSSID 1 : 02:11:22:33:44:55

@@ -3,11 +3,37 @@ import unittest
 from unittest.mock import patch
 from tools.read_sta_diagnostics import SYSLOG, MESH, collect, summarize_log, mesh_observation, summarize_survey, radio_observation
 from tools.probe_sta_config import request
-from tools.read_sta_state import Failure, LOGOUT
+from tools.read_sta_state import Failure, LOGOUT, STATUS_ROUTE
 from tests.test_probe_sta_config import Device, PlainProtocol
 
 
 class DiagnosticTests(unittest.TestCase):
+    def test_two_ghz_survey_and_status_failure_preserve_diagnostics_and_logout(self):
+        class StatusDevice(Device):
+            def post(self, route, payload, token=''):
+                if route == '/admin/wireless?form=survey_2g':
+                    self.survey_read_only = payload == b'operation=read'
+                    return {'success': True, 'data': [{'ssid': 'private', 'channel': '5', 'bssid': 'private-mac'}]}
+                if route == '/admin/syslog?form=filter':
+                    return {'success': True, 'data': {'type': 'ALL', 'level': 'ALL'}}
+                if route == SYSLOG:
+                    return {'success': True, 'data': []}
+                if route == STATUS_ROUTE:
+                    raise Failure('HTTP response rejected')
+                return super().post(route, payload, token)
+        device = StatusDevice()
+        device.state['ssid_2g'] = 'private'
+        with patch('tools.read_sta_diagnostics.login_session', return_value=(PlainProtocol(), 'token')):
+            result = collect(device, None, lambda: 'secret', probe_survey=True, survey_band='2g', probe_status=True)
+        self.assertEqual(result['outcome'], 'diagnostics-complete')
+        self.assertEqual(result['survey_2g']['target_matches'], 1)
+        self.assertEqual(result['survey_2g']['targets'][0]['channel'], 5)
+        self.assertTrue(device.survey_read_only)
+        self.assertEqual(result['connect_status_api_reason'], 'HTTP response rejected')
+        self.assertEqual(result['logout'], 'complete')
+        self.assertEqual(device.writes, [])
+        self.assertNotIn('private', json.dumps(result))
+
     def test_both_band_diagnostics_keep_secrets_out_and_supply_form(self):
         class RadioDevice(Device):
             def post(self, route, payload, token=''):

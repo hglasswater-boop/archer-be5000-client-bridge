@@ -41,12 +41,16 @@ def select_target(text, target, band='5g'):
     return mac, channel
 
 
-def pin_target(transport, protocol, token, mac, band='5g'):
+def pin_target(transport, protocol, token, mac, band='5g', saved=None):
     if band not in ('2g', '5g'):
         raise Failure('target band outside retained STA comparison')
     if not isinstance(mac, str) or not re.fullmatch(MAC, mac) or int(mac[:2], 16) & 1 or not int(mac.replace(':', ''), 16):
         raise Failure('target BSSID format invalid')
     fields = {'operation': 'write', 'enable_' + band: 'on', 'bssid_' + band: mac, 'locktoap_' + band: 'on'}
+    if saved is not None:
+        if band != '2g' or saved != plan_2g(saved.get('ssid_2g'), saved.get('psk_key_2g')):
+            raise Failure('saved profile outside retained 2.4GHz baseline')
+        fields.update(saved)
     return success(protocol.decrypt(transport.post(STA, protocol.encrypt(urlencode(fields)), token)), 'pin-target')
 
 
@@ -78,7 +82,11 @@ def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--pin-scan-target', action='store_true', required=True)
     p.add_argument('--band', choices=('2g', '5g'), default='5g')
+    p.add_argument('--diagnose-after', action='store_true', help='read both radios, Mesh and link in the same authenticated session')
+    p.add_argument('--include-saved-profile', action='store_true', help='include the verified saved 2.4GHz WPA2 fields in the pin request')
     args = p.parse_args()
+    if args.include_saved_profile and args.band != '2g':
+        p.error('--include-saved-profile requires --band 2g')
     node = shutil.which('node')
     if not node or not sys.stdin.isatty() or not sys.stderr.isatty():
         print('Stopped: Node.js and interactive terminal are required', file=sys.stderr)
@@ -107,7 +115,8 @@ def main():
         mac, channel = select_target(scan.stdout.decode('utf-8', errors='replace'), saved['ssid_' + args.band], args.band)
         report['target_channel'] = channel
         report['pin_write_attempted'] = True
-        pin_target(transport, protocol, token, mac, args.band)
+        pin_target(transport, protocol, token, mac, args.band,
+                   saved if args.include_saved_profile else None)
         report['pin_write_accepted'] = True
         print('BSSID pin accepted; waiting for STA update')
         time.sleep(20)
@@ -126,6 +135,16 @@ def main():
         report['reason'] = 'PC scan operation failed'
     finally:
         if protocol and token and transport.cookie:
+            if args.diagnose_after:
+                from .read_sta_diagnostics import observe_authenticated
+                report['diagnostics'] = {}
+                try:
+                    observe_authenticated(transport, protocol, token, probe_mesh=True,
+                        probe_radio=True, report=report['diagnostics'])
+                    report['diagnostics_outcome'] = 'diagnostics-complete'
+                except Failure as error:
+                    report['diagnostics_outcome'] = 'stopped'
+                    report['diagnostics_reason'] = str(error)
             try:
                 success(protocol.decrypt(transport.post(LOGOUT, protocol.encrypt(''), token)), 'logout')
                 report['logout'] = 'complete'

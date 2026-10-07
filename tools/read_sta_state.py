@@ -24,6 +24,7 @@ STATUS_ROUTE = '/admin/wireless?form=wireless_connect_status'
 STATUS_READS = frozenset([STATUS_ROUTE])
 DIAGNOSTIC_READS = frozenset(['/admin/syslog?form=log', '/admin/syslog?form=filter',
                              '/admin/easymesh?form=easymesh_enable', '/admin/wireless?form=survey_5g',
+                             '/admin/wireless?form=survey_2g',
                              '/admin/wireless?form=wireless_5g', '/admin/wireless?form=wireless_2g'])
 NETWORK_READS = frozenset(['/admin/network?form=lan_ipv4', '/admin/dhcps?form=setting'])
 LOCAL_SSH_ROUTE = '/admin/administration?form=login'
@@ -171,7 +172,7 @@ class Transport:
             if route != LOGIN and (not re.fullmatch(r'[0-9a-f]{16,128}', token) or not self.cookie):
                 raise Failure('authenticated session required')
         connection = http.client.HTTPConnection(self.target_ip, 80,
-                                                timeout=30 if route == '/admin/wireless?form=survey_5g' else 5,
+                                                timeout=30 if route in ('/admin/wireless?form=survey_5g', '/admin/wireless?form=survey_2g') else 5,
                                                 source_address=(self.source_ip, 0))
         try:
             headers = {'Content-Type': 'application/x-www-form-urlencoded', 'Cache-Control': 'no-cache'}

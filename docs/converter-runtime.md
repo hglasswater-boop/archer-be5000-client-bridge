@@ -2,6 +2,16 @@
 
 ## ユーザー指定の2.4GHz比較
 
+06:50Zにユーザーが再指定したWi-Fiキーをhidden入力で比較し、保存済み2gキーと既に一致していたことを確認。既知7 fieldで再適用・readback成功、Ethernet OFFERなし（Wi-Fi対照あり）。管理用passwordとは別に扱い、値はコード/ファイル/reportへ保存しない。
+
+06:47Zの3 field BSSID固定要求と、06:51Zの保存SSID/security/keyを含む要求はともに失敗応答。後者の同一session診断でlocktoap_2g=off、STA2g on/5g off、Mesh off、通常AP両band off、disabled_all offを確認。BSSID固定が成立したとは扱わない。
+
+06:53ZにPCの更新scanで保存対象の2.4GHz/channel 5を選び、wireless_2gの通常writeへform、wireless_2g_channel=5、wireless_2g_enable=off、wireless_2g_disabled_all=offを指定。公開model pc0414〜0418はchannelをradio cfg/actへmappingし、controller/wireless_predefined_formsはbody formでApcfgを選ぶことを静的確認した。channel/AP/radioのreadback後にSTAの保存済み7 fieldを再適用、保存一致を確認した。Ethernet OFFERなし、Wi-Fi対照あり。channel 5は保持する。
+
+06:54Zの読取り診断は2g survey成功0件、tmp_read信号0/internet_status disconnected、wireless_connect_status APIはHTTP response rejected。後者はSTA ifname profileとwpa_cliに依存し、tmp_readのprofile依存とは別。PCで対象APが見えるためsurvey 0をAP不在と扱わず、これらのAPI結果からassociation失敗も確定しない。
+
+`python -m tools.update_sta_2g_key` は指定済み2g対象へローカルhidden入力のWi-Fiキーを反映する。`--align-scan-channel` はキーを新規入力せず、保存済みWPA2設定を保持し、PC scanの対象channelへradioを合わせる。いずれも通常login一回でSTA readback、DHCP観測、Mesh/両radio/link/log診断、logoutを行う。`pin_sta_target --diagnose-after`も同じsession内で成功・失敗後の診断を行う。passwordの永続保存はしない。
+
 ユーザーが通常2.4GHz SSIDへの接続を指定。現在の5GHz STAをoff、2.4GHzをonとする既知rootap setterを一回要求する。rootap_2gは同じenable/ssid/encryption/psk_version/psk_cipher/psk_key mappingを持ち、WPA2/AESを使う。Wi-Fi鍵は現在の5GHz保存値をRAM内で引き継ぎ、他のパスワードを推測しない。Mesh/AP/管理LAN/DHCPは変更せず、両bandの有効状態と2.4GHzの6 fieldをreadback後にDHCP観測する。失敗でも通常終了時の復元は行わない。2.4GHzで成立しても当初の5GHz性能要件と区別する。
 
 06:30Zのwrite/readbackで2.4GHz STA on、5GHz STA offを確認。PCのWlanScanを明示的に要求すると通常2.4GHz AP/WPA2/channel 5と試験5GHz APが見えた。Windowsのnetsh一覧が見えない状態はキャッシュ/scanタイミングの影響もあり、SSID消失を断定しない。2.4GHz試験もEthernet OFFERなし（Wi-Fi controlあり）。BSSID指定toolへ--band 2gとWlanScan更新を追加し、SSID一致とprimary Bandの一致を要求する。colocated APのBand/Channelを選択に使わない。

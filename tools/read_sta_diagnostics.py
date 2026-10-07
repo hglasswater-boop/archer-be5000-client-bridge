@@ -6,7 +6,7 @@ import shutil
 import sys
 
 from .probe_sta_config import STA, link_observation, request
-from .read_sta_state import Crypto, Failure, LOGOUT, ROOT, Transport, login_session, prompt_password, sanitize_sta, success, write_report
+from .read_sta_state import Crypto, Failure, LOGOUT, ROOT, STATUS_ROUTE, Transport, login_session, prompt_password, sanitize_sta, success, write_report
 
 SYSLOG = '/admin/syslog?form=log'
 MESH = '/admin/easymesh?form=easymesh_enable'
@@ -93,35 +93,53 @@ def radio_observation(data, band='5g'):
     return result
 
 
-def collect(transport, crypto, password_provider, *, probe_mesh=False, probe_survey=False, probe_radio=False):
+def observe_authenticated(transport, protocol, token, *, probe_mesh=False, probe_survey=False, probe_radio=False, report=None, survey_band='5g', probe_status=False):
+    """Read diagnostics using an existing session; caller owns logout."""
+    if report is None:
+        report = {}
+    if survey_band not in ('2g', '5g'):
+        raise Failure('unsupported survey band')
+    config = request(transport, protocol, token, STA)
+    report['sta_2g_enabled'] = config.get('enable_2g') == 'on'
+    report['sta_5g_enabled'] = config.get('enable_5g') == 'on'
+    report['sta_config'] = sanitize_sta(config)
+    if probe_radio:
+        for band in ('2g', '5g'):
+            form = 'wireless_' + band
+            report['radio_' + band] = radio_observation(request(transport, protocol, token,
+                '/admin/wireless?form=' + form, fields={'form': form}), band)
+    if probe_survey:
+        payload = protocol.encrypt('operation=read')
+        rows = success(protocol.decrypt(transport.post('/admin/wireless?form=survey_' + survey_band, payload, token)), 'survey')
+        report['survey_' + survey_band] = summarize_survey(rows, config.get('ssid_' + survey_band))
+    if probe_mesh:
+        report['mesh_setting'] = mesh_observation(request(transport, protocol, token, MESH))
+    report['link'] = link_observation(request(transport, protocol, token, STA, 'tmp_read'))
+    filter_state = request(transport, protocol, token, '/admin/syslog?form=filter')
+    report['log_filter'] = {
+        'all_types': filter_state.get('type') == 'ALL',
+        'all_levels': filter_state.get('level') == 'ALL',
+    }
+    body = protocol.encrypt('operation=load')
+    data = success(protocol.decrypt(transport.post(SYSLOG, body, token)), 'system-log-read')
+    report['system_log'] = summarize_log(data)
+    if probe_status:
+        try:
+            data = request(transport, protocol, token, STATUS_ROUTE)
+            report['connect_status_api'] = sanitize_sta(data)
+        except Failure as error:
+            report['connect_status_api_reason'] = str(error)
+    return report
+
+
+def collect(transport, crypto, password_provider, *, probe_mesh=False, probe_survey=False, probe_radio=False, survey_band='5g', probe_status=False):
     report = {'outcome': 'stopped', 'logout': 'not-needed'}
     protocol, token = None, ''
     try:
         protocol, token = login_session(transport, crypto, password_provider)
-        config = request(transport, protocol, token, STA)
-        report['sta_2g_enabled'] = config.get('enable_2g') == 'on'
-        report['sta_5g_enabled'] = config.get('enable_5g') == 'on'
-        report['sta_config'] = sanitize_sta(config)
-        if probe_radio:
-            for band in ('2g', '5g'):
-                form = 'wireless_' + band
-                report['radio_' + band] = radio_observation(request(transport, protocol, token,
-                    '/admin/wireless?form=' + form, fields={'form': form}), band)
-        if probe_survey:
-            payload = protocol.encrypt('operation=read')
-            rows = success(protocol.decrypt(transport.post(SURVEY, payload, token)), 'survey')
-            report['survey_5g'] = summarize_survey(rows, config.get('ssid_5g'))
-        if probe_mesh:
-            report['mesh_setting'] = mesh_observation(request(transport, protocol, token, MESH))
-        report['link'] = link_observation(request(transport, protocol, token, STA, 'tmp_read'))
-        filter_state = request(transport, protocol, token, '/admin/syslog?form=filter')
-        report['log_filter'] = {
-            'all_types': filter_state.get('type') == 'ALL',
-            'all_levels': filter_state.get('level') == 'ALL',
-        }
-        body = protocol.encrypt('operation=load')
-        data = success(protocol.decrypt(transport.post(SYSLOG, body, token)), 'system-log-read')
-        report['system_log'] = summarize_log(data)
+        observe_authenticated(transport, protocol, token, report=report,
+            probe_mesh=probe_mesh, probe_survey=probe_survey, probe_radio=probe_radio,
+            survey_band=survey_band, probe_status=probe_status)
         report['outcome'] = 'diagnostics-complete'
     except Failure as error:
         report['reason'] = str(error)
@@ -141,6 +159,8 @@ def main():
     parser.add_argument('--source-ip', required=True, choices=('192.168.1.52',))
     parser.add_argument('--probe-mesh', action='store_true', help='read known EasyMesh enable getter; no settings changes')
     parser.add_argument('--probe-survey', action='store_true', help='scan 5GHz and summarize saved-target matches')
+    parser.add_argument('--survey-band', choices=('2g', '5g'), default='5g', help='band for --probe-survey')
+    parser.add_argument('--probe-status', action='store_true', help='probe known supplicant-status getter separately from tmp_read')
     parser.add_argument('--probe-radio', action='store_true', help='read limited 2.4GHz and 5GHz AP/radio configuration')
     args = parser.parse_args()
     node = shutil.which('node')
@@ -148,7 +168,8 @@ def main():
         print('Stopped: Node.js and interactive terminal are required', file=sys.stderr)
         return 1
     report = collect(Transport(args.source_ip, '192.168.1.1'), Crypto(node), prompt_password,
-                     probe_mesh=args.probe_mesh, probe_survey=args.probe_survey, probe_radio=args.probe_radio)
+                     probe_mesh=args.probe_mesh, probe_survey=args.probe_survey, probe_radio=args.probe_radio,
+                     survey_band=args.survey_band, probe_status=args.probe_status)
     stamp = datetime.datetime.now(datetime.timezone.utc)
     report['captured_at'] = stamp.isoformat()
     path = ROOT / 'local-evidence' / ('sta-diagnostics-' + stamp.strftime('%Y%m%dT%H%M%S%fZ') + '.json')
