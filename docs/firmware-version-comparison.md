@@ -354,3 +354,24 @@ The userspace `wifix` string corpus does not contain `ApCliMWDS`, `MWDSEnable`, 
 Therefore the shipped driver contains stable nontrivial APCLI/MWDS/proxy capabilities that wifix does not visibly configure through those explicit private-control names. This strengthens the hypothesis that the missing Ethernet forwarding path is a runtime configuration problem, not removed driver functionality.
 
 It does not prove that enabling any of these private controls is safe or sufficient. Their exact runtime relationships and the product-specific `ApCliMeshRule` semantics remain unproven.
+
+
+## Function-level comparison plan
+
+The next stage compares executable references, not only strings.
+
+Targets:
+- `wifix`: `ApCliEnable=1`, `ApCliEnable=0`, `config_wds_setting`, supplicant `disconnect`.
+- `meshd`: `wpa_cli ... reconnect`, `disconnect`, `reconfigure`, and the reconnect-band log string.
+
+Method:
+1. Map each target string file offset to ELF virtual address using PT_LOAD segments.
+2. Disassemble AArch64 text with GNU binutils.
+3. Resolve common `adrp + add` / `adr` references to the target string.
+4. Capture bounded instruction context around each XREF for 1.0.2 and 1.2.0.
+5. Compare XREF counts and normalized local instruction contexts. Do not infer a function boundary when symbol/prologue evidence is absent.
+
+Decision boundary:
+- identical local control flow around the target weakens a firmware-regression hypothesis at that boundary;
+- changed predecessor branches/calls around a target identifies a concrete candidate for deeper reverse engineering;
+- absence of an XREF in one version is evidence of code-path removal only after confirming the target string itself and executable section mapping.
