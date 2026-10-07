@@ -256,3 +256,39 @@ A closer read of the 1.2.0 `meshd_match_select_bss` and `meshd_scan_match_monito
 Therefore the 1.1+ redesign does **not** simply require TP-Link/EasyMesh TP-IE and does not statically forbid an ordinary AP. The redesign remains behaviorally different, but TP-IE filtering alone cannot explain the live failure.
 
 The next version comparison must include daemon startup/gating scripts. Since reconnect policy lives in `meshd`, compare `/etc/init.d/meshd`, `/etc/init.d/apsd`, and `/etc/init.d/tpbr` across releases to determine whether EasyMesh-off behavior changed.
+
+
+## Daemon startup/gating comparison
+
+The daemon init scripts were extracted from all four verified/decoded JP releases and compared byte-for-byte.
+
+| Path | 1.0.2 -> 1.2.0 |
+| --- | --- |
+| `/etc/init.d/meshd` | byte-identical |
+| `/etc/init.d/apsd` | byte-identical |
+| `/etc/init.d/tpbr` | byte-identical |
+| `/etc/init.d/wifix` | byte-identical |
+
+The common `meshd` init script has no `meshd.meshd.enable` guard in `start()`; it simply launches `/usr/bin/meshd`. Its `START=50` line is commented out, so automatic boot ordering must not be inferred from rc.common alone.
+
+The common `apsd` and `tpbr` init scripts explicitly read `meshd.meshd.enable` and return immediately when it is `off`. In addition, `apsd stop` executes `tpbrctl detach br-lan`.
+
+All four `wifix` binaries also contain the same control strings:
+- `ubus send meshd.wifi_reload_complete`
+- `pidof meshd`
+- `/etc/init.d/meshd stop`
+- `/etc/init.d/meshd start`
+
+This rules out a firmware-version regression in the daemon gating scripts. The EasyMesh-off data-plane problem is architectural and was already present in the first JP release: disabling Mesh also prevents the standard `apsd/tpbr` startup path, while `meshd` contains reconnect logic that can handle non-TP-IE candidates.
+
+## Updated firmware-level conclusion
+
+The static firmware evidence now supports the following:
+
+1. Current 1.2.0 did not remove or globally disable STA/APCLI.
+2. Ordinary non-TP-Link AP candidates are not statically rejected by 1.1+/1.2 `meshd`; a non-TP-IE candidate can reach the band reconnect dispatcher.
+3. The 1.1.0 candidate-selection redesign is real, but TP-IE gating alone does not explain the current failure.
+4. The Mesh-off gating of `apsd/tpbr` is identical from 1.0.2 through 1.2.0, so downgrading does not restore a separate legacy non-Mesh forwarding path.
+5. Association and Ethernet forwarding must now be separated experimentally. A missing Ethernet DHCP OFFER can be explained by a detached/unused `tpbr` path even if the STA were associated; conversely the current public status APIs are not sufficient to prove association.
+
+The next practical firmware question is no longer “which old version still has STA?” but “what is the smallest current-firmware runtime combination that keeps STA reconnect and LAN forwarding while removing EasyMesh control-plane behavior?”
