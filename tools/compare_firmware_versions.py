@@ -26,6 +26,13 @@ SELECTED_PATHS = (
     '/etc/meshd_cfg.json',
     '/etc/meshd_cfg_be260v1_jp.json',
     '/lib/modules/5.4.281/mt_wifi.ko',
+    '/etc/partition_config/default-config',
+    '/etc/partition_config/profile',
+    '/usr/bin/apsd',
+    '/lib/modules/iplatform/tpbr.ko',
+    '/etc/apsd_be260v1_jp_hc.json',
+    '/etc/easymesh_cfg_be260v1_jp.json',
+    '/usr/sbin/wpad',
 )
 MAX_SELECTED_FILE = 32 * 1024 * 1024
 
