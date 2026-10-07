@@ -1,7 +1,7 @@
 import hashlib
 import unittest
 
-from tools.compare_firmware_versions import MARKERS, compare_versions, summarize_bytes
+from tools.compare_firmware_versions import MARKERS, SELECTED_PATHS, compare_versions, summarize_bytes
 
 
 class FirmwareVersionComparisonTests(unittest.TestCase):
@@ -44,6 +44,11 @@ class FirmwareVersionComparisonTests(unittest.TestCase):
         self.assertTrue(row['versions']['1.0.2']['present'])
         self.assertFalse(row['versions']['1.2.0']['present'])
         self.assertNotIn('sha256', row['versions']['1.2.0'])
+
+
+    def test_daemon_gating_scripts_are_in_version_comparison(self):
+        for path in ('/etc/init.d/meshd', '/etc/init.d/apsd', '/etc/init.d/tpbr'):
+            self.assertIn(path, SELECTED_PATHS)
 
 
 if __name__ == '__main__':
