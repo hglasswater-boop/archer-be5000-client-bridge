@@ -63,33 +63,11 @@ jobs:
               --nm-source "$NM_SOURCE" \
               --output "artifacts/decoded-$version.bin" \
               --report "artifacts/decoded-$version.json"
-            ubi_start="$(python - "$version" <<'PY'
-import json, sys
-version = sys.argv[1]
-report = json.load(open(f'artifacts/decoded-{version}.json', encoding='utf-8'))
-hits = [x['offset'] for x in report['magic_candidates'] if x['kind'] == 'ubi']
-if not hits:
-    raise SystemExit('no UBI candidate')
-print(hex(min(hits)))
-PY
-)"
+            ubi_start="$(python -c "import json; r=json.load(open('artifacts/decoded-$version.json')); h=[x['offset'] for x in r['magic_candidates'] if x['kind']=='ubi']; assert h; print(hex(min(h)))")"
             python -m tools.read_ubi "artifacts/decoded-$version.bin" \
               --start "$ubi_start" --peb-size 0x20000 \
               --output "artifacts/volumes-$version"
-            rootfs="$(python - "$version" <<'PY'
-from pathlib import Path
-import sys
-version = sys.argv[1]
-matches = []
-for path in sorted(Path(f'artifacts/volumes-{version}').glob('volume-*.bin')):
-    with path.open('rb') as stream:
-        if stream.read(4) == b'hsqs':
-            matches.append(path)
-if len(matches) != 1:
-    raise SystemExit(f'expected one SquashFS rootfs, got {len(matches)}')
-print(matches[0])
-PY
-)"
+            rootfs="$(python -c "from pathlib import Path; ps=sorted(Path('artifacts/volumes-$version').glob('volume-*.bin')); m=[p for p in ps if p.open('rb').read(4)==b'hsqs']; assert len(m)==1, len(m); print(m[0])")"
             printf '%s=%s\n' "$version" "$rootfs" >> artifacts/rootfs-list.txt
           done
 
