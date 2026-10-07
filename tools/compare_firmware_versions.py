@@ -12,6 +12,8 @@ MARKERS = (
     'disconnect',
     'MACRepeater',
     'tp_mesh_enable',
+    'ApCliMeshRule',
+    'MACRepeaterEn',
 )
 SELECTED_PATHS = (
     '/usr/bin/wifix',
@@ -23,6 +25,7 @@ SELECTED_PATHS = (
     '/etc/init.d/tpbr',
     '/etc/meshd_cfg.json',
     '/etc/meshd_cfg_be260v1_jp.json',
+    '/lib/modules/5.4.281/mt_wifi.ko',
 )
 MAX_SELECTED_FILE = 32 * 1024 * 1024
 
