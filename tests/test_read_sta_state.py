@@ -203,6 +203,19 @@ class LifecycleTests(unittest.TestCase):
 
 
 class HttpTests(unittest.TestCase):
+    def test_network_failure_labels_do_not_expose_exception_content(self):
+        unavailable = OSError('private-local-data')
+        unavailable.winerror = 10049
+        for error, label in ((unavailable, 'configured source IPv4 is not assigned to this PC'),
+                (TimeoutError('private-local-data'), 'management network request timed out'),
+                (OSError('private-local-data'), 'management network request failed')):
+            with self.subTest(label=label), patch('http.client.HTTPConnection') as factory:
+                factory.return_value.request.side_effect = error
+                with self.assertRaises(Failure) as caught:
+                    Transport('192.168.1.52', '192.168.1.1').post('/login?form=keys', b'operation=read')
+                self.assertEqual(str(caught.exception), label)
+                factory.return_value.close.assert_called_once()
+
     def test_status_route_is_allowlisted_for_bounded_probe(self):
         with patch('http.client.HTTPConnection') as factory:
             response = factory.return_value.getresponse.return_value
@@ -247,7 +260,7 @@ class HttpTests(unittest.TestCase):
     def test_network_failure_never_retries_or_exposes_exception(self):
         with patch('http.client.HTTPConnection') as factory:
             factory.return_value.request.side_effect = OSError('SECRET')
-            with self.assertRaisesRegex(Failure, '^network request or JSON response failed$'):
+            with self.assertRaisesRegex(Failure, '^management network request failed$'):
                 Transport('192.168.0.52').post('/login?form=keys', b'operation=read')
             factory.assert_called_once()
             factory.return_value.request.assert_called_once()

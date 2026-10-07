@@ -196,8 +196,17 @@ class Transport:
             if not isinstance(result, dict):
                 raise Failure('HTTP response invalid')
             return result
-        except (OSError, http.client.HTTPException, ValueError):
-            raise Failure('network request or JSON response failed') from None
+        except OSError as error:
+            # Fixed labels only: exception text can contain response or local data.
+            if getattr(error, 'winerror', None) == 10049:
+                raise Failure('configured source IPv4 is not assigned to this PC') from None
+            if isinstance(error, TimeoutError):
+                raise Failure('management network request timed out') from None
+            raise Failure('management network request failed') from None
+        except http.client.HTTPException:
+            raise Failure('management HTTP protocol failed') from None
+        except ValueError:
+            raise Failure('management JSON response invalid') from None
         finally:
             connection.close()
 

@@ -1,5 +1,11 @@
 # Ethernet Converter実機切り分け
 
+## ユーザー指定の2.4GHz比較
+
+ユーザーが通常2.4GHz SSIDへの接続を指定。現在の5GHz STAをoff、2.4GHzをonとする既知rootap setterを一回要求する。rootap_2gは同じenable/ssid/encryption/psk_version/psk_cipher/psk_key mappingを持ち、WPA2/AESを使う。Wi-Fi鍵は現在の5GHz保存値をRAM内で引き継ぎ、他のパスワードを推測しない。Mesh/AP/管理LAN/DHCPは変更せず、両bandの有効状態と2.4GHzの6 fieldをreadback後にDHCP観測する。失敗でも通常終了時の復元は行わない。2.4GHzで成立しても当初の5GHz性能要件と区別する。
+
+06:30Zのwrite/readbackで2.4GHz STA on、5GHz STA offを確認。PCのWlanScanを明示的に要求すると通常2.4GHz AP/WPA2/channel 5と試験5GHz APが見えた。Windowsのnetsh一覧が見えない状態はキャッシュ/scanタイミングの影響もあり、SSID消失を断定しない。2.4GHz試験もEthernet OFFERなし（Wi-Fi controlあり）。BSSID指定toolへ--band 2gとWlanScan更新を追加し、SSID一致とprimary Bandの一致を要求する。colocated APのBand/Channelを選択に使わない。
+
 ## 通常認証からのローカルSSH診断
 
 公開administration controllerのform=login/operation=app_user_agreeはlogin_update_ssh_enableへdispatchする。ssh_is_enable=1はREMOTE_ADDRだけをknock_functions.sh addへ渡し、accountmgnt.admin.ssh_is_enable=1を保存する。パスワード・ユーザー名・WAN remote設定は変更しない。公開dropbear設定はPort=20001、SysAccountLogin=off、PasswordAuth=on。Web管理と同じ認証からPC 192.168.1.52だけのSSH許可を要求し、その後に既存管理パスワードによる通常SSH認証を一回試す。APIや認証の失敗を突破するためのパスワード推測は行わない。
@@ -14,12 +20,14 @@ PCの接続確認で実際のMLO接続先はWPA3-Personal(H2E)、5GHz channel 12
 
 実施順はrouter mode、192.168.1.1、DHCP off、5GHz STA on/2.4GHz offを確認→Mesh offを一回write→15秒待ち→Mesh/LAN/DHCP readback→開始時6 fieldを一回write→15秒待ち→STA readback→IPv4 DHCP DISCOVER/OFFER観測→logout。個体のSSID/PSKはRAMのみ、reportは固定ラベルとboolのみ。失敗時も自動でMesh on/STA offへ復元せず、最後に確認できた状態を残す。
 
-追加の`--probe-radio`は既知wireless_5g/readを使用し、5GHz AP/radioのenable/disabled_all/channelだけを限定取得する。APのSSID・鍵や未知値をreportへコピーしない。AP停止とradio停止は別なので、getter結果のfield名を維持する。
+追加の`--probe-radio`は既知wireless_2g/5gのreadを使用し、各bodyにformを明示して両bandのAP/radioのenable/disabled_all/channelを限定取得する。STA設定も両bandをsanitizeし、SSID/PSKは存在形態だけを記録する。APのSSID・鍵や未知値をreportへコピーしない。AP停止とradio停止は別なので、getter結果のfield名を維持する。
 
 `configure_converter --apply-mesh-off --disable-aps`はwireless_2g/5gの既知writeへform、wireless_<band>_enable=off、wireless_<band>_disabled_all=offを送る。公開mappingでは5GHz enableはAP用cfg=3/act=VAP、STAはcfg=13、radioはcfg=19で別。controllerはdisabled_allが要求に**ない**場合にenableから補完するため、AP offではradio停止のonへ補完される。Lua TESTの分岐を読み違えた初回2.4GHz要求でこの条件をreadback guardが検出し、5GHz変更前に停止した。radio維持にはdisabled_all=offの明示が必要であり、修正した。各APのoffとdisabled_all=offをreadback後、保持STAを再適用し管理LAN/DHCP/STAを照合する。MLO/guest/backhaulの全BSS停止は別途確認が必要。
 
 ## 2026-10-07実機結果
 
+- 06:37Z: 公開管理API取得も失敗。PC有線IPv4は169.254.149.145、管理用192.168.1.52へのsocket bindはWinError 10049。認証前のPC側アドレス問題を確認した。06:34Zの失敗時点のIPは観測していないため、同じ原因だったと断定しない。
+- 06:38Z: ユーザーが有線固定IPを再設定後、192.168.1.52をsourceにした公開feature preflightが成功。管理アクセスの復旧と、STA association・LAN転送は別に判定する。
 - 05:53Z: survey_5gの成功応答は空Lua table（JSONの{}）。0件として処理。設定変更なし。
 - 05:56Z: Mesh off保存・readback、管理LAN/DHCP確認、通常STA再適用に成功。Ethernet OFFERなし、Wi-Fi control OFFERあり。
 - 05:59Z: 実際にPCで接続したMLO SSIDへWPA3専用候補を適用・readback成功。STA有効維持、Ethernet OFFERなし。

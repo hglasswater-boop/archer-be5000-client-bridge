@@ -5,6 +5,18 @@ from tests.test_probe_sta_config import PlainProtocol
 
 
 class PinTargetTests(unittest.TestCase):
+    def test_two_ghz_uses_primary_band_not_colocated_ap(self):
+        text = '''SSID 1 : TARGET
+    BSSID 1 : 02:11:22:33:44:55
+         Signal : 60%
+         Band : 2.4 GHz
+         Channel : 5
+         Colocated AP Band : 5 GHz
+         Channel : 124
+'''
+        self.assertEqual(select_target(text, 'TARGET', '2g'), ('02:11:22:33:44:55', 5))
+        with self.assertRaises(Failure):
+            select_target(text, 'TARGET', '5g')
     def test_scan_selects_exact_ssid_and_five_ghz_only(self):
         text = '''SSID 1 : TARGET
     BSSID 1 : 02:11:22:33:44:55

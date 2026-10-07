@@ -6,7 +6,7 @@ import shutil
 import sys
 
 from .probe_sta_config import STA, link_observation, request
-from .read_sta_state import Crypto, Failure, LOGOUT, ROOT, Transport, login_session, prompt_password, success, write_report
+from .read_sta_state import Crypto, Failure, LOGOUT, ROOT, Transport, login_session, prompt_password, sanitize_sta, success, write_report
 
 SYSLOG = '/admin/syslog?form=log'
 MESH = '/admin/easymesh?form=easymesh_enable'
@@ -73,14 +73,16 @@ def summarize_survey(data, target):
     return {'rows': len(data), 'target_matches': len(matches), 'targets': targets}
 
 
-def radio_observation(data):
+def radio_observation(data, band='5g'):
+    if band not in ('2g', '5g'):
+        raise Failure('unsupported radio band')
     if not isinstance(data, dict):
         raise Failure('radio setting must be an object')
     result = {}
-    for key in ('wireless_5g_enable', 'wireless_5g_disabled_all', 'radio_5g_enable'):
+    for key in (f'wireless_{band}_enable', f'wireless_{band}_disabled_all', f'radio_{band}_enable'):
         if data.get(key) in ('on', 'off'):
             result[key] = data[key]
-    for key in ('radio_5g_channel', 'wireless_5g_channel'):
+    for key in (f'radio_{band}_channel', f'wireless_{band}_channel'):
         value = data.get(key)
         if isinstance(value, str) and re.fullmatch(r'[0-9]{1,3}', value):
             value = int(value)
@@ -97,10 +99,14 @@ def collect(transport, crypto, password_provider, *, probe_mesh=False, probe_sur
     try:
         protocol, token = login_session(transport, crypto, password_provider)
         config = request(transport, protocol, token, STA)
+        report['sta_2g_enabled'] = config.get('enable_2g') == 'on'
         report['sta_5g_enabled'] = config.get('enable_5g') == 'on'
+        report['sta_config'] = sanitize_sta(config)
         if probe_radio:
-            report['radio_5g'] = radio_observation(request(transport, protocol, token, RADIO,
-                                                          fields={'form': 'wireless_5g'}))
+            for band in ('2g', '5g'):
+                form = 'wireless_' + band
+                report['radio_' + band] = radio_observation(request(transport, protocol, token,
+                    '/admin/wireless?form=' + form, fields={'form': form}), band)
         if probe_survey:
             payload = protocol.encrypt('operation=read')
             rows = success(protocol.decrypt(transport.post(SURVEY, payload, token)), 'survey')
@@ -135,7 +141,7 @@ def main():
     parser.add_argument('--source-ip', required=True, choices=('192.168.1.52',))
     parser.add_argument('--probe-mesh', action='store_true', help='read known EasyMesh enable getter; no settings changes')
     parser.add_argument('--probe-survey', action='store_true', help='scan 5GHz and summarize saved-target matches')
-    parser.add_argument('--probe-radio', action='store_true', help='read limited 5GHz AP/radio configuration')
+    parser.add_argument('--probe-radio', action='store_true', help='read limited 2.4GHz and 5GHz AP/radio configuration')
     args = parser.parse_args()
     node = shutil.which('node')
     if not node or not sys.stdin.isatty() or not sys.stderr.isatty():

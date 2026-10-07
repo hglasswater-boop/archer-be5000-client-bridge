@@ -1,4 +1,4 @@
-"""Pin retained STA to an exact saved-SSID 5GHz AP from Windows scan."""
+"""Pin retained STA to a saved-SSID AP in the selected band from Windows scan."""
 import argparse
 import datetime
 import re
@@ -6,15 +6,20 @@ import shutil
 import subprocess
 import sys
 import time
+import ctypes
+import uuid
 from urllib.parse import urlencode
 from .probe_sta_config import STA, original_state, request
 from .read_sta_state import Crypto, Failure, LOGOUT, ROOT, Transport, login_session, prompt_password, success, write_report
 from .sta_ipv4_probe import DhcpObserver
+from .connect_sta_2g import plan_2g
 
 MAC = r'(?:[0-9a-fA-F]{2}:){5}[0-9a-fA-F]{2}'
 
 
-def select_target(text, target):
+def select_target(text, target, band='5g'):
+    if band not in ('2g', '5g'):
+        raise Failure('target band outside retained STA comparison')
     candidates = []
     for block in re.split(r'(?m)^SSID \d+\s*:', text)[1:]:
         if block.splitlines()[0].strip() != target:
@@ -23,35 +28,63 @@ def select_target(text, target):
             mac = row.splitlines()[0].strip().lower()
             if not re.fullmatch(MAC, mac) or int(mac[:2], 16) & 1 or not int(mac.replace(':', ''), 16):
                 continue
-            if not re.search(r'Band\s*:\s*5 GHz', row):
+            primary_band = re.search(r'(?m)^\s+Band\s*:\s*(2\.4|5|6) GHz', row)
+            if not primary_band or primary_band[1] != ('5' if band == '5g' else '2.4'):
                 continue
             channel = re.search(r'Channel\s*:\s*([0-9]{1,3})', row)
             signal = re.search(r'Signal\s*:\s*([0-9]{1,3})%', row)
-            if channel and 32 <= int(channel[1]) <= 177:
+            if channel and (32 <= int(channel[1]) <= 177 if band == '5g' else 1 <= int(channel[1]) <= 14):
                 candidates.append((int(signal[1]) if signal else 0, mac, int(channel[1])))
     if not candidates:
-        raise Failure('saved target has no validated 5GHz BSSID in PC scan')
+        raise Failure('saved target has no validated band BSSID in PC scan')
     _, mac, channel = max(candidates)
     return mac, channel
 
 
-def pin_target(transport, protocol, token, mac):
+def pin_target(transport, protocol, token, mac, band='5g'):
+    if band not in ('2g', '5g'):
+        raise Failure('target band outside retained STA comparison')
     if not isinstance(mac, str) or not re.fullmatch(MAC, mac) or int(mac[:2], 16) & 1 or not int(mac.replace(':', ''), 16):
         raise Failure('target BSSID format invalid')
-    fields = {'operation': 'write', 'enable_5g': 'on', 'bssid_5g': mac, 'locktoap_5g': 'on'}
+    fields = {'operation': 'write', 'enable_' + band: 'on', 'bssid_' + band: mac, 'locktoap_' + band: 'on'}
     return success(protocol.decrypt(transport.post(STA, protocol.encrypt(urlencode(fields)), token)), 'pin-target')
+
+
+def refresh_wifi_scan():
+    result = subprocess.run(['powershell', '-NoProfile', '-Command',
+        '(Get-NetAdapter | Where-Object ifIndex -eq 14).InterfaceGuid'], capture_output=True, timeout=10)
+    if result.returncode:
+        raise Failure('Wi-Fi adapter lookup failed')
+    try:
+        guid = ctypes.create_string_buffer(uuid.UUID(result.stdout.decode().strip().strip('{}')).bytes_le)
+    except ValueError:
+        raise Failure('Wi-Fi adapter identity unavailable') from None
+    w = ctypes.WinDLL('wlanapi.dll')
+    handle, version = ctypes.c_void_p(), ctypes.c_uint32()
+    w.WlanOpenHandle.argtypes = [ctypes.c_uint32, ctypes.c_void_p, ctypes.POINTER(ctypes.c_uint32), ctypes.POINTER(ctypes.c_void_p)]
+    w.WlanScan.argtypes = [ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_void_p]
+    w.WlanCloseHandle.argtypes = [ctypes.c_void_p, ctypes.c_void_p]
+    if w.WlanOpenHandle(2, None, ctypes.byref(version), ctypes.byref(handle)):
+        raise Failure('Windows scan handle unavailable')
+    try:
+        if w.WlanScan(handle, guid, None, None, None):
+            raise Failure('Windows active scan request rejected')
+        time.sleep(5)
+    finally:
+        w.WlanCloseHandle(handle, None)
 
 
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--pin-scan-target', action='store_true', required=True)
-    p.parse_args()
+    p.add_argument('--band', choices=('2g', '5g'), default='5g')
+    args = p.parse_args()
     node = shutil.which('node')
     if not node or not sys.stdin.isatty() or not sys.stderr.isatty():
         print('Stopped: Node.js and interactive terminal are required', file=sys.stderr)
         return 1
     transport = Transport('192.168.1.52', '192.168.1.1')
-    report = {'outcome': 'stopped', 'logout': 'not-needed', 'association': 'not-measured'}
+    report = {'outcome': 'stopped', 'logout': 'not-needed', 'association': 'not-measured', 'band': args.band}
     protocol, token = None, ''
     try:
         protocol, token = login_session(transport, Crypto(node), prompt_password)
@@ -60,22 +93,28 @@ def main():
                 read('/admin/dhcps?form=setting').get('enable') != 'off'):
             raise Failure('converter management precondition mismatch')
         state = read(STA)
-        saved = original_state(state, allow_active=True)
+        if args.band == '5g':
+            saved = original_state(state, allow_active=True)
+        else:
+            saved = plan_2g(state.get('ssid_2g'), state.get('psk_key_2g'))
+            if not all(state.get(k) == v for k, v in saved.items()):
+                raise Failure('expected retained WPA2 2.4GHz baseline')
+        refresh_wifi_scan()
         scan = subprocess.run(['netsh', 'wlan', 'show', 'networks', 'mode=bssid'],
                               capture_output=True, timeout=10, check=False)
         if scan.returncode or len(scan.stdout) > 1048576:
             raise Failure('PC scan failed')
-        mac, channel = select_target(scan.stdout.decode('utf-8', errors='replace'), saved['ssid_5g'])
+        mac, channel = select_target(scan.stdout.decode('utf-8', errors='replace'), saved['ssid_' + args.band], args.band)
         report['target_channel'] = channel
         report['pin_write_attempted'] = True
-        pin_target(transport, protocol, token, mac)
+        pin_target(transport, protocol, token, mac, args.band)
         report['pin_write_accepted'] = True
         print('BSSID pin accepted; waiting for STA update')
         time.sleep(20)
         current = read(STA)
-        report['sta_kept_enabled'] = current.get('enable_5g') == 'on'
-        report['pin_verified'] = current.get('locktoap_5g') == 'on' and (
-            str(current.get('bssid_5g', '')).replace('-', ':').lower() == mac)
+        report['sta_kept_enabled'] = current.get('enable_' + args.band) == 'on'
+        report['pin_verified'] = current.get('locktoap_' + args.band) == 'on' and (
+            str(current.get('bssid_' + args.band, '')).replace('-', ':').lower() == mac)
         report['saved_fields_unchanged'] = all(current.get(k) == v for k, v in saved.items())
         if not all(report[k] for k in ('sta_kept_enabled', 'pin_verified', 'saved_fields_unchanged')):
             raise Failure('pinned STA readback mismatch')

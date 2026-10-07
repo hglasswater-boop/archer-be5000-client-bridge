@@ -8,6 +8,33 @@ from tests.test_probe_sta_config import Device, PlainProtocol
 
 
 class DiagnosticTests(unittest.TestCase):
+    def test_both_band_diagnostics_keep_secrets_out_and_supply_form(self):
+        class RadioDevice(Device):
+            def post(self, route, payload, token=''):
+                if route in ('/admin/wireless?form=wireless_2g', '/admin/wireless?form=wireless_5g'):
+                    band = '2g' if route.endswith('2g') else '5g'
+                    self.requests.append((route, payload))
+                    return {'success': True, 'data': {f'wireless_{band}_enable': 'off',
+                        f'wireless_{band}_disabled_all': 'off', f'radio_{band}_channel': '5',
+                        f'wireless_{band}_ssid': 'private', f'wireless_{band}_psk_key': 'secret'}}
+                if route == '/admin/syslog?form=filter':
+                    raise Failure('HTTP response rejected')
+                return super().post(route, payload, token)
+        device = RadioDevice()
+        device.requests = []
+        device.state.update(enable_2g='on', enable_5g='off', ssid_2g='private', psk_key_2g='secret')
+        with patch('tools.read_sta_diagnostics.login_session', return_value=(PlainProtocol(), 'token')):
+            result = collect(device, None, lambda: 'secret', probe_radio=True)
+        self.assertTrue(result['sta_2g_enabled'])
+        self.assertFalse(result['sta_5g_enabled'])
+        self.assertEqual(result['radio_2g']['radio_2g_channel'], 5)
+        self.assertEqual(device.requests, [(f'/admin/wireless?form=wireless_{band}',
+            f'operation=read&form=wireless_{band}'.encode()) for band in ('2g', '5g')])
+        self.assertNotIn('private', json.dumps(result))
+        self.assertNotIn('secret', json.dumps(result))
+        self.assertEqual(device.writes, [])
+        self.assertEqual(result['logout'], 'complete')
+
     def test_radio_read_omits_credentials_and_unknown_values(self):
         result = radio_observation({'wireless_5g_enable': 'on', 'radio_5g_channel': '36',
                                     'wireless_5g_ssid': 'private', 'radio_5g_mode': 'private'})
