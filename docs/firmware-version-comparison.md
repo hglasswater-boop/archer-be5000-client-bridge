@@ -87,3 +87,58 @@ Next comparison should focus on:
 2. the generic `meshd_cfg.json` 1.0.3 -> 1.1.0 diff;
 3. filtered STA/APCLI-related string-table differences in `wifix` and `meshd`;
 4. if needed, function-level diff around STA initialization and reconnect paths.
+
+
+## Focused diff result
+
+A second successful comparison extracted only firmware-public configuration and STA/APCLI-related string-table differences.
+
+### 1.0.2 -> 1.0.3: wifix profile
+
+The only `wifix_profile.ini` change is addition of country-dependent TPC/thermal duty-control settings:
+
+- `FEATURE_TPC_CTRL_BY_CNTRY=y`
+- temperature thresholds for 2.4/5 GHz
+- duty values for 2.4/5 GHz
+
+No STA/APCLI enable/disable, supplicant, reconnect, bSTA, WDS, or MAC-repeater setting changed in this file.
+
+### 1.0.3 -> 1.1.0: generic meshd config
+
+The generic `meshd_cfg.json` keeps `scan_before_connect_enable=true` and the same bSTA interface assignments. The changes add:
+
+- RSSI thresholds for 2.4/5/6 GHz;
+- thread-pool thread count and stack size.
+
+The JP-specific `meshd_cfg_be260v1_jp.json` remains byte-identical across all four releases.
+
+### STA/APCLI-related binary strings
+
+`wifix` has no filtered STA/APCLI string change between 1.0.2 -> 1.0.3 or 1.0.3 -> 1.1.0. Between 1.1.0 -> 1.2.0 it adds, rather than removes:
+
+- `ApCliAuthMode=OWE`
+- `ApCliAuthMode=WPA2PSKMIXWPA3PSK`
+- `ApCliAuthMode=WPA3PSK`
+- `ApCliEncrypType=AES`
+
+The existing `ApCliEnable=0`, `ApCliEnable=1`, `ApCliBssid`, WPA/WPA2 auth modes, supplicant control interface, and `config_wds_setting` strings remain.
+
+`meshd` has no filtered STA-related string change between 1.0.2 -> 1.0.3 or 1.1.0 -> 1.2.0. Between 1.0.3 -> 1.1.0 it adds:
+
+- a disconnected-role transition log;
+- `wpa_cli ... list_networks`;
+- `wpa_cli ... set_network ... bssid <MAC>`;
+- `wpa_cli ... set_network ... bssid any`.
+
+Existing `disconnect`, `reconfigure`, `reconnect`, scan/status and EasyMesh supplicant commands remain.
+
+## Current conclusion
+
+The static evidence does **not** support either of these simple explanations:
+
+1. "STA/APCLI existed only in old firmware and was removed from current firmware."
+2. "A visible profile/config switch disabled STA in current firmware."
+
+Current 1.2.0 retains the STA/APCLI control path and adds authentication/encryption support. The public JP bSTA mapping and wifix init script are unchanged from 1.0.2.
+
+The remaining version-sensitive hypothesis is narrower: internal control flow, runtime state, or EasyMesh/reconnect gating inside changed binaries may differ even though the commands and configurations remain. A function-level comparison is required before attributing the live association failure to a firmware regression. Static presence also does not prove that 1.0.2 ever supported standalone non-EasyMesh association.
