@@ -308,3 +308,10 @@ A bounded full-stream search of the published GPL archive found **zero** regular
 This means the product binary's `iwpriv ... ApCliMeshRule=1` command cannot currently be mapped to a published GPL handler by name. Possible explanations include a product-only driver patch or a source branch not represented by the published GPL tree; no one explanation is assumed.
 
 Continue from published driver tokens that are independently present in the firmware/GPL feature set: `ApCliEnable` and `MACRepeaterEn`. Their handlers/configuration should establish whether a non-EasyMesh APCLI forwarding mode exists independently of `tpbr`.
+
+
+## Production Wi-Fi driver comparison
+
+The published GPL does not contain the exact product command tokens `ApCliMeshRule` or `ApCliEnable` in regular text members, so it cannot establish the production command semantics by name.
+
+Compare the actual production kernel module `/lib/modules/5.4.281/mt_wifi.ko` from each verified JP firmware. Record byte hash/size and the exact command markers `ApCliMeshRule`, `ApCliEnable`, `MACRepeaterEn`, and related APCLI tokens. This comparison takes precedence over GPL naming for the shipped behavior.
