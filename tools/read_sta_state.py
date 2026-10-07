@@ -20,6 +20,8 @@ ROOT = Path(__file__).resolve().parents[1]
 PUBLIC = frozenset(['/device_config?form=config', '/login?form=keys', '/login?form=auth'])
 READS = frozenset(['/admin/system?form=sysmode',
                    '/admin/wireless?form=wireless_connect_to_network'])
+STATUS_ROUTE = '/admin/wireless?form=wireless_connect_status'
+STATUS_READS = frozenset([STATUS_ROUTE])
 NETWORK_READS = frozenset(['/admin/network?form=lan_ipv4', '/admin/dhcps?form=setting'])
 LOGIN = '/login?form=login'
 LOGOUT = '/admin/system?form=logout'
@@ -143,7 +145,7 @@ class Transport:
         self.source_ip, self.target_ip, self.cookie = str(address), target_ip, ''
 
     def post(self, route, payload, token=''):
-        if route not in PUBLIC | READS | NETWORK_READS | {LOGIN, LOGOUT}:
+        if route not in PUBLIC | READS | STATUS_READS | NETWORK_READS | {LOGIN, LOGOUT}:
             raise Failure('request route is not allowlisted')
         if not isinstance(payload, bytes) or len(payload) > 16384:
             raise Failure('request payload invalid')

@@ -11,7 +11,7 @@ from urllib.parse import parse_qs
 
 from tools.read_sta_state import (
     Crypto, Failure, Protocol, Transport, collect, sanitize_sta, signature_text,
-    split_signature, validate_password, write_report, sanitize_network,
+    split_signature, validate_password, write_report, sanitize_network, STATUS_ROUTE,
 )
 
 
@@ -203,6 +203,18 @@ class LifecycleTests(unittest.TestCase):
 
 
 class HttpTests(unittest.TestCase):
+    def test_status_route_is_allowlisted_for_bounded_probe(self):
+        with patch('http.client.HTTPConnection') as factory:
+            response = factory.return_value.getresponse.return_value
+            response.status = 200
+            response.read.return_value = b'{"success":true,"data":{"connect_status":"connected"}}'
+            transport = Transport('192.168.1.210', '192.168.1.1')
+            transport.cookie = 'test-cookie'
+            result = transport.post(STATUS_ROUTE, b'sign=aa&data=QQ==', '0123456789abcdef')
+            self.assertEqual(result['data']['connect_status'], 'connected')
+            factory.assert_called_once_with('192.168.1.1', 80, timeout=5,
+                                            source_address=('192.168.1.210', 0))
+
     def test_changed_management_address_is_explicit_and_source_bound(self):
         with patch('http.client.HTTPConnection') as factory:
             response = factory.return_value.getresponse.return_value

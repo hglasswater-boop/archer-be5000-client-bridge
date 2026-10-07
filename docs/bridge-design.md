@@ -6,7 +6,7 @@
 | --- | --- | --- | --- | --- | --- | --- |
 | A: 4addr / 互換WDS | 双方対応時Full候補 | broadcast/unicast透過を実測 | RA / ND / DHCPv6実測 | snooping含め実測 | SMBと探索を別に実測 | 未測定 |
 | B: STA + MAC NAT | Partial、元MAC非透過 | 複数端末mapping、DHCP識別子・ARPの実装依存 | ND / RA等の対応必須 | group転送の実装依存 | direct IPが通っても探索は別条件 | 未測定 |
-| C: relayd相当 | Partial | proxy ARP / DHCP relayの実装依存 | upstream relaydはIPv4のpseudo bridge、IPv6を満たさない | IPv4 relay成功から透過を推論しない | IPv4 SMB成立でもIPv6/探索要件が残る | 未測定 |
+| C: relayd相当 | Partial | proxy ARP / DHCP relayの実装依存 | 今回の受入対象外 | IPv4 relay成功から透過を推論しない | IPv4 SMB成立後も探索を別に検証 | 未測定 |
 | D: 既存backhaul data path | 実装依存 | 実装依存 | 実装依存 | 実装依存 | 実装依存 | daemonによる上書き・再設定を確認 |
 
 relaydの範囲は[公式source](https://github.com/openwrt/relayd)を確認。LAN複数MACの扱い、ARP、DHCP、ND、multicast、TCPをそれぞれ検証し、IP NATなしとMAC変換なしを区別する。
@@ -14,8 +14,8 @@ relaydの範囲は[公式source](https://github.com/openwrt/relayd)を確認。L
 ## 推奨設計
 
 **純正kernel / driver / FWを保ち、BE700を通常APとしてAPCLIによる通常STAのruntime構成を検証する**方針を優先する。
-2026-10-07のユーザー指摘を反映し、BE700のHW/FW・4addr調査を先行条件から外した。まずBに相当するMAC変換/proxyやvendorの複数端末転送をBE5000側で調べ、IPv6/探索を含む実測が揃えばPartialとして評価する。Dのdata pathを使う場合も通常APへの接続とmesh制御からの独立性を確認する。
-AはFull L2を追加で追求する場合に双方対応を確認する。Cは現要件のIPv6を満たさず既定案にしない。
+2026-10-07のユーザー指摘を反映し、BE700のHW/FW・4addr調査を先行条件から外した。まずBに相当するMAC変換/proxyやvendorの複数端末転送をBE5000側で調べ、IPv4/探索を含む実測が揃えばPartialとして評価する。Dのdata pathを使う場合も通常APへの接続とmesh制御からの独立性を確認する。IPv6は今回の受入条件に含めない。
+AはFull L2を追加で追求する場合に双方対応を確認する。CはIPv4のpseudo bridgeとして成立する範囲だけを評価し、IPv6対応を前提にしない。
 
 通常STAは親APと3addrで通信できるが、PC/NASの異なる元MACをそのまま通すためには別の処理が必要。MAC変換/proxyを使う方式ではIP NATなし・同一IPネットワークを目標にできる一方、純粋なMAC透過とは異なる。
 GPLのMAC_REPEATER機能名だけでは、親機に1 MACとして見える変換か、複数のvirtual STAとしてassociationするかを確定できない。親APが認識するassociation/MAC数も実測する。

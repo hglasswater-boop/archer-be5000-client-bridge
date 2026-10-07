@@ -67,7 +67,7 @@ LAN/DHCPのIP範囲はlocal-evidence内のreportへ記録し、個体のSSID/PSK
 このgetterはwireless_sta_ifname profileとwpa_cliに依存し、最新公開profileで必要なkeyが見当たらない。
 製品によるHTTP status/sizeの詳細を初回clientが保持していないため、具体的なerror codeは未確定。
 失敗したgetterをbaselineから外し、LAN/DHCP/通常STA設定の4 getter・logoutの成功を別試行で確認した。
-失敗はdriverのassociation失敗を意味しない。clientは現在この共通status経路を要求しない。
+失敗はdriverのassociation失敗を意味しない。read_sta_stateの通常baselineはこの共通status経路を要求しない。別のprobe_sta_configはSTA有効時と復元後にこのread-only経路を一度ずつ要求し、失敗を固定ラベルread-failedとして記録する。
 
 出力はrepository内のgitignoreされたlocal-evidence/へ新規作成する。既存fileは上書きしない。
 password・PSK・暗号key・token・cookieをreport/consoleへ保存しない。未知fieldは値を保存せずfield名だけを記録する。

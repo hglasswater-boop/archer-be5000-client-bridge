@@ -60,11 +60,15 @@ FWの書込み、SSH/firewall変更、mesh daemon停止、AP停止は対象外�
 
 ## 実機結果
 
-WPA2/AES候補とWPA2/WPA3混在候補を一度ずつ実行し、どちらも設定writeの受理、4秒後の6 field readback、5GHz無効化、開始時設定へのrestore、logoutを確認した。最新の混在候補は`configuration-probe-complete`、`rollback=verified`で終了した。getterは既知の接続状態フィールドを返さず、status observationは`unavailable`だった。設定値の受理・復元までであり、association、MLO link aggregation、IPv4/IPv6 forwarding、AP停止、再起動後の永続性は未測定である。
+WPA2/AES候補とWPA2/WPA3混在候補を一度ずつ実行し、どちらも設定writeの受理、4秒後の6 field readback、5GHz無効化、開始時設定へのrestore、logoutを確認した。最新の混在候補は`configuration-probe-complete`、`rollback=verified`で終了した。getterは既知の接続状態フィールドを返さず、status observationは`unavailable`だった。設定値の受理・復元までであり、association、MLO link aggregation、IPv4 forwarding、AP停止、再起動後の永続性は未測定である。
 
-同時に行ったIPv6 probeは、管理Wi-Fi側のcontrol replyを得た一方、BE5000直結Ethernet側のreplyを得られなかった。Ethernet側にIPv6 address/RAがないため、これはassociation失敗の直接証拠ではなく、reportでは`association=not-measured`として扱う。
+以前のIPv6 probeは診断記録としてのみ残す。IPv6は今回の受入条件から外し、以後の実機判定はIPv4へ絞る。
 
-## 同期したIPv6の限定試験
+IPv4 forwardingはまだ測定していない。PCのWi-Fi側に親機サブネットのdefault routeがあり、有線側は管理用の別サブネットなので、通常のpingだけでは無線uplinkの転送を判定できない。2026-10-07の一時host route追加はOSの権限不足で拒否され、routeは追加されなかった。BE5000経由のrouted pingだけでも同一ネットワークのbridge成立を証明できない。次の通信試験は管理用アドレスを維持しつつ、有線側で親機のDHCP取得または重複しない同一サブネットの試験アドレスを用意し、Wi-Fi経由の迂回を除外して行う。
+
+IPv6測定を省いた最新試行では、既知のread-only route `/admin/wireless?form=wireless_connect_status` をSTA有効時と復元後に一度ずつ要求した。両方ともreadに失敗し、`status_after_write` / `status_after_restore` は`read-failed`だった。設定write・readback・rollback・logoutは成功した。接続状態readの失敗からassociation失敗とは判定しない。
+
+## 参考: IPv6の限定試験（今回の受入対象外）
 
 --probe-ipv6を指定した試行では、PCのEthernet index 7とWi-Fi index 14のlink-local address、Wi-Fi側のIPv6 default gatewayをPCから読み取る。
 全addressをlink-localとして検証し、pingのsourceとdestinationに明示したinterface scopeを付ける。

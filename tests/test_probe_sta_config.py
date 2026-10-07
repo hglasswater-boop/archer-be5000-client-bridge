@@ -4,7 +4,7 @@ import unittest
 from unittest.mock import patch
 from urllib.parse import parse_qs
 
-from tools.probe_sta_config import (FIELDS, STA, connection_plan, main, original_state,
+from tools.probe_sta_config import (FIELDS, STA, STATUS, connection_plan, main, original_state,
                                    probe, request, status_observation)
 from tools.read_sta_state import Failure, LOGOUT
 
@@ -59,6 +59,8 @@ class Device:
                 data = {}
             else:
                 data = self.state.copy()
+        elif route == STATUS:
+            data = {'connect_status': 'connected' if self.state['enable_5g'] == 'on' else 'disconnected'}
         else:
             raise AssertionError(route)
         return {'success': True, 'data': data}
@@ -83,8 +85,8 @@ class ProbeTests(unittest.TestCase):
         self.assertEqual(device.writes[1], {'operation': 'write', 'enable_5g': 'off'})
         self.assertEqual(result['association'], 'not-measured')
         self.assertEqual(result['forwarding'], 'not-measured')
-        self.assertEqual(result['status_after_write'], {'field': 'unavailable'})
-        self.assertEqual(result['status_after_restore'], {'field': 'unavailable'})
+        self.assertEqual(result['status_after_write'], {'field': 'connect_status', 'value': 'connected'})
+        self.assertEqual(result['status_after_restore'], {'field': 'connect_status', 'value': 'disconnected'})
         for secret in ('TEST_SSID', 'WiFiTestSecret', 'AdminTestSecret', 'own-token'):
             self.assertNotIn(secret, json.dumps(result))
 

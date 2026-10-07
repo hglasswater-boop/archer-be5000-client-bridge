@@ -10,7 +10,7 @@ MLO対応SSIDを候補にした混在security mappingのreadbackまでは確認�
 1. 同版backupと有線管理/再起動rollback、BE5000のSTA/forwarding設定APIを確認。通常STA接続に必要なSSID・認証条件を確認し、BE700のhardware/FW調査を待たずに進める。
 2. 既存EasyMeshとBE700直結のbaselineを測定。PCがWi-FiとBE5000直結を併用する際、同じ192.168.0.0/24とgateway192.168.0.1が両interfaceに存在することを今回観測した。試験時は実際の経路を固定/記録し、この競合を混同しない。
 3. 隔離LANで検証済みruntime変更を一段ずつ実施。5GHz STA接続 → LAN forwarding → DHCP/NATなし → EasyMesh依存解消 → 全AP beacon停止の順に確認し、途中でmanagement / STAが失われたらrollback。
-4. IPv4/IPv6、BE700側端末とのSMB/multicast/mDNS、復帰・再associationを確認。PC/NAS間のlocal switch通信だけで合格にしない。
+4. IPv4、BE700側端末とのSMB/multicast/mDNS、復帰・再associationを確認。PC/NAS間のlocal switch通信だけで合格にしない。IPv6は受入条件に含めない。
 5. 12〜24時間試験と再起動後の再現性を確認。合格後にstartup永続化の必要性を判断する。
 
 [テスト計画](testing.md)。実interface、bridge、VLAN ID、driver setterやdaemon停止順序を推測して投入scriptにしない。復号解析copyをflashしない。

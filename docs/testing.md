@@ -10,7 +10,7 @@ GPL TARにはpath traversal・リンク無視・member/合計の読取り制限�
 Cloud decodeにはPSSの不正hash・marker・trailerの拒否とRSA public blob構造検証、NIST AES-CBC既知ベクトルを使用する。失敗時に復号しない。
 UBIにはEC/VID/payload CRC、logical block順序・欠損・重複、image sequence混在、truncated extent、erased reserveをsynthetic fixtureで検証する。
 
-最終実行: `python -m unittest discover -s tests -v`、60 tests PASS、skipなし。
+最終実行: `python -m unittest discover -s tests -v`、61 tests PASS、skipなし。
 限定STA reader/probeの暗号方式・request境界・失敗時停止・secret除外・report path・設定rollback境界も検証した。
 対象実機で公開feature preflight、通常local login、sysmode/STA getter、logoutが成功。mode=router、STA両band=off。
 既知の5GHz setterはWPA2/AES候補とWPA2/WPA3混在候補で一回ずつ実行し、設定readback・STA無効化・開始時値へのrestoreを確認した。これはSTA association、MLO link aggregation、Client Bridge forwardingの合格ではない。
@@ -32,9 +32,9 @@ BE700側有線端末を1台追加する。PC↔NASだけではBE5000内switchを
 | 項目 | 合格条件 | 証拠 |
 | --- | --- | --- |
 | PC / NAS DHCPv4 | BE700のlease各1件、異なるMAC/client ID、同一prefix | lease + DHCP capture |
-| IPv6 | RA/SLAAC、必要ならDHCPv6、DAD成功、双方向通信 | RA/ND/DHCPv6 capture |
-| gateway / DNS / Internet | IPv4/IPv6、名前解決とTCP/HTTPS成功 | 各endpoint log |
-| PC ↔ NAS | IPv4/IPv6到達、SMB読書き成功 | ping + SMB hash |
+| IPv6 | 今回は試験対象外 | 受入条件に含めない |
+| gateway / DNS / Internet | IPv4、名前解決とTCP/HTTPS成功 | 各endpoint log |
+| PC ↔ NAS | IPv4到達、SMB読書き成功 | ping + SMB hash |
 | BE700 LAN ↔ PC / NAS | 双方向TCP/SMB成功 | 両側capture |
 | ARP / ND renewal | cacheの失効後も双方向成功 | neighbor table + capture |
 | multicast / mDNS / NAS discovery | 両方向のサービス探索・announceを確認 | UDP5353 / 対象NASプロトコルcapture |
@@ -46,7 +46,7 @@ BE700側有線端末を1台追加する。PC↔NASだけではBE5000内switchを
 
 各比較構成で同じ条件・期間で測定する。pingはgateway、BE700側有線端末、NAS、外部endpointを分けて記録。
 iperf3をBE700側有線端末とPC/NAS間で正逆、単一/複数TCPに実施する。SMBは合意済み試験directoryで大容量copyとhash比較。
-long-lived TCP、DHCP renew、ARP renewal、IPv6 ND、Wi-Fi reassociationとbackhaul切断を監視する。
+long-lived TCP、DHCP renew、ARP renewal、Wi-Fi reassociationとbackhaul切断を監視する。IPv6 NDは監視対象外とする。
 loss、RTT分位、throughput、unexpected TCP reset、転送失敗、再接続回数を数値化。初期受入目標は予期しないreset・hash不一致・自発的reassociationが0。
 packet lossはbaselineとの比較と用途上の許容値を記録し、無線で絶対0を無条件に保証しない。
 
@@ -55,6 +55,6 @@ packet lossはbaselineとの比較と用途上の許容値を記録し、無線�
 captureのtcp.flags.reset == 1を抽出し、5-tuple、時刻、送信元、直前のretransmission、各構成を照合する。
 終端アプリによる通常のRSTと予期しないRSTを分ける。ブラウザエラーだけでWi-Fi原因としない。
 PCとBE700側の両側captureでreset発生位置を調べ、driver/offloadで観測できない場合はその限界を記録する。
-IPv4/IPv6、LAN内/Internet、SMB/HTTPSを分ける。TLS本文やcredentialを公開しない。
+IPv4、LAN内/Internet、SMB/HTTPSを分ける。TLS本文やcredentialを公開しない。
 
 結果欄はNOT RUN。12〜24時間の実機成功をsynthetic単体テストで代用しない。

@@ -188,4 +188,10 @@ association / forwarding / AP完全停止の合格とは区別する。
 
 同じ試行のIPv6 link-local controlでは、管理Wi-Fi側のcontrol replyは得られたが、BE5000直結Ethernet側のreplyは有効期間中も得られなかった。Ethernet側にRA/IPv6 addressがないため、この結果だけでSTA association、ND変換、bridge forwardingのどれかを失敗と特定できない。reportの`association`は`not-measured`、`forwarding`は`IPv6-link-local-probe-only`のままである。
 
-getterは接続状態フィールド自体を返さず、reportの`status_after_write`/`status_after_restore`も`unavailable`だった。したがって、MLO対応SSIDを設定候補にできること、既知setterの受理・rollbackを確認できることまでは進んだが、MLO client negotiation、複数LAN端末のIPv4/IPv6転送、MAC変換、AP停止後のSTA維持、再起動後の永続性は未測定である。
+設定getterは接続状態フィールド自体を返さず、この時点のreportの`status_after_write`/`status_after_restore`も`unavailable`だった。MLO client negotiation、複数LAN端末の転送、MAC変換、AP停止後のSTA維持、再起動後の永続性は未測定である。
+
+## IPv4だけの受入条件への変更
+
+2026-10-07にユーザーがIPv6を使用していないと明示したため、IPv6を受入条件から外した。今後はIPv4 DHCP/ARP、親機側との双方向通信、SMB、IPv4 multicast/mDNS、長時間TCPを評価する。過去のIPv6 probeは診断記録であり、候補を不合格にする根拠にしない。IPv4 relay/proxy方式も制約を実測した上で候補に含める。
+
+IPv6測定を省いた追加probeは設定readback、無効化、開始時値への復元、logoutに成功した。既知の`/admin/wireless?form=wireless_connect_status` readは有効時・復元後とも失敗し、接続状態は`read-failed`、associationとIPv4 forwardingは未測定のまま。記録はlocal-evidence/sta-probe-20261006T223857030087Z.json。PCの一時host route追加もOSの権限不足で拒否されたため、転送試験は成立していない。
