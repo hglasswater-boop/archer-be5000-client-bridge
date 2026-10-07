@@ -95,7 +95,7 @@ jobs:
           while IFS='=' read -r version rootfs; do
             out="artifacts/focused/$version"
             mkdir -p "$out"
-            python -c "from dissect.squashfs import SquashFS; from pathlib import Path; import sys; src=open(sys.argv[1],'rb'); fs=SquashFS(src); out=Path(sys.argv[2]); items={'wifix_profile.ini':'/lib/wifi/wifix_profile.ini','meshd_cfg.json':'/etc/meshd_cfg.json','meshd_cfg_be260v1_jp.json':'/etc/meshd_cfg_be260v1_jp.json','wifix':'/usr/bin/wifix','meshd':'/usr/bin/meshd'}; [(out/name).write_bytes(fs.get(path).open().read()) for name,path in items.items()]" "$rootfs" "$out"
+            python -c "from dissect.squashfs import SquashFS; from pathlib import Path; import sys; src=open(sys.argv[1],'rb'); fs=SquashFS(src); out=Path(sys.argv[2]); items={'wifix_profile.ini':'/lib/wifi/wifix_profile.ini','meshd_cfg.json':'/etc/meshd_cfg.json','meshd_cfg_be260v1_jp.json':'/etc/meshd_cfg_be260v1_jp.json','init-meshd':'/etc/init.d/meshd','init-apsd':'/etc/init.d/apsd','init-tpbr':'/etc/init.d/tpbr','wifix':'/usr/bin/wifix','meshd':'/usr/bin/meshd'}; [(out/name).write_bytes(fs.get(path).open().read()) for name,path in items.items()]" "$rootfs" "$out"
             strings -a "$out/wifix" | grep -Ei 'apcli|wpa_cli|wpa_supplicant|reconnect|disconnect|macrepeater|tp_mesh|rootap|bsta|wds' | sort -u > "$out/wifix-sta-strings.txt" || true
             strings -a "$out/meshd" | grep -Ei 'apcli|wpa_cli|wpa_supplicant|reconnect|disconnect|macrepeater|tp_mesh|rootap|bsta|wds' | sort -u > "$out/meshd-sta-strings.txt" || true
           done < artifacts/rootfs-list.txt
@@ -117,6 +117,15 @@ jobs:
                 diff -u "artifacts/focused/$1/$bin-sta-strings.txt" "artifacts/focused/$2/$bin-sta-strings.txt" || true
               done
             } > "artifacts/focused/$bin-sta-strings.diff"
+          done
+          for script in init-meshd init-apsd init-tpbr; do
+            {
+              for pair in '1.0.2 1.0.3' '1.0.3 1.1.0' '1.1.0 1.2.0'; do
+                set -- $pair
+                echo "=== $1 -> $2 ==="
+                diff -u "artifacts/focused/$1/$script" "artifacts/focused/$2/$script" || true
+              done
+            } > "artifacts/focused/$script.diff"
           done
 
       - name: Export stripped-binary disassembly for string-xref analysis
