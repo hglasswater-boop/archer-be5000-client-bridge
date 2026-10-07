@@ -163,3 +163,82 @@ Targets in `meshd`:
 For every release, record ELF architecture/build metadata, available function symbols, function start/size where symbols exist, and normalized AArch64 disassembly. Compare normalized instruction bodies across adjacent releases. Absolute addresses alone are not treated as behavior changes.
 
 If target names are stripped, fall back to string-reference neighborhoods and call-site comparison; do not invent function identity from nearby strings alone.
+
+
+## Deep control-flow result
+
+The production `wifix` and `meshd` executables are stripped, so target function names are not available from their ELF symbol tables. Function identity below is based on exact string references, AArch64 call/control-flow neighborhoods, and the already-established current-firmware analysis. Absolute address shifts are not treated as behavior changes.
+
+### Stable since 1.0.2: wpa_supplicant registration/disconnect
+
+The `wifix` function that registers the STA with wpa_supplicant and ends by issuing `wpa_cli ... disconnect` has the same 153-instruction mnemonic sequence in all four JP releases.
+
+Approximate function bounds:
+
+| Version | Bounds | Instructions |
+| --- | --- | ---: |
+| 1.0.2 | 0x415ec0–0x416120 | 153 |
+| 1.0.3 | 0x416154–0x4163b4 | 153 |
+| 1.1.0 | 0x416958–0x416bb8 | 153 |
+| 1.2.0 | 0x416a8c–0x416cec | 153 |
+
+The sequence `interface_add -> scan_interval 30 -> disconnect` therefore predates 1.1/1.2 and is not a newly introduced current-firmware regression.
+
+### Stable since 1.0.2: meshd reconnect helper
+
+The small `meshd` helper that formats and executes `wpa_cli -p /var/run/wpa_supplicant -i %s reconnect` is 23 instructions in every release and has the same mnemonic/control-flow sequence. It still invokes `system()` and returns success independently of the shell command result.
+
+The helper itself was not removed or materially rewritten.
+
+### Stable since 1.0.2: band-map reconnect dispatcher
+
+The `meshd` band-map reconnect routine is 54 instructions in every release and retains the same branch/call topology. The larger config structure in 1.1+ moves field offsets, but no reconnect-dispatch branch disappears.
+
+### Stable core, extended in 1.2: APCLI driver enable
+
+The `wifix` APCLI/WDS driver setup routine is 591 instructions in 1.0.2, 1.0.3 and 1.1.0. It expands to 839 instructions in 1.2.0 because of additional WPA3/OWE handling.
+
+Critically, the final path that writes the SSID and then `ApCliEnable=1` has the same 45-instruction mnemonic sequence in every release. The current firmware did not remove the APCLI enable tail.
+
+### Material change at 1.1.0: scan candidate selection before reconnect
+
+The major version-sensitive change is upstream of the stable reconnect dispatcher.
+
+In 1.0.2/1.0.3, the scan-selection block contains an explicit BSS matcher. It:
+- uses band-specific RSSI thresholds;
+- iterates scan BSS entries;
+- compares SSID;
+- records RSSI, TP IE presence and level;
+- explicitly handles the "not match any BSS" and "select BSS" cases.
+
+The old helper logs include `rssi_threshold=%d`, `match BSS...`, `not match any BSS` and `select BSS...`. Its scan-entry observations include candidates with TP IE absent / level zero; this is evidence of the old selector's input model, not proof of successful standalone association.
+
+At the 1.1.0 boundary this block is replaced by a substantially smaller/different selection path. The 1.1/1.2 implementation:
+- builds/uses a neighbor candidate structure;
+- selects a `best_nbr`;
+- evaluates TP IE support, level and node ID/controller-related state;
+- then derives band-map reconnect actions.
+
+The new logs include `match_count=%d` and `best_nbr: ... tpie_support=%d, level=%d, nodeid=...`. The old direct `rssi_threshold / match BSS / select BSS` corpus disappears.
+
+Approximate combined selection/monitor block sizes:
+
+| Version | Bounds | Instructions | reconnect calls |
+| --- | --- | ---: | ---: |
+| 1.0.2 | 0x417554–0x418400 | 940 | 3 |
+| 1.0.3 | 0x4175b4–0x418460 | 940 | 3 |
+| 1.1.0 | 0x419d54–0x41a6ac | 599 | 3 |
+| 1.2.0 | 0x419dec–0x41a744 | 599 | 3 |
+
+The reconnect helper and dispatcher remain; what changes is the decision path that selects a candidate and reaches those calls.
+
+## Revised conclusion
+
+The old-vs-current hypothesis is **partly supported, but not as feature removal**.
+
+- STA/APCLI implementation was not removed in current firmware.
+- The supplicant disconnect sequence was already present in 1.0.2.
+- The APCLI `Enable=1` path and reconnect helper remain.
+- A real behavioral boundary appears at **1.1.0** in `meshd` scan/candidate selection and reconnect gating.
+
+This makes a 1.1-era control-plane change the strongest firmware-regression candidate currently identified for the observed standalone STA failure. Static analysis alone does not prove that 1.0.2/1.0.3 successfully associated to an ordinary non-EasyMesh AP, nor that the 1.1 change is the cause on the live unit. It does justify testing the legacy candidate-selection semantics against the current runtime before considering any downgrade.
