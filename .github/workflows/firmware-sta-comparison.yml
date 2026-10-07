@@ -27,6 +27,9 @@ jobs:
       - name: Run unit tests first
         run: python -m unittest discover -s tests -q
 
+      - name: Install AArch64 binutils
+        run: sudo apt-get update && sudo apt-get install -y binutils-aarch64-linux-gnu
+
       - name: Install read-only SquashFS parser and AArch64 binutils
         shell: bash
         run: |
@@ -160,6 +163,23 @@ jobs:
             done
           done
 
+      - name: Compare AArch64 XREF contexts for STA enable and reconnect
+        shell: bash
+        run: |
+          set -euo pipefail
+          for version in 1.0.2 1.2.0; do
+            python -m tools.aarch64_string_xrefs "artifacts/focused/$version/wifix" \
+              --marker 'iwpriv %s set ApCliEnable=1' \
+              --marker '/usr/sbin/wpa_cli -p /var/run/wpa_supplicant -i %s disconnect' \
+              --marker 'config_wds_setting' \
+              --output "artifacts/focused/$version/wifix-xrefs.json"
+            python -m tools.aarch64_string_xrefs "artifacts/focused/$version/meshd" \
+              --marker 'wpa_cli -p /var/run/wpa_supplicant -i %s reconnect' \
+              --marker '[meshd]<%s, %d>Reconnect band_map[0x%02X]' \
+              --marker '[meshd]<%s, %d>select_band_bmap=0x%02X, connect_band_bmap=0x%02X, need to reconnect' \
+              --output "artifacts/focused/$version/meshd-xrefs.json"
+          done
+
       - name: Upload comparison reports only
         uses: actions/upload-artifact@v4
         with:
@@ -172,6 +192,7 @@ jobs:
             artifacts/volumes-*/summary.json
             artifacts/focused/*.diff
             artifacts/focused/*/*-sta-strings.txt
+            artifacts/focused/*/*-xrefs.json
             artifacts/focused/*/mt-wifi-apcli-strings.txt
             artifacts/focused/*/init-meshd
             artifacts/focused/*/init-apsd
