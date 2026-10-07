@@ -56,6 +56,13 @@ jobs:
           nm_count="$(find artifacts/gpl-selected -maxdepth 1 -type f -name '*.txt' | wc -l)"
           test "$nm_count" -eq 1
 
+      - name: Locate ApCliMeshRule in GPL driver sources
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -c "import json; from tools.inspect_gpl import scan_content; r=scan_content('artifacts/GPL_ArcherBE5000.tar.gz', b'ApCliMeshRule'); open('artifacts/gpl-apcli-mesh-rule.json','w').write(json.dumps(r,indent=2))"
+          cat artifacts/gpl-apcli-mesh-rule.json
+
       - name: Verify, decode and reconstruct rootfs volumes
         shell: bash
         run: |
@@ -149,6 +156,7 @@ jobs:
           path: |
             artifacts/firmware-version-comparison.json
             artifacts/decoded-*.json
+            artifacts/gpl-apcli-mesh-rule.json
             artifacts/volumes-*/summary.json
             artifacts/focused/*.diff
             artifacts/focused/*/*-sta-strings.txt
