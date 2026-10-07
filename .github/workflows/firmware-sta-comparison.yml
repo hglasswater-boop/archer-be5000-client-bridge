@@ -60,7 +60,8 @@ jobs:
           test "$nm_count" -eq 1
           python -m tools.inspect_gpl artifacts/GPL_ArcherBE5000.tar.gz \
             --output artifacts/gpl-profile-build \
-            --select '/Iplatform/build/product_configs/be260v1/common[.]mk
+            --select 'Iplatform/build/product_configs/be260v1/common'
+          find artifacts/gpl-profile-build -maxdepth 1 -type f -print
           set -euo pipefail
           python -c "import json; from tools.inspect_gpl import scan_content; r=scan_content('artifacts/GPL_ArcherBE5000.tar.gz', b'ApCliMeshRule'); open('artifacts/gpl-apcli-mesh-rule.json','w').write(json.dumps(r,indent=2))"
           python -c "import json; from tools.inspect_gpl import scan_content; r=scan_content('artifacts/GPL_ArcherBE5000.tar.gz', b'ApCliEnable'); open('artifacts/gpl-apcli-enable.json','w').write(json.dumps(r,indent=2))"
