@@ -198,3 +198,22 @@ class ProbeTests(unittest.TestCase):
         self.assertEqual(phases, ['before', 'enabled', 'after'])
         self.assertTrue(result['ipv6_enabled']['ethernet_reply'])
         self.assertEqual(result['rollback'], 'verified')
+
+    def test_ipv4_observation_failure_still_restores_and_logs_out(self):
+        device = Device()
+        case = self
+        class Observer:
+            def before(self):
+                case.assertEqual(device.state['enable_5g'], 'off')
+                return {'wifi_control': True}
+            def enabled(self):
+                case.assertEqual(device.state['enable_5g'], 'on')
+                raise Failure('DHCP socket observation failed')
+            def after(self):
+                case.assertEqual(device.state['enable_5g'], 'off')
+                return {'offer_on_requested_interface': False}
+        result = self.run_probe(device, ipv4=Observer())
+        self.assertEqual(result['outcome'], 'stopped')
+        self.assertEqual(result['rollback'], 'verified')
+        self.assertEqual(result['logout'], 'complete')
+        self.assertEqual(device.state, INITIAL)

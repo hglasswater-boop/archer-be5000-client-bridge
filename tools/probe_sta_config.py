@@ -96,7 +96,7 @@ def request(transport, protocol, token, route, operation='read', fields=None):
 
 def probe(transport, crypto, admin_provider, network_provider, *, sleep=time.sleep,
           observe=lambda: time.sleep(45), stage=lambda text: None, ipv6=None,
-          security='wpa2'):
+          security='wpa2', ipv4=None):
     report = {'outcome': 'stopped', 'write_attempted': False, 'rollback': 'not-needed',
               'logout': 'not-needed', 'association': 'not-measured', 'forwarding': 'not-measured'}
     protocol, token, original = None, '', None
@@ -117,6 +117,8 @@ def probe(transport, crypto, admin_provider, network_provider, *, sleep=time.sle
         original = original_state(read(STA))
         if ipv6 is not None:
             report['ipv6_before'] = ipv6.before()
+        if ipv4 is not None:
+            report['ipv4_before'] = ipv4.before()
         ssid, psk = network_provider()
         plan = connection_plan(ssid, psk, security)
         del ssid, psk
@@ -130,7 +132,11 @@ def probe(transport, crypto, admin_provider, network_provider, *, sleep=time.sle
         report['configuration_verified'] = True
         report['status_after_write'] = read_status(read)
         stage('STA configuration verified; observation window: up to 45 seconds')
-        if ipv6 is not None:
+        if ipv4 is not None:
+            sleep(10)
+            report['ipv4_enabled'] = ipv4.enabled()
+            report['forwarding'] = 'IPv4-DHCP-DISCOVER-OFFER-only'
+        elif ipv6 is not None:
             report['ipv6_enabled'] = ipv6.enabled()
             report['forwarding'] = 'IPv6-link-local-probe-only'
         else:
@@ -169,6 +175,11 @@ def probe(transport, crypto, admin_provider, network_provider, *, sleep=time.sle
                     report['ipv6_after'] = ipv6.after()
                 except Failure:
                     report['ipv6_after'] = {'measurement': 'failed'}
+            if report['rollback'] == 'verified' and ipv4 is not None:
+                try:
+                    report['ipv4_after'] = ipv4.after()
+                except Failure:
+                    report['ipv4_after'] = {'measurement': 'failed'}
         if protocol and token and transport.cookie:
             try:
                 success(protocol.decrypt(transport.post(LOGOUT, protocol.encrypt(''), token)), 'logout')
@@ -189,6 +200,7 @@ def main(argv=None):
     parser.add_argument('--source-ip', choices=('192.168.1.52',))
     parser.add_argument('--node', default=shutil.which('node'))
     parser.add_argument('--probe-ipv6', action='store_true', help='synchronously measure scoped link-local ping while enabled')
+    parser.add_argument('--probe-ipv4', action='store_true', help='one interface-verified DHCP DISCOVER/OFFER observation per phase, no lease')
     parser.add_argument('--security', choices=tuple(SECURITY_PLANS), default='wpa2',
                         help='frontend security mapping; wpa3-transition is WPA2/WPA3 mixed')
     args = parser.parse_args(argv)
@@ -199,13 +211,19 @@ def main(argv=None):
         if not args.source_ip or not args.node or not sys.stdin.isatty() or not sys.stderr.isatty():
             raise Failure('explicit source, Node.js and interactive terminal are required')
         transport = Transport(args.source_ip, '192.168.1.1')
+        if args.probe_ipv4 and args.probe_ipv6:
+            raise Failure('choose one observation protocol')
         ipv6 = None
+        ipv4 = None
+        if args.probe_ipv4:
+            from .sta_ipv4_probe import DhcpObserver
+            ipv4 = DhcpObserver()
         if args.probe_ipv6:
             from .sta_ipv6_probe import IPv6Probe, endpoints
             ipv6 = IPv6Probe(*endpoints())
         report = probe(transport, Crypto(args.node), prompt_password, prompt_network,
                        stage=lambda message: print('Stage: ' + message, flush=True), ipv6=ipv6,
-                       security=args.security)
+                       security=args.security, ipv4=ipv4)
         stamp = datetime.datetime.now(datetime.timezone.utc)
         report.update(captured_at=stamp.isoformat(), target=transport.target_ip, source_ip=transport.source_ip)
         path = ROOT / 'local-evidence' / ('sta-probe-' + stamp.strftime('%Y%m%dT%H%M%S%fZ') + '.json')

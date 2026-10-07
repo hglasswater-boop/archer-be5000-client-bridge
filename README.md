@@ -5,7 +5,7 @@ Archer BE5000 **JP/1.0** を、EasyMeshなしの5GHz STA → 1GbE PC/NAS用Ether
 
 ## 2026-10-06〜07の結論
 
-**NOT PRACTICAL：現時点で安全なClient Bridge実機PoCを投入する条件が揃わない。**
+**日常利用できるClient Bridgeは未成立。限定STA設定試験とIPv4 DHCP観測まで実施済み。**
 STA機能の候補はあり、恒久的な実現不能と断定した結論ではない。復旧未確立のまま改造FWを書き込むことはしない。
 
 - 本体ラベルと直結Web UIでJP/1.0、**1.2.0 Build 20260420 rel.13798(4A50)** を照合。JP最新版と一致。
@@ -32,23 +32,24 @@ STA機能の候補はあり、恒久的な実現不能と断定した結論で�
 | [Runtime investigation](docs/runtime-investigation.md) | 設定backup取得、実機ログ、STA設定経路とwifixの追加解析 |
 | [Read STA state](docs/read-sta-state.md) | 通常認証による限定getterの仕様・実行方法。対象実機のlogin・read・logoutが成功 |
 | [STA config probe](docs/sta-config-probe.md) | 5GHz限定setter、security mapping、rollback、IPv4試験の範囲 |
+| [IPv4 DHCP probe](docs/sta-ipv4-probe.md) | leaseを取得しないDISCOVER/OFFER観測、受信interface照合、実機結果 |
 | [Wired management](docs/wired-management.md) | 管理IP分離、PC固定IP、DHCP復元手順 |
 
 実装したのは**オフライン解析PoC**（inspect_firmware / inspect_gpl / decode_cloud / read_ubi）、通常認証で既知STA getterを読む限定client（read_sta_state）、既知の5GHz setterを一回だけ適用してrollbackする限定probe（probe_sta_config）である。Client Bridgeの永続化scriptや書込みimageは作成していない。
-`python -m unittest discover -s tests -v`: **61 PASS、skipなし**。実配布物の署名/復号/UBI/SquashFS読み取り、限定clientの実機公開feature preflight・通常login・STA read・logout、およびsetter probeの失敗時rollback境界を検証した。
+`python -m unittest discover -s tests -q`: **64 PASS、skipなし**。実配布物の署名/復号/UBI/SquashFS読み取り、限定clientの実機公開feature preflight・通常login・STA read・logout、およびsetter probeの失敗時rollback境界とDHCP応答/interface照合を検証した。
 firmware / GPL archive / 復号image / rootfs本文 / 個体情報はgit対象外。
 
 ## 判定項目
 
 | 項目 | 結果 |
 | --- | --- |
-| Verdict | NOT PRACTICAL（現時点の安全な実機投入） |
+| Verdict | 日常利用構成は未成立。限定STA設定の受理・復元を確認、DHCP転送成功は未確認 |
 | Recommended approach | BE700を通常APとして、純正FW/driverのAPCLI + MAC変換/proxyを優先。認証済み管理経路とrollback/recoveryを確立 |
 | Firmware modification required | 未判定。今回の調査ではNo、目標構成で必要かは未確認 |
 | Brick risk | 読み取り調査はLow、復旧未確立の改造flashはHigh |
 | Recovery method | 対象個体で成功した手段なし。dual-image / TFTP / UARTは候補証拠のみ |
 | L2 transparency | 未確認。4addr双方対応時Full候補、MAC NAT/relaydはPartial |
-| IPv4 | 候補bridgeの有線→親機到達は未測定。次の判定対象 |
+| IPv4 | 限定DHCP観測でWi-Fi controlはOFFER受信、EthernetはSTA有効中もOFFERなし。ARP/unicast/SMBは未測定 |
 | IPv6 | 今回の要件外。限定probeのlink-local結果は診断記録のみ |
 | SMB/NAS suitability | NOT RUN。BE700側有線端末との通信/探索が必要 |
 | Expected stability | 未測定。EasyMeshとERR_CONNECTION_RESETの因果関係も未確定 |

@@ -195,3 +195,15 @@ association / forwarding / AP完全停止の合格とは区別する。
 2026-10-07にユーザーがIPv6を使用していないと明示したため、IPv6を受入条件から外した。今後はIPv4 DHCP/ARP、親機側との双方向通信、SMB、IPv4 multicast/mDNS、長時間TCPを評価する。過去のIPv6 probeは診断記録であり、候補を不合格にする根拠にしない。IPv4 relay/proxy方式も制約を実測した上で候補に含める。
 
 IPv6測定を省いた追加probeは設定readback、無効化、開始時値への復元、logoutに成功した。既知の`/admin/wireless?form=wireless_connect_status` readは有効時・復元後とも失敗し、接続状態は`read-failed`、associationとIPv4 forwardingは未測定のまま。記録はlocal-evidence/sta-probe-20261006T223857030087Z.json。PCの一時host route追加もOSの権限不足で拒否されたため、転送試験は成立していない。
+
+## IPv4 DHCPの限定転送観測
+
+続いて[IPv4 probe](sta-ipv4-probe.md)を実装し、route/IP設定を変更せずに一回ずつDHCP DISCOVERを送信した。Wi-Fi controlは受信interfaceを照合したOFFERを受信。BE5000直結EthernetはSTA有効化前、有効中、復元後ともOFFERなし。別interfaceからの同じtransactionのOFFERもなかった。WPA2/WPA3混在候補の設定write/readbackとrollback、logoutは成功した。記録はlocal-evidence/sta-probe-20261007T045658760984Z.json。
+
+これでIPv4の観測自体は実施できたが、DHCP転送の成功は得ていない。DISCOVERのIP sourceが既存の管理subnet addressとなる条件、および短い待ち時間がある。無線association、ARP/unicast、複数端末、SMB、安定性の成否はこの結果から特定できない。lease取得やAP停止は行っていない。
+
+### 接続状態APIの静的な不一致候補
+
+公開FWのcontrollerはwireless_connect_status/readをconnect_rootap_statusへdispatchする。このcallbackは2g/5gのsta_connect_rootap_statusを呼び、最大値からconnected/connecting/disconnectedを返す。後者はUCI profileの`wireless_sta_ifname_` + bandを取得し、そのsectionのenable/ifnameを参照する。有効時はwpa_cli statusのwpa_stateを読む。
+
+復号済み公開profileには`wireless_sta_config_2g=apcli0`、`wireless_sta_config_5g=apclii0`がある一方、`wireless_sta_ifname_2g/5g`はない。参照名の不一致はAPI失敗の候補である。ただし実機profile mergeやget_profileの補完を確認していないので、nil値による例外や実機failureの原因と断定しない。controller/sta_connect_rootap_statusのpc12〜18、pc22〜46、pc47〜71を追跡した静的推論であり、実機でwpa_cliを実行した証拠ではない。
