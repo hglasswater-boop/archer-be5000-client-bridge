@@ -119,37 +119,6 @@ jobs:
             } > "artifacts/focused/$bin-sta-strings.diff"
           done
 
-      - name: Extract function-level STA control-flow reports
-        shell: bash
-        run: |
-          set -euo pipefail
-          targets_wifix='init_vap wpa_supplicant_setup_vif wpa_supplicant_enable_vif config_wds_setting mtk_update_vap reload_radio'
-          targets_meshd='mtk_connect meshd_bmap_reconnect_sta mtk_reconfigSTA'
-          for version in 1.0.2 1.0.3 1.1.0 1.2.0; do
-            dir="artifacts/focused/$version"
-            for bin in wifix meshd; do
-              aarch64-linux-gnu-readelf -h "$dir/$bin" > "$dir/$bin-elf-header.txt"
-              aarch64-linux-gnu-readelf -Ws "$dir/$bin" > "$dir/$bin-symbols-all.txt"
-              grep -Ei 'init_vap|supplicant|config_wds|mtk_update_vap|reload_radio|mtk_connect|bmap_reconnect|reconfigSTA|reconnect|disconnect' "$dir/$bin-symbols-all.txt" > "$dir/$bin-symbols-sta.txt" || true
-              : > "$dir/$bin-target-functions.txt"
-              if [ "$bin" = wifix ]; then targets="$targets_wifix"; else targets="$targets_meshd"; fi
-              for name in $targets; do
-                echo "===== $name =====" >> "$dir/$bin-target-functions.txt"
-                if grep -Eq "[[:space:]]$name$" "$dir/$bin-symbols-all.txt"; then
-                  aarch64-linux-gnu-objdump -d --no-show-raw-insn --disassemble="$name" "$dir/$bin" >> "$dir/$bin-target-functions.txt"
-                else
-                  echo "SYMBOL_NOT_PRESENT" >> "$dir/$bin-target-functions.txt"
-                fi
-              done
-            done
-          done
-          for bin in wifix meshd; do
-            for pair in '1.0.2 1.0.3' '1.0.3 1.1.0' '1.1.0 1.2.0'; do
-              set -- $pair
-              diff -u "artifacts/focused/$1/$bin-target-functions.txt" "artifacts/focused/$2/$bin-target-functions.txt" > "artifacts/focused/$bin-functions-$1-to-$2.diff" || true
-            done
-          done
-
       - name: Export stripped-binary disassembly for string-xref analysis
         shell: bash
         run: |
@@ -175,11 +144,8 @@ jobs:
             artifacts/focused/*.diff
             artifacts/focused/*/*-sta-strings.txt
             artifacts/focused/*/*-elf-header.txt
-            artifacts/focused/*/*-symbols-sta.txt
-            artifacts/focused/*/*-target-functions.txt
             artifacts/focused/*/*-program-headers.txt
             artifacts/focused/*/*-section-headers.txt
             artifacts/focused/*/*-disassembly.txt
             artifacts/focused/*/*-strings-offsets.txt
-            artifacts/focused/*-functions-*.diff
           if-no-files-found: error
