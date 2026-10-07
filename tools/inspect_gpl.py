@@ -50,6 +50,31 @@ def scan_archive(path, output, pattern, member_limit=2 * 1024**2,
     return summary
 
 
+
+def scan_content(path, needle, member_limit=2 * 1024**2, match_limit=64, context_bytes=240):
+    """Stream regular text members and return bounded contexts containing an exact byte token."""
+    if not isinstance(needle, bytes) or not needle or len(needle) > 256:
+        raise ValueError('needle must be 1..256 bytes')
+    matches = []
+    with tarfile.open(Path(path), 'r|gz') as archive:
+        for member in archive:
+            if not member.isfile() or member.size < 0 or member.size > member_limit:
+                continue
+            with archive.extractfile(member) as stream:
+                data = stream.read(member_limit + 1)
+            if len(data) != member.size or len(data) > member_limit or b'\0' in data:
+                continue
+            pos = data.find(needle)
+            if pos < 0:
+                continue
+            if len(matches) >= match_limit:
+                raise ValueError('content match count exceeds limit')
+            start = max(0, pos - context_bytes)
+            end = min(len(data), pos + len(needle) + context_bytes)
+            context = data[start:end].decode('utf-8', errors='replace')
+            matches.append({'name': member.name, 'size': member.size, 'offset': pos, 'context': context})
+    return matches
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('archive', type=Path)
