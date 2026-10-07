@@ -5,7 +5,7 @@ from unittest.mock import patch
 from urllib.parse import parse_qs
 
 from tools.probe_sta_config import (FIELDS, STA, STATUS, connection_plan, main, original_state,
-                                   probe, request, status_observation)
+                                   probe, request, status_observation, link_observation)
 from tools.read_sta_state import Failure, LOGOUT
 
 INITIAL = {'enable_2g': 'off', 'enable_5g': 'off', 'ssid_5g': '', 'psk_key_5g': '',
@@ -217,3 +217,71 @@ class ProbeTests(unittest.TestCase):
         self.assertEqual(result['rollback'], 'verified')
         self.assertEqual(result['logout'], 'complete')
         self.assertEqual(device.state, INITIAL)
+
+    def test_link_observation_excludes_identifiers_and_unbounded_values(self):
+        result = link_observation({'bssid_5g': '12:34:56:78:90:ab',
+                                   'bssid_2g': '00-00-00-00-00-00', 'signal_5g': 3,
+                                   'channel_5g': '36', 'signal_2g': True, 'channel_2g': '999',
+                                   'internet_status': 'connected', 'ssid_5g': 'SecretSSID',
+                                   'psk_key_5g': 'SecretPSK', 'extra': {'private': 'hidden'}})
+        self.assertEqual(result, {'bssid_present_2g': False, 'bssid_present_5g': True,
+                                  'signal_5g': 3, 'channel_5g': 36, 'internet_status': 'connected'})
+
+    def test_tmp_read_is_restricted_to_sta_without_fields(self):
+        device = Device()
+        for route, fields in ((STATUS, None), (STA, {'enable_5g': 'on'})):
+            with self.assertRaises(Failure):
+                request(device, PlainProtocol(), 'token', route, 'tmp_read', fields)
+        self.assertEqual(device.calls, [])
+
+    def test_link_observations_before_enabled_and_restored_do_not_claim_association(self):
+        class LinkDevice(Device):
+            def post(self, route, payload, token=''):
+                if route == STA and payload == b'operation=tmp_read':
+                    return {'success': True, 'data': {'signal_5g': 3 if self.state['enable_5g'] == 'on' else 0}}
+                return super().post(route, payload, token)
+        result = self.run_probe(LinkDevice(), probe_link=True)
+        self.assertEqual([result[k]['signal_5g'] for k in ('link_before', 'link_enabled', 'link_after')], [0, 3, 0])
+        self.assertEqual(result['association'], 'not-measured')
+        self.assertEqual(result['rollback'], 'verified')
+
+    def test_tmp_read_failures_stop_before_write_or_restore_after_write(self):
+        for failure_phase in (1, 2):
+            class LinkDevice(Device):
+                def __init__(self):
+                    super().__init__()
+                    self.link_reads = 0
+                def post(self, route, payload, token=''):
+                    if route == STA and payload == b'operation=tmp_read':
+                        self.link_reads += 1
+                        if self.link_reads == failure_phase:
+                            raise Failure('HTTP response rejected')
+                        return {'success': True, 'data': {}}
+                    return super().post(route, payload, token)
+            device = LinkDevice()
+            result = self.run_probe(device, probe_link=True)
+            self.assertEqual(result['outcome'], 'stopped')
+            self.assertEqual(result['write_attempted'], failure_phase == 2)
+            self.assertEqual(result['rollback'], 'not-needed' if failure_phase == 1 else 'verified')
+            self.assertEqual(result['logout'], 'complete')
+            self.assertEqual(device.state, INITIAL)
+
+    def test_keep_enabled_avoids_disable_restore_even_if_observation_fails(self):
+        for fail_observation in (False, True):
+            device = Device()
+            def observe():
+                if fail_observation:
+                    raise Failure('observation failed')
+            result = self.run_probe(device, keep_enabled=True, observe=observe)
+            self.assertEqual(len(device.writes), 1)
+            self.assertEqual(device.state['enable_5g'], 'on')
+            self.assertTrue(result['sta_kept_enabled'])
+            self.assertEqual(result['rollback'], 'not-requested')
+            self.assertEqual(result['logout'], 'complete')
+
+    def test_keep_enabled_restores_on_unverified_configuration(self):
+        device = Device(lose_write_response=True)
+        result = self.run_probe(device, keep_enabled=True)
+        self.assertEqual(result['rollback'], 'verified')
+        self.assertEqual(device.state, INITIAL)
+        self.assertNotIn('sta_kept_enabled', result)

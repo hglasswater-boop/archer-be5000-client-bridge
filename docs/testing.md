@@ -10,7 +10,7 @@ GPL TARにはpath traversal・リンク無視・member/合計の読取り制限�
 Cloud decodeにはPSSの不正hash・marker・trailerの拒否とRSA public blob構造検証、NIST AES-CBC既知ベクトルを使用する。失敗時に復号しない。
 UBIにはEC/VID/payload CRC、logical block順序・欠損・重複、image sequence混在、truncated extent、erased reserveをsynthetic fixtureで検証する。
 
-最終実行: `python -m unittest discover -s tests -q`、64 tests PASS、skipなし。DHCP応答のtransaction/MAC/options照合、受信interfaceのcontrol buffer照合、IPv4観測失敗後のrollbackも含む。
+最終実行: `python -m unittest discover -s tests -q`、72 tests PASS、skipなし。DHCP応答のtransaction/MAC/options照合、受信interfaceのcontrol buffer照合、IPv4観測失敗後のrollback、tmp_readの個体値除外、有効状態の維持、ログ分類と読み取り失敗時logoutも含む。
 限定STA reader/probeの暗号方式・request境界・失敗時停止・secret除外・report path・設定rollback境界も検証した。
 対象実機で公開feature preflight、通常local login、sysmode/STA getter、logoutが成功。mode=router、STA両band=off。
 既知の5GHz setterはWPA2/AES候補とWPA2/WPA3混在候補で一回ずつ実行し、設定readback・STA無効化・開始時値へのrestoreを確認した。これはSTA association、MLO link aggregation、Client Bridge forwardingの合格ではない。

@@ -70,6 +70,8 @@ IPv6測定を省いた最新試行では、既知のread-only route `/admin/wire
 
 その後`--probe-ipv4`を追加し、Wi-Fi controlとEthernetで受信interfaceを照合する限定DHCP観測を実施した。Wi-FiでOFFER受信、Ethernetでは有効前・有効中・復元後ともOFFERなし。設定rollbackは確認済み。lease/IP/routeは変更しない。[測定条件と判定の限界](sta-ipv4-probe.md)を参照。
 
+ユーザーの指示により、現在は`--keep-enabled`で設定readback成功後のSTAを有効のまま維持する。観測失敗だけでrestoreしない。write応答喪失・設定readback不一致時の復旧のみ残す。STA onを通常baseline offで再適用せず、[read-only診断](sta-link-observation.md)を使用する。
+
 ## 参考: IPv6の限定試験（今回の受入対象外）
 
 --probe-ipv6を指定した試行では、PCのEthernet index 7とWi-Fi index 14のlink-local address、Wi-Fi側のIPv6 default gatewayをPCから読み取る。

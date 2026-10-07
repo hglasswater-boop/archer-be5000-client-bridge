@@ -8,6 +8,8 @@ Archer BE5000 **JP/1.0** を、EasyMeshなしの5GHz STA → 1GbE PC/NAS用Ether
 **日常利用できるClient Bridgeは未成立。限定STA設定試験とIPv4 DHCP観測まで実施済み。**
 STA機能の候補はあり、恒久的な実現不能と断定した結論ではない。復旧未確立のまま改造FWを書き込むことはしない。
 
+**現在の実機状態:** ユーザーの指示で、2026-10-07の設定readback成功後は5GHz STAを有効のまま維持している。管理IP192.168.1.1、DHCP off。以後の診断はreadのみで、毎回の無効化・復元を行わない。tmp_readは信号0・BSSID/channelなし、純正ログ48件（全type/全level）にAPCLI関連語なし。数分経過後のEthernet DHCP観測もOFFERなし。接続状態と転送成功は未確立。
+
 - 本体ラベルと直結Web UIでJP/1.0、**1.2.0 Build 20260420 rel.13798(4A50)** を照合。JP最新版と一致。
 - 公開FWのRSA2048-PSS/SHA256を検証し、copyのAES128-CBC payloadを復号。全UBI CRCを検証してkernel / rootfsを読んだ。
 - 最新FWに5GHz bSTA **apclii0**、**br-lan**、vendor Wi-Fi driver、hostapd/wpa_supplicantのwpad、EasyMesh agent/controller、wifix / meshd / apsd / tpbrを確認。GPLにはAPCLI / MWDS / MAC_REPEATER機能がある。
@@ -33,10 +35,11 @@ STA機能の候補はあり、恒久的な実現不能と断定した結論で�
 | [Read STA state](docs/read-sta-state.md) | 通常認証による限定getterの仕様・実行方法。対象実機のlogin・read・logoutが成功 |
 | [STA config probe](docs/sta-config-probe.md) | 5GHz限定setter、security mapping、rollback、IPv4試験の範囲 |
 | [IPv4 DHCP probe](docs/sta-ipv4-probe.md) | leaseを取得しないDISCOVER/OFFER観測、受信interface照合、実機結果 |
+| [STA link observation](docs/sta-link-observation.md) | 既知tmp_readによるBSSIDの有無・信号・channelの限定観測 |
 | [Wired management](docs/wired-management.md) | 管理IP分離、PC固定IP、DHCP復元手順 |
 
 実装したのは**オフライン解析PoC**（inspect_firmware / inspect_gpl / decode_cloud / read_ubi）、通常認証で既知STA getterを読む限定client（read_sta_state）、既知の5GHz setterを一回だけ適用してrollbackする限定probe（probe_sta_config）である。Client Bridgeの永続化scriptや書込みimageは作成していない。
-`python -m unittest discover -s tests -q`: **64 PASS、skipなし**。実配布物の署名/復号/UBI/SquashFS読み取り、限定clientの実機公開feature preflight・通常login・STA read・logout、およびsetter probeの失敗時rollback境界とDHCP応答/interface照合を検証した。
+`python -m unittest discover -s tests -q`: **72 PASS、skipなし**。実配布物の署名/復号/UBI/SquashFS読み取り、限定clientの実機公開feature preflight・通常login・STA read・logout、およびsetter probeの失敗時rollback境界、DHCP応答/interface照合、tmp_read観測の個体値除外、有効状態の維持、ログ分類と読み取り失敗時logoutを検証した。
 firmware / GPL archive / 復号image / rootfs本文 / 個体情報はgit対象外。
 
 ## 判定項目

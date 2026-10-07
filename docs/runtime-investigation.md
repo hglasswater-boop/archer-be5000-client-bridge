@@ -207,3 +207,15 @@ IPv6測定を省いた追加probeは設定readback、無効化、開始時値へ
 公開FWのcontrollerはwireless_connect_status/readをconnect_rootap_statusへdispatchする。このcallbackは2g/5gのsta_connect_rootap_statusを呼び、最大値からconnected/connecting/disconnectedを返す。後者はUCI profileの`wireless_sta_ifname_` + bandを取得し、そのsectionのenable/ifnameを参照する。有効時はwpa_cli statusのwpa_stateを読む。
 
 復号済み公開profileには`wireless_sta_config_2g=apcli0`、`wireless_sta_config_5g=apclii0`がある一方、`wireless_sta_ifname_2g/5g`はない。参照名の不一致はAPI失敗の候補である。ただし実機profile mergeやget_profileの補完を確認していないので、nil値による例外や実機failureの原因と断定しない。controller/sta_connect_rootap_statusのpc12〜18、pc22〜46、pc47〜71を追跡した静的推論であり、実機でwpa_cliを実行した証拠ではない。
+
+## STA有効状態を維持した診断への変更
+
+ユーザーが毎回の復元停止と解析加速を指示したため、`--keep-enabled`を追加した。設定readback成功後はSTAを維持し、観測失敗だけではdisable/restoreしない。設定write応答喪失やreadback不一致時のみ復旧する。既定probeの復元動作とは明示flagで区別する。
+
+2026-10-07T05:10ZのWPA2/WPA3混在候補は設定readback成功、rollback=not-requested、sta_kept_enabled=true、logout complete。**現在の5GHz STA設定はon、管理IP192.168.1.1、DHCP off。** local-evidence/sta-probe-20261007T051011229503Z.json。次の診断で両band offを前提にした通常probeをそのまま再実行しない。
+
+同じ設定routeの既知operation=tmp_readはcontroller/tmp_read_rootapへdispatchされる。こちらはwireless_sta_2g/5g（公開profileにない）とiwinfoに依存し、通常status APIと異なる。45秒待ちの試験と、その後のread-only診断でsignal_2g/5g=0、internet_status=disconnected、BSSID/channelは返らなかった。profile依存があるため未接続とは確定しない。[仕様](sta-link-observation.md)。
+
+純正syslog controllerの既知log/loadとfilter/readを通常認証で要求できた。2026-10-07T05:11Zの診断はSTA onを確認、filterは全type/全level、ログ48 rowsを読み取り、APCLI/supplicant/association/authentication/disconnection/failureの分類語に合致する件数は全て0。生ログを保存せず、分類件数のみ記録した。local-evidence/sta-diagnostics-20261007T051147502265Z.json。これはkernel/driver debug logが存在しないことの証明ではない。
+
+STAを触らず、数分経過後に同じDHCP観測を再実施した。Wi-Fi controlはinterface照合済みOFFER受信、EthernetはOFFERなし、別interfaceからの同一transaction応答なし。lease/IP/routeは変更していない。短い初回待ち時間だけを原因にできないが、source IP条件は引き続き異なる。今後は毎回の設定復元を省き、driverへの適用条件と読める診断経路の追跡を優先する。

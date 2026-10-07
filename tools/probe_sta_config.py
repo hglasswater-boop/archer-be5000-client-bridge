@@ -1,4 +1,4 @@
-"""Time-limited normal-auth 5GHz STA setter probe with explicit rollback."""
+"""Normal-auth 5GHz STA setter probe with rollback or explicit retained state."""
 import argparse
 import datetime
 import getpass
@@ -85,18 +85,40 @@ def original_state(state):
 def request(transport, protocol, token, route, operation='read', fields=None):
     if operation == 'write' and (route != STA or not fields or set(fields) - set(FIELDS)):
         raise Failure('write is outside the STA field allowlist')
-    if operation not in ('read', 'write'):
+    if operation not in ('read', 'write', 'tmp_read') or (
+            operation == 'tmp_read' and (route != STA or fields)):
         raise Failure('operation is not allowed')
     body = urlencode({'operation': operation, **(fields or {})})
     data = success(protocol.decrypt(transport.post(route, protocol.encrypt(body), token)), operation)
-    if operation == 'read' and not isinstance(data, dict):
+    if operation in ('read', 'tmp_read') and not isinstance(data, dict):
         raise Failure('getter response must be an object')
     return data
 
 
+def link_observation(state):
+    """Keep only fixed-label/limited numeric observations, never identifiers."""
+    if not isinstance(state, dict):
+        raise Failure('link observation must be an object')
+    result = {}
+    for band in ('2g', '5g'):
+        mac = state.get('bssid_' + band)
+        if isinstance(mac, str) and re.fullmatch(r'(?:[0-9a-fA-F]{2}[:-]){5}[0-9a-fA-F]{2}', mac):
+            result['bssid_present_' + band] = bool(int(mac.replace(':', '').replace('-', ''), 16))
+        for kind, limit in (('signal', 3), ('channel', 233)):
+            value = state.get(kind + '_' + band)
+            if isinstance(value, str) and re.fullmatch(r'[0-9]{1,3}', value):
+                value = int(value)
+            if type(value) is int and 0 <= value <= limit:
+                result[kind + '_' + band] = value
+    status = state.get('internet_status')
+    if status in ('connected', 'disconnected'):
+        result['internet_status'] = status
+    return result
+
+
 def probe(transport, crypto, admin_provider, network_provider, *, sleep=time.sleep,
           observe=lambda: time.sleep(45), stage=lambda text: None, ipv6=None,
-          security='wpa2', ipv4=None):
+          security='wpa2', ipv4=None, probe_link=False, keep_enabled=False):
     report = {'outcome': 'stopped', 'write_attempted': False, 'rollback': 'not-needed',
               'logout': 'not-needed', 'association': 'not-measured', 'forwarding': 'not-measured'}
     protocol, token, original = None, '', None
@@ -115,6 +137,9 @@ def probe(transport, crypto, admin_provider, network_provider, *, sleep=time.sle
         if read('/admin/dhcps?form=setting').get('enable') != 'off':
             raise Failure('router DHCP must be off before enabling STA')
         original = original_state(read(STA))
+        link_read = lambda: link_observation(request(transport, protocol, token, STA, 'tmp_read'))
+        if probe_link:
+            report['link_before'] = link_read()
         if ipv6 is not None:
             report['ipv6_before'] = ipv6.before()
         if ipv4 is not None:
@@ -141,13 +166,18 @@ def probe(transport, crypto, admin_provider, network_provider, *, sleep=time.sle
             report['forwarding'] = 'IPv6-link-local-probe-only'
         else:
             observe()
+        if probe_link:
+            report['link_enabled'] = link_read()
         report['outcome'] = 'configuration-probe-complete'
     except Failure as error:
         report['reason'] = str(error)
     except KeyboardInterrupt:
         report['reason'] = 'interrupted; rollback requested'
     finally:
-        if report['write_attempted'] and original is not None:
+        if keep_enabled and report.get('configuration_verified'):
+            report['rollback'] = 'not-requested'
+            report['sta_kept_enabled'] = True
+        elif report['write_attempted'] and original is not None:
             report['rollback'] = 'failed'
             try:
                 request(transport, protocol, token, STA, 'write', {'enable_5g': 'off'})
@@ -180,6 +210,11 @@ def probe(transport, crypto, admin_provider, network_provider, *, sleep=time.sle
                     report['ipv4_after'] = ipv4.after()
                 except Failure:
                     report['ipv4_after'] = {'measurement': 'failed'}
+            if report['rollback'] == 'verified' and probe_link:
+                try:
+                    report['link_after'] = link_read()
+                except Failure:
+                    report['link_after'] = {'measurement': 'failed'}
         if protocol and token and transport.cookie:
             try:
                 success(protocol.decrypt(transport.post(LOGOUT, protocol.encrypt(''), token)), 'logout')
@@ -201,17 +236,20 @@ def main(argv=None):
     parser.add_argument('--node', default=shutil.which('node'))
     parser.add_argument('--probe-ipv6', action='store_true', help='synchronously measure scoped link-local ping while enabled')
     parser.add_argument('--probe-ipv4', action='store_true', help='one interface-verified DHCP DISCOVER/OFFER observation per phase, no lease')
+    parser.add_argument('--probe-link', action='store_true', help='bounded known tmp_read observations; no identifiers saved')
+    parser.add_argument('--keep-enabled', action='store_true', help='keep verified STA settings enabled after observation; restore only on failed configuration readback')
     parser.add_argument('--security', choices=tuple(SECURITY_PLANS), default='wpa2',
                         help='frontend security mapping; wpa3-transition is WPA2/WPA3 mixed')
     args = parser.parse_args(argv)
     if not args.apply:
-        print('Plan only: 5GHz ' + args.security + ' candidate, 45-second observation, disable and restore; no network requests')
+        finish = 'keep verified STA enabled' if args.keep_enabled else 'disable and restore'
+        print('Plan only: 5GHz ' + args.security + ' candidate, bounded observation, ' + finish + '; no network requests')
         return 0
     try:
         if not args.source_ip or not args.node or not sys.stdin.isatty() or not sys.stderr.isatty():
             raise Failure('explicit source, Node.js and interactive terminal are required')
         transport = Transport(args.source_ip, '192.168.1.1')
-        if args.probe_ipv4 and args.probe_ipv6:
+        if sum((args.probe_ipv4, args.probe_ipv6, args.probe_link)) > 1:
             raise Failure('choose one observation protocol')
         ipv6 = None
         ipv4 = None
@@ -223,7 +261,7 @@ def main(argv=None):
             ipv6 = IPv6Probe(*endpoints())
         report = probe(transport, Crypto(args.node), prompt_password, prompt_network,
                        stage=lambda message: print('Stage: ' + message, flush=True), ipv6=ipv6,
-                       security=args.security, ipv4=ipv4)
+                       security=args.security, ipv4=ipv4, probe_link=args.probe_link, keep_enabled=args.keep_enabled)
         stamp = datetime.datetime.now(datetime.timezone.utc)
         report.update(captured_at=stamp.isoformat(), target=transport.target_ip, source_ip=transport.source_ip)
         path = ROOT / 'local-evidence' / ('sta-probe-' + stamp.strftime('%Y%m%dT%H%M%S%fZ') + '.json')
@@ -233,7 +271,8 @@ def main(argv=None):
         if 'reason' in report:
             print('Reason: ' + report['reason'])
         print('Report: ' + str(path))
-        return 0 if report['outcome'] == 'configuration-probe-complete' and report['rollback'] == 'verified' else 1
+        return 0 if report['outcome'] == 'configuration-probe-complete' and (
+            report['rollback'] == 'verified' or report.get('sta_kept_enabled')) else 1
     except Failure as error:
         print('Stopped: ' + str(error), file=sys.stderr)
         return 1
