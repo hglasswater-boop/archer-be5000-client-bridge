@@ -292,3 +292,10 @@ The static firmware evidence now supports the following:
 5. Association and Ethernet forwarding must now be separated experimentally. A missing Ethernet DHCP OFFER can be explained by a detached/unused `tpbr` path even if the STA were associated; conversely the current public status APIs are not sufficient to prove association.
 
 The next practical firmware question is no longer “which old version still has STA?” but “what is the smallest current-firmware runtime combination that keeps STA reconnect and LAN forwarding while removing EasyMesh control-plane behavior?”
+
+
+## GPL driver follow-up: ApCliMeshRule
+
+All four `wifix` binaries set `ApCliMeshRule=1` immediately before `ApCliSsid` and `ApCliEnable=1`. Because this is identical from 1.0.2 through 1.2.0 it is not a firmware-version regression, but its driver semantics may distinguish ordinary APCLI from a Mesh-specific data path.
+
+Next step: scan the published GPL archive in streaming/read-only mode for the exact token `ApCliMeshRule` and nearby definitions/handlers. Do not extract the full archive and do not infer semantics from the command name alone.
