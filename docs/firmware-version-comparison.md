@@ -315,3 +315,21 @@ Continue from published driver tokens that are independently present in the firm
 The published GPL does not contain the exact product command tokens `ApCliMeshRule` or `ApCliEnable` in regular text members, so it cannot establish the production command semantics by name.
 
 Compare the actual production kernel module `/lib/modules/5.4.281/mt_wifi.ko` from each verified JP firmware. Record byte hash/size and the exact command markers `ApCliMeshRule`, `ApCliEnable`, `MACRepeaterEn`, and related APCLI tokens. This comparison takes precedence over GPL naming for the shipped behavior.
+
+
+### Production mt_wifi first-pass result
+
+The production `mt_wifi.ko` module is present in all four JP releases and changes by version:
+
+| Version | Size | SHA-256 |
+| --- | ---: | --- |
+| 1.0.2 | 15,339,272 | a1b5106f5f1c79b2f4b3ee5fa678c4e13fa85e5c7ae55549027c0df3880d8007 |
+| 1.0.3 | 15,339,272 | 979d5ad986b24b198c401ad2f81dcd8903157ba0aaf88ee1a51a850bca31db0a |
+| 1.1.0 | 15,405,776 | 841e41125ad0db4d6c37b2290b55e82d5e705e0268169ba2f6a57791a0d32846 |
+| 1.2.0 | 15,400,056 | dbc2528195c22bd61bc0856cb3e63a401b27dc44ce7d632fc97af53bf466da5b |
+
+Every release contains four exact `ApCliEnable` markers. No release contains the exact `ApCliMeshRule` or `MACRepeaterEn` marker in this module.
+
+This confirms that the userspace `wifix` command `ApCliMeshRule=1` is not a current-only addition and cannot be mapped to an exact string handler in the production `mt_wifi.ko`. Since the wifix command helper ignores command exit status and continues to SSID/`ApCliEnable=1`, a rejected MeshRule command alone does not prove association failure.
+
+Next: extract the production driver's APCLI/WDS/repeater string corpus across releases to identify the actual supported private controls and whether a separate MAC-repeater forwarding control is exposed under another name.
