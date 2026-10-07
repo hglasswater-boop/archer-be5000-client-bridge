@@ -63,3 +63,27 @@ Add synthetic tests for marker counting, deterministic hashing, version ordering
 ## Output
 
 The comparison produces JSON only from decoded local analysis copies. Firmware, decoded images, rootfs contents, credentials, device-specific values, and vendor archives are not committed.
+
+
+## First-pass static result
+
+The comparison workflow successfully downloaded all four official JP V1 release packages, verified and decoded each package with the same documented verification path, reconstructed UBI static volumes with CRC validation, and read the selected SquashFS files.
+
+### Core findings
+
+- `/etc/init.d/wifix` is byte-identical in 1.0.2, 1.0.3, 1.1.0 and 1.2.0.
+- `/etc/meshd_cfg_be260v1_jp.json` is byte-identical in all four releases and contains the same two `apclii0` occurrences in every release.
+- `/usr/bin/wifix` exists in every release. All four versions retain the same counted STA-related markers: `ApCliEnable`=2, `wpa_cli`=7, `disconnect`=6, `tp_mesh_enable`=1.
+- `/usr/bin/meshd` exists in every release. All four versions retain `reconnect`=3. 1.0.2/1.0.3 contain `wpa_cli`=16 and `disconnect`=13; 1.1.0/1.2.0 contain `wpa_cli`=19 and `disconnect`=14.
+- `wifix_profile.ini` changes between 1.0.2 and 1.0.3, then is byte-identical from 1.0.3 through 1.2.0.
+- generic `meshd_cfg.json` changes at the 1.0.3 -> 1.1.0 boundary, while the JP-specific `meshd_cfg_be260v1_jp.json` does not.
+
+### Interpretation boundary
+
+This rules out the simple hypothesis that current 1.2.0 removed the STA/APCLI implementation wholesale. It does not prove that 1.0.2 could associate as a standalone non-EasyMesh STA, and it does not rule out a runtime gating or reconnect-condition change inside the changed `wifix` / `meshd` binaries.
+
+Next comparison should focus on:
+1. the exact `wifix_profile.ini` 1.0.2 -> 1.0.3 diff;
+2. the generic `meshd_cfg.json` 1.0.3 -> 1.1.0 diff;
+3. filtered STA/APCLI-related string-table differences in `wifix` and `meshd`;
+4. if needed, function-level diff around STA initialization and reconnect paths.
