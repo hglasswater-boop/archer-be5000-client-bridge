@@ -22,7 +22,8 @@ READS = frozenset(['/admin/system?form=sysmode',
                    '/admin/wireless?form=wireless_connect_to_network'])
 STATUS_ROUTE = '/admin/wireless?form=wireless_connect_status'
 STATUS_READS = frozenset([STATUS_ROUTE])
-DIAGNOSTIC_READS = frozenset(['/admin/syslog?form=log', '/admin/syslog?form=filter'])
+DIAGNOSTIC_READS = frozenset(['/admin/syslog?form=log', '/admin/syslog?form=filter',
+                             '/admin/easymesh?form=easymesh_enable'])
 NETWORK_READS = frozenset(['/admin/network?form=lan_ipv4', '/admin/dhcps?form=setting'])
 LOGIN = '/login?form=login'
 LOGOUT = '/admin/system?form=logout'

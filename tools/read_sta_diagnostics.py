@@ -9,6 +9,7 @@ from .probe_sta_config import STA, link_observation, request
 from .read_sta_state import Crypto, Failure, LOGOUT, ROOT, Transport, login_session, prompt_password, success, write_report
 
 SYSLOG = '/admin/syslog?form=log'
+MESH = '/admin/easymesh?form=easymesh_enable'
 PATTERNS = {
     'apcli': r'apcli|rootap|wifix',
     'supplicant': r'wpa_supplicant|wpa_cli',
@@ -38,13 +39,22 @@ def summarize_log(data):
     return summary
 
 
-def collect(transport, crypto, password_provider):
+def mesh_observation(data):
+    if not isinstance(data, dict):
+        raise Failure('mesh setting must be an object')
+    value = data.get('enable')
+    return {'enable': value if value in ('on', 'off') else 'unavailable'}
+
+
+def collect(transport, crypto, password_provider, *, probe_mesh=False):
     report = {'outcome': 'stopped', 'logout': 'not-needed'}
     protocol, token = None, ''
     try:
         protocol, token = login_session(transport, crypto, password_provider)
         config = request(transport, protocol, token, STA)
         report['sta_5g_enabled'] = config.get('enable_5g') == 'on'
+        if probe_mesh:
+            report['mesh_setting'] = mesh_observation(request(transport, protocol, token, MESH))
         report['link'] = link_observation(request(transport, protocol, token, STA, 'tmp_read'))
         filter_state = request(transport, protocol, token, '/admin/syslog?form=filter')
         report['log_filter'] = {
@@ -71,12 +81,14 @@ def collect(transport, crypto, password_provider):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--source-ip', required=True, choices=('192.168.1.52',))
+    parser.add_argument('--probe-mesh', action='store_true', help='read known EasyMesh enable getter; no settings changes')
     args = parser.parse_args()
     node = shutil.which('node')
     if not node or not sys.stdin.isatty() or not sys.stderr.isatty():
         print('Stopped: Node.js and interactive terminal are required', file=sys.stderr)
         return 1
-    report = collect(Transport(args.source_ip, '192.168.1.1'), Crypto(node), prompt_password)
+    report = collect(Transport(args.source_ip, '192.168.1.1'), Crypto(node), prompt_password,
+                     probe_mesh=args.probe_mesh)
     stamp = datetime.datetime.now(datetime.timezone.utc)
     report['captured_at'] = stamp.isoformat()
     path = ROOT / 'local-evidence' / ('sta-diagnostics-' + stamp.strftime('%Y%m%dT%H%M%S%fZ') + '.json')
