@@ -20,8 +20,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Run existing decode tests first
-        run: python -m unittest tests.test_decode_cloud tests.test_read_ubi -q
+      - name: Run tests first
+        run: python -m unittest tests.test_decode_cloud tests.test_read_ubi tests.test_compare_partition_profiles -q
       - name: Install read-only SquashFS parser
         run: python -m pip install -r requirements-analysis.txt
       - name: Fetch public inputs
@@ -35,58 +35,24 @@ jobs:
           curl -fL --retry 3 -o artifacts/downloads/1.2.0.zip 'https://static.tp-link.com/upload/firmware/2026/202606/20260612/Archer%20BE5000_V1_260420.zip'
           curl -fL --retry 3 -o artifacts/GPL.tar.gz 'https://static.tp-link.com/upload/gpl-code/2026/202605/20260512/GPL_ArcherBE5000.tar.gz'
           python -m tools.inspect_gpl artifacts/GPL.tar.gz --output artifacts/gpl-key --select '/nvrammanager/nm_fwup[.]c'
-      - name: Decode public profiles and default STA sections
+      - name: Decode firmware and compare public profile semantics
         shell: bash
         run: |
           set -euo pipefail
           NM_SOURCE="$(find artifacts/gpl-key -maxdepth 1 -type f -name '*.txt' -print -quit)"
-          mkdir -p artifacts/profile-diff
+          : > artifacts/rootfs-list.txt
           for version in 1.0.2 1.0.3 1.1.0 1.2.0; do
             python -m tools.decode_cloud "artifacts/downloads/$version.zip" --nm-source "$NM_SOURCE" --output "artifacts/decoded-$version.bin" --report "artifacts/decoded-$version.json"
             ubi_start="$(python -c "import json; r=json.load(open('artifacts/decoded-$version.json')); print(hex(min(x['offset'] for x in r['magic_candidates'] if x['kind']=='ubi')))")"
             python -m tools.read_ubi "artifacts/decoded-$version.bin" --start "$ubi_start" --peb-size 0x20000 --output "artifacts/volumes-$version"
             rootfs="$(python -c "from pathlib import Path; ps=sorted(Path('artifacts/volumes-$version').glob('volume-*.bin')); m=[p for p in ps if p.open('rb').read(4)==b'hsqs']; assert len(m)==1; print(m[0])")"
-            python - "$rootfs" "$version" <<'PY'
-import subprocess, sys, zlib
-from pathlib import Path
-from dissect.squashfs import SquashFS
-rootfs, version = sys.argv[1:]
-out = Path('artifacts/profile-diff')
-key='2EB38F7EC41D4B8E1422805BCD5F740BC3B95BE163E39D67579EB344427F7836'
-iv='360028C9064242F81074F4C127D299F6'
-with open(rootfs,'rb') as src:
-    fs=SquashFS(src)
-    for name,path in [('profile','/etc/partition_config/profile'),('default-config','/etc/partition_config/default-config')]:
-        enc=fs.get(path).open().read()
-        dec=subprocess.run(['openssl','aes-256-cbc','-d','-K',key,'-iv',iv],input=enc,capture_output=True,check=True).stdout
-        plain=zlib.decompress(dec)
-        (out/f'{version}-{name}.txt').write_bytes(plain)
-PY
+            printf '%s=%s\n' "$version" "$rootfs" >> artifacts/rootfs-list.txt
           done
-          python - <<'PY'
-import json,re
-from pathlib import Path
-out={}
-for version in ('1.0.2','1.0.3','1.1.0','1.2.0'):
-    profile=(Path('artifacts/profile-diff')/f'{version}-profile.txt').read_text('utf-8',errors='replace')
-    default=(Path('artifacts/profile-diff')/f'{version}-default-config.txt').read_text('utf-8',errors='replace')
-    def lines(text, pats):
-        selected=[]
-        for line in text.splitlines():
-            low=line.lower()
-            if any(p in low for p in pats):
-                s=line.strip()
-                if len(s)<=500: selected.append(s)
-        return selected
-    out[version]={
-      'profile': lines(profile,['operation_mode','wireless_sta','wds','repeater','client','hotspot']),
-      'default_sta': lines(default,['apcli0','apclii0','mode="sta"','mode=\'sta\'','mesh=','mesh="','mesh=\''])
-    }
-Path('artifacts/profile-diff/summary.json').write_text(json.dumps(out,indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
-print(json.dumps(out,indent=2,ensure_ascii=False))
-PY
+          args=()
+          while IFS= read -r entry; do args+=(--rootfs "$entry"); done < artifacts/rootfs-list.txt
+          python -m tools.compare_partition_profiles "${args[@]}" --output artifacts/profile-summary.json
       - uses: actions/upload-artifact@v4
         with:
           name: decoded-profile-differences
-          path: artifacts/profile-diff/summary.json
+          path: artifacts/profile-summary.json
           if-no-files-found: error
