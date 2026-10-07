@@ -333,3 +333,24 @@ Every release contains four exact `ApCliEnable` markers. No release contains the
 This confirms that the userspace `wifix` command `ApCliMeshRule=1` is not a current-only addition and cannot be mapped to an exact string handler in the production `mt_wifi.ko`. Since the wifix command helper ignores command exit status and continues to SSID/`ApCliEnable=1`, a rejected MeshRule command alone does not prove association failure.
 
 Next: extract the production driver's APCLI/WDS/repeater string corpus across releases to identify the actual supported private controls and whether a separate MAC-repeater forwarding control is exposed under another name.
+
+
+### Production driver APCLI/WDS/repeater corpus
+
+The filtered APCLI/WDS/repeater string corpus from production `mt_wifi.ko` is identical across 1.0.2, 1.0.3, 1.1.0 and 1.2.0, even though the full module hashes differ.
+
+Current 1.2.0 contains, among others:
+
+- `ApCliAutoConnect`, `ApCliAutoConnectExec`
+- `ApCliMWDS`, `Set_ApCli_MWDS_Proc`
+- `ApMWDS`, `Set_Ap_MWDS_Proc`
+- `MWDSEnable`, `MWDSAPCliPeerEnable/Disable`
+- `IPv4ProxyARP`, `AddIPv4ProxyARPEntry`, `Set_ProxyArp_Enable`
+- `IgmpMwdsCloneEnable`
+- explicit APCLI link-up/link-down and root-AP reconnect monitoring strings.
+
+The userspace `wifix` string corpus does not contain `ApCliMWDS`, `MWDSEnable`, `ProxyARP`, or `ApCliAutoConnect`; its retained driver setup uses the APCLI SSID/security/enable path plus `ApCliMeshRule=1`.
+
+Therefore the shipped driver contains stable nontrivial APCLI/MWDS/proxy capabilities that wifix does not visibly configure through those explicit private-control names. This strengthens the hypothesis that the missing Ethernet forwarding path is a runtime configuration problem, not removed driver functionality.
+
+It does not prove that enabling any of these private controls is safe or sufficient. Their exact runtime relationships and the product-specific `ApCliMeshRule` semantics remain unproven.
